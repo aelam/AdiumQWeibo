@@ -28,6 +28,7 @@
 		942FDF0A148CCC43007D8EBE /* qweibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF08148CCC43007D8EBE /* qweibo.png */; };
 		942FDF0B148CCC43007D8EBE /* qweibo-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF09148CCC43007D8EBE /* qweibo-small.png */; };
 		942FDF0D148CCC8E007D8EBE /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */; };
+		94D39FBB148D159700D1A141 /* AIQWeiboReplyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D39FBA148D159700D1A141 /* AIQWeiboReplyWindowController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,8 @@
 		942FDF08148CCC43007D8EBE /* qweibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qweibo.png; sourceTree = "<group>"; };
 		942FDF09148CCC43007D8EBE /* qweibo-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qweibo-small.png"; sourceTree = "<group>"; };
 		942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AIUtilities.framework; sourceTree = "<group>"; };
+		94D39FB9148D159700D1A141 /* AIQWeiboReplyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQWeiboReplyWindowController.h; sourceTree = "<group>"; };
+		94D39FBA148D159700D1A141 /* AIQWeiboReplyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIQWeiboReplyWindowController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +143,8 @@
 				942FDF00148CC2B6007D8EBE /* AIQWeiboAccountViewController.h */,
 				942FDF01148CC2B6007D8EBE /* AIQWeiboAccountViewController.m */,
 				942FDF07148CC543007D8EBE /* AIQWeiboAccountView.xib */,
+				94D39FB9148D159700D1A141 /* AIQWeiboReplyWindowController.h */,
+				94D39FBA148D159700D1A141 /* AIQWeiboReplyWindowController.m */,
 			);
 			path = AdiumQWeibo;
 			sourceTree = "<group>";
@@ -287,6 +292,7 @@
 				942FDEFC148CBBA8007D8EBE /* WeiboEngine.m in Sources */,
 				942FDEFF148CC1FC007D8EBE /* AIQWeiboService.m in Sources */,
 				942FDF02148CC2B6007D8EBE /* AIQWeiboAccountViewController.m in Sources */,
+				94D39FBB148D159700D1A141 /* AIQWeiboReplyWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

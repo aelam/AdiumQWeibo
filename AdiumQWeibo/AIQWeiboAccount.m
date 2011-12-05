@@ -29,7 +29,7 @@
 #import <Adium/AIStatus.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIContentEvent.h>
-
+#import <Adium/AISharedAdium.h>
 
 
 @implementation AIQWeiboAccount
@@ -42,12 +42,16 @@
                                                  name:Chat_DidOpen
                                                object:nil];
 	
-//	[adium.preferenceController registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
-//												  [NSNumber numberWithInt:QWEIBO_UPDATE_INTERVAL_MINUTES], QWEIBO_PREFERENCE_UPDATE_INTERVAL,
-//												  [NSNumber numberWithBool:YES], QWEIBO_PREFERENCE_UPDATE_AFTER_SEND,
-//												  [NSNumber numberWithBool:YES], QWEIBO_PREFERENCE_LOAD_CONTACTS, nil]
-//										forGroup:QWEIBO_PREFERENCE_GROUP_UPDATES
-//										  object:self];
+	[adium.preferenceController registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
+												  [NSNumber numberWithInt:QWEIBO_UPDATE_INTERVAL_MINUTES], QWEIBO_PREFERENCE_UPDATE_INTERVAL,
+												  [NSNumber numberWithBool:YES], QWEIBO_PREFERENCE_UPDATE_AFTER_SEND,
+												  [NSNumber numberWithBool:YES], QWEIBO_PREFERENCE_LOAD_CONTACTS, nil]
+										forGroup:QWEIBO_PREFERENCE_GROUP_UPDATES
+										  object:self];
+
+    [[adium.preferenceController registerDefaults:[NSNumber numberWithInt:QWEIBO_UPDATE_INTERVAL_MINUTES] forClass:[self class]]
+                                        forGroup:PREF_GROUP_FORMATTING];		
+
 
 }
 
