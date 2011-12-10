@@ -1,36 +1,50 @@
 //
-//  AdiumQWeibo.m
+//  AIQWeiboPlugin.m
 //  AdiumQWeibo
 //
-//  Created by Ryan Wang on 11-12-5.
+//  Created by Ryan Wang on 11-12-7.
 //  Copyright (c) 2011年 __MyCompanyName__. All rights reserved.
 //
 
-#import "AdiumQWeiboPlugin.h"
+#import "AIQWeiboPlugin.h"
+#import "AIQWeiboService.h"
 #import <Adium/AIListObject.h>
 #import <Adium/AIService.h>
-#import <Adium/AIContactObserverManager.h>
-#import "AIQWeiboService.h"
 
-@implementation AdiumQWeiboPlugin
+@implementation AIQWeiboPlugin
 
 - (void)installPlugin
 {
-//    [[AIContactObserverManager sharedManager] registerListObjectObserver:self];
-    [AIQWeiboService registerService];
-
+    [[AIContactObserverManager sharedManager] registerListObjectObserver:self];
+	[AIQWeiboService registerService];    
 }
 
-- (void)uninstallPlugin
+- (NSString *)pluginAuthor {
+    return @"Ryan Wang";
+}
+
+- (NSString *)pluginVersion {
+    return @"0.1";
+}
+
+- (NSString *)pluginDescription {
+    return @"QQ MiniBlog";
+}
+
+- (NSString *)pluginURL {
+    return @"https://github.com/aelam/AdiumQWeibo";
+}
+
+- (void)dealloc
 {
-    [[AIContactObserverManager sharedManager] unregisterListObjectObserver:self];
+	[[AIContactObserverManager sharedManager] unregisterListObjectObserver:self];
+	[super dealloc];
 }
-
 
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	NSSet *returnSet = nil;
-	
+    
 	if (!inModifiedKeys) {
 		if (([inObject.UID isEqualToString:@"twitter@twitter.com"] &&
 			 [inObject.service.serviceClass isEqualToString:@"Jabber"]) ||
@@ -46,6 +60,5 @@
 	
 	return returnSet;
 }
-
 
 @end

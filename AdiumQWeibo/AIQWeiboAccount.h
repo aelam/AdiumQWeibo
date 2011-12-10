@@ -7,7 +7,6 @@
 //
 
 #import <Adium/AIAccount.h>
-#import "QWeibo.h"
 
 #define QWEIBO_UPDATE_INTERVAL_MINUTES 20
 
@@ -38,7 +37,10 @@
 #define QWEIBO_TIMELINE_NAME				@"Timeline (%@)"
 
 @interface AIQWeiboAccount : AIAccount {
-    WeiboEngine *_engine;
+    //    WeiboEngine *_engine;
 }
+
+@property (readonly, nonatomic) NSString *defaultServer;
+@property (readonly, nonatomic) BOOL useOAuth;
 
 @end

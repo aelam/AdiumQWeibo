@@ -7,31 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		94187A891493AD48000F4AD1 /* AIQWeiboAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 94187A881493AD48000F4AD1 /* AIQWeiboAccountView.nib */; };
 		942FDE4F148CACA7007D8EBE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDE4E148CACA7007D8EBE /* Cocoa.framework */; };
 		942FDE59148CACA7007D8EBE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 942FDE57148CACA7007D8EBE /* InfoPlist.strings */; };
-		942FDE65148CAD5D007D8EBE /* AdiumQWeiboPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDE64148CAD5D007D8EBE /* AdiumQWeiboPlugin.m */; };
 		942FDEA6148CB6AB007D8EBE /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDEA5148CB6AB007D8EBE /* Adium.framework */; };
-		942FDEB1148CB7C3007D8EBE /* YAJL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDEB0148CB7C3007D8EBE /* YAJL.framework */; };
 		942FDED4148CBA99007D8EBE /* AIQWeiboAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDED3148CBA99007D8EBE /* AIQWeiboAccount.m */; };
-		942FDEF4148CBBA8007D8EBE /* NSData+QBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDEE0148CBBA8007D8EBE /* NSData+QBase64.m */; };
-		942FDEF5148CBBA8007D8EBE /* NSDictionary+Response.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDEE2148CBBA8007D8EBE /* NSDictionary+Response.m */; };
-		942FDEF6148CBBA8007D8EBE /* NSMutableURLRequest+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDEE4148CBBA8007D8EBE /* NSMutableURLRequest+Category.m */; };
-		942FDEF7148CBBA8007D8EBE /* NSString+QEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDEE6148CBBA8007D8EBE /* NSString+QEncoding.m */; };
-		942FDEF8148CBBA8007D8EBE /* NSURL+QAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDEE8148CBBA8007D8EBE /* NSURL+QAdditions.m */; };
-		942FDEF9148CBBA8007D8EBE /* OAuthURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDEEB148CBBA8007D8EBE /* OAuthURLRequest.m */; };
-		942FDEFA148CBBA8007D8EBE /* QOAuthSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDEED148CBBA8007D8EBE /* QOAuthSession.m */; };
-		942FDEFB148CBBA8007D8EBE /* RSimpleConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDEF0148CBBA8007D8EBE /* RSimpleConnection.m */; };
-		942FDEFC148CBBA8007D8EBE /* WeiboEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDEF2148CBBA8007D8EBE /* WeiboEngine.m */; };
 		942FDEFF148CC1FC007D8EBE /* AIQWeiboService.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDEFE148CC1FC007D8EBE /* AIQWeiboService.m */; };
 		942FDF02148CC2B6007D8EBE /* AIQWeiboAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDF01148CC2B6007D8EBE /* AIQWeiboAccountViewController.m */; };
-		942FDF05148CC543007D8EBE /* AIQWeiboAccountView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF07148CC543007D8EBE /* AIQWeiboAccountView.xib */; };
 		942FDF0A148CCC43007D8EBE /* qweibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF08148CCC43007D8EBE /* qweibo.png */; };
 		942FDF0B148CCC43007D8EBE /* qweibo-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF09148CCC43007D8EBE /* qweibo-small.png */; };
 		942FDF0D148CCC8E007D8EBE /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */; };
 		94D39FBB148D159700D1A141 /* AIQWeiboReplyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D39FBA148D159700D1A141 /* AIQWeiboReplyWindowController.m */; };
+		94D39FCA148FB97D00D1A141 /* AIQWeiboPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D39FC9148FB97200D1A141 /* AIQWeiboPlugin.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		94187A881493AD48000F4AD1 /* AIQWeiboAccountView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = AIQWeiboAccountView.nib; sourceTree = "<group>"; };
 		942FDE4B148CACA7007D8EBE /* AdiumQWeibo.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdiumQWeibo.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		942FDE4E148CACA7007D8EBE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		942FDE51148CACA7007D8EBE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -40,41 +31,20 @@
 		942FDE56148CACA7007D8EBE /* AdiumQWeibo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AdiumQWeibo-Info.plist"; sourceTree = "<group>"; };
 		942FDE58148CACA7007D8EBE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		942FDE5A148CACA7007D8EBE /* AdiumQWeibo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AdiumQWeibo-Prefix.pch"; sourceTree = "<group>"; };
-		942FDE63148CAD5D007D8EBE /* AdiumQWeiboPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdiumQWeiboPlugin.h; sourceTree = "<group>"; };
-		942FDE64148CAD5D007D8EBE /* AdiumQWeiboPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdiumQWeiboPlugin.m; sourceTree = "<group>"; };
 		942FDEA5148CB6AB007D8EBE /* Adium.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Adium.framework; sourceTree = "<group>"; };
-		942FDEB0148CB7C3007D8EBE /* YAJL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = YAJL.framework; sourceTree = "<group>"; };
 		942FDED2148CBA99007D8EBE /* AIQWeiboAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQWeiboAccount.h; sourceTree = "<group>"; };
 		942FDED3148CBA99007D8EBE /* AIQWeiboAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIQWeiboAccount.m; sourceTree = "<group>"; };
-		942FDEDF148CBBA8007D8EBE /* NSData+QBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+QBase64.h"; sourceTree = "<group>"; };
-		942FDEE0148CBBA8007D8EBE /* NSData+QBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+QBase64.m"; sourceTree = "<group>"; };
-		942FDEE1148CBBA8007D8EBE /* NSDictionary+Response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Response.h"; sourceTree = "<group>"; };
-		942FDEE2148CBBA8007D8EBE /* NSDictionary+Response.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Response.m"; sourceTree = "<group>"; };
-		942FDEE3148CBBA8007D8EBE /* NSMutableURLRequest+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+Category.h"; sourceTree = "<group>"; };
-		942FDEE4148CBBA8007D8EBE /* NSMutableURLRequest+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+Category.m"; sourceTree = "<group>"; };
-		942FDEE5148CBBA8007D8EBE /* NSString+QEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+QEncoding.h"; sourceTree = "<group>"; };
-		942FDEE6148CBBA8007D8EBE /* NSString+QEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+QEncoding.m"; sourceTree = "<group>"; };
-		942FDEE7148CBBA8007D8EBE /* NSURL+QAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+QAdditions.h"; sourceTree = "<group>"; };
-		942FDEE8148CBBA8007D8EBE /* NSURL+QAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+QAdditions.m"; sourceTree = "<group>"; };
-		942FDEEA148CBBA8007D8EBE /* OAuthURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAuthURLRequest.h; sourceTree = "<group>"; };
-		942FDEEB148CBBA8007D8EBE /* OAuthURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAuthURLRequest.m; sourceTree = "<group>"; };
-		942FDEEC148CBBA8007D8EBE /* QOAuthSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QOAuthSession.h; sourceTree = "<group>"; };
-		942FDEED148CBBA8007D8EBE /* QOAuthSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QOAuthSession.m; sourceTree = "<group>"; };
-		942FDEEE148CBBA8007D8EBE /* QWeibo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QWeibo.h; sourceTree = "<group>"; };
-		942FDEEF148CBBA8007D8EBE /* RSimpleConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSimpleConnection.h; sourceTree = "<group>"; };
-		942FDEF0148CBBA8007D8EBE /* RSimpleConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSimpleConnection.m; sourceTree = "<group>"; };
-		942FDEF1148CBBA8007D8EBE /* WeiboEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiboEngine.h; sourceTree = "<group>"; };
-		942FDEF2148CBBA8007D8EBE /* WeiboEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeiboEngine.m; sourceTree = "<group>"; };
 		942FDEFD148CC1FC007D8EBE /* AIQWeiboService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQWeiboService.h; sourceTree = "<group>"; };
 		942FDEFE148CC1FC007D8EBE /* AIQWeiboService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIQWeiboService.m; sourceTree = "<group>"; };
 		942FDF00148CC2B6007D8EBE /* AIQWeiboAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQWeiboAccountViewController.h; sourceTree = "<group>"; };
 		942FDF01148CC2B6007D8EBE /* AIQWeiboAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIQWeiboAccountViewController.m; sourceTree = "<group>"; };
-		942FDF06148CC543007D8EBE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/AIQWeiboAccountView.xib; sourceTree = "<group>"; };
 		942FDF08148CCC43007D8EBE /* qweibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qweibo.png; sourceTree = "<group>"; };
 		942FDF09148CCC43007D8EBE /* qweibo-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qweibo-small.png"; sourceTree = "<group>"; };
 		942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AIUtilities.framework; sourceTree = "<group>"; };
 		94D39FB9148D159700D1A141 /* AIQWeiboReplyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQWeiboReplyWindowController.h; sourceTree = "<group>"; };
 		94D39FBA148D159700D1A141 /* AIQWeiboReplyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIQWeiboReplyWindowController.m; sourceTree = "<group>"; };
+		94D39FC8148FB97000D1A141 /* AIQWeiboPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQWeiboPlugin.h; sourceTree = "<group>"; };
+		94D39FC9148FB97200D1A141 /* AIQWeiboPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIQWeiboPlugin.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,7 +54,6 @@
 			files = (
 				942FDE4F148CACA7007D8EBE /* Cocoa.framework in Frameworks */,
 				942FDEA6148CB6AB007D8EBE /* Adium.framework in Frameworks */,
-				942FDEB1148CB7C3007D8EBE /* YAJL.framework in Frameworks */,
 				942FDF0D148CCC8E007D8EBE /* AIUtilities.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -112,7 +81,6 @@
 		942FDE4D148CACA7007D8EBE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				942FDEDB148CBB86007D8EBE /* QWeibo OAuth */,
 				942FDEA4148CB69C007D8EBE /* Linked Frameworks */,
 				942FDE4E148CACA7007D8EBE /* Cocoa.framework */,
 				942FDE50148CACA7007D8EBE /* Other Frameworks */,
@@ -134,15 +102,15 @@
 			isa = PBXGroup;
 			children = (
 				942FDE55148CACA7007D8EBE /* Supporting Files */,
-				942FDE63148CAD5D007D8EBE /* AdiumQWeiboPlugin.h */,
-				942FDE64148CAD5D007D8EBE /* AdiumQWeiboPlugin.m */,
+				94D39FC8148FB97000D1A141 /* AIQWeiboPlugin.h */,
+				94D39FC9148FB97200D1A141 /* AIQWeiboPlugin.m */,
 				942FDEFD148CC1FC007D8EBE /* AIQWeiboService.h */,
 				942FDEFE148CC1FC007D8EBE /* AIQWeiboService.m */,
 				942FDED2148CBA99007D8EBE /* AIQWeiboAccount.h */,
 				942FDED3148CBA99007D8EBE /* AIQWeiboAccount.m */,
 				942FDF00148CC2B6007D8EBE /* AIQWeiboAccountViewController.h */,
 				942FDF01148CC2B6007D8EBE /* AIQWeiboAccountViewController.m */,
-				942FDF07148CC543007D8EBE /* AIQWeiboAccountView.xib */,
+				94187A881493AD48000F4AD1 /* AIQWeiboAccountView.nib */,
 				94D39FB9148D159700D1A141 /* AIQWeiboReplyWindowController.h */,
 				94D39FBA148D159700D1A141 /* AIQWeiboReplyWindowController.m */,
 			);
@@ -165,54 +133,10 @@
 			isa = PBXGroup;
 			children = (
 				942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */,
-				942FDEB0148CB7C3007D8EBE /* YAJL.framework */,
 				942FDEA5148CB6AB007D8EBE /* Adium.framework */,
 			);
 			name = "Linked Frameworks";
 			path = "AdiumQWeibo/Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		942FDEDB148CBB86007D8EBE /* QWeibo OAuth */ = {
-			isa = PBXGroup;
-			children = (
-				942FDEDC148CBBA8007D8EBE /* Cocoa Categories */,
-				942FDEE9148CBBA8007D8EBE /* OAuth */,
-			);
-			name = "QWeibo OAuth";
-			path = "AdiumQWeibo/Linked Frameworks/QWeibo OAuth";
-			sourceTree = "<group>";
-		};
-		942FDEDC148CBBA8007D8EBE /* Cocoa Categories */ = {
-			isa = PBXGroup;
-			children = (
-				942FDEDF148CBBA8007D8EBE /* NSData+QBase64.h */,
-				942FDEE0148CBBA8007D8EBE /* NSData+QBase64.m */,
-				942FDEE1148CBBA8007D8EBE /* NSDictionary+Response.h */,
-				942FDEE2148CBBA8007D8EBE /* NSDictionary+Response.m */,
-				942FDEE3148CBBA8007D8EBE /* NSMutableURLRequest+Category.h */,
-				942FDEE4148CBBA8007D8EBE /* NSMutableURLRequest+Category.m */,
-				942FDEE5148CBBA8007D8EBE /* NSString+QEncoding.h */,
-				942FDEE6148CBBA8007D8EBE /* NSString+QEncoding.m */,
-				942FDEE7148CBBA8007D8EBE /* NSURL+QAdditions.h */,
-				942FDEE8148CBBA8007D8EBE /* NSURL+QAdditions.m */,
-			);
-			path = "Cocoa Categories";
-			sourceTree = "<group>";
-		};
-		942FDEE9148CBBA8007D8EBE /* OAuth */ = {
-			isa = PBXGroup;
-			children = (
-				942FDEEA148CBBA8007D8EBE /* OAuthURLRequest.h */,
-				942FDEEB148CBBA8007D8EBE /* OAuthURLRequest.m */,
-				942FDEEC148CBBA8007D8EBE /* QOAuthSession.h */,
-				942FDEED148CBBA8007D8EBE /* QOAuthSession.m */,
-				942FDEEE148CBBA8007D8EBE /* QWeibo.h */,
-				942FDEEF148CBBA8007D8EBE /* RSimpleConnection.h */,
-				942FDEF0148CBBA8007D8EBE /* RSimpleConnection.m */,
-				942FDEF1148CBBA8007D8EBE /* WeiboEngine.h */,
-				942FDEF2148CBBA8007D8EBE /* WeiboEngine.m */,
-			);
-			path = OAuth;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,9 +190,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				942FDE59148CACA7007D8EBE /* InfoPlist.strings in Resources */,
-				942FDF05148CC543007D8EBE /* AIQWeiboAccountView.xib in Resources */,
 				942FDF0A148CCC43007D8EBE /* qweibo.png in Resources */,
 				942FDF0B148CCC43007D8EBE /* qweibo-small.png in Resources */,
+				94187A891493AD48000F4AD1 /* AIQWeiboAccountView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,20 +203,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				942FDE65148CAD5D007D8EBE /* AdiumQWeiboPlugin.m in Sources */,
 				942FDED4148CBA99007D8EBE /* AIQWeiboAccount.m in Sources */,
-				942FDEF4148CBBA8007D8EBE /* NSData+QBase64.m in Sources */,
-				942FDEF5148CBBA8007D8EBE /* NSDictionary+Response.m in Sources */,
-				942FDEF6148CBBA8007D8EBE /* NSMutableURLRequest+Category.m in Sources */,
-				942FDEF7148CBBA8007D8EBE /* NSString+QEncoding.m in Sources */,
-				942FDEF8148CBBA8007D8EBE /* NSURL+QAdditions.m in Sources */,
-				942FDEF9148CBBA8007D8EBE /* OAuthURLRequest.m in Sources */,
-				942FDEFA148CBBA8007D8EBE /* QOAuthSession.m in Sources */,
-				942FDEFB148CBBA8007D8EBE /* RSimpleConnection.m in Sources */,
-				942FDEFC148CBBA8007D8EBE /* WeiboEngine.m in Sources */,
 				942FDEFF148CC1FC007D8EBE /* AIQWeiboService.m in Sources */,
 				942FDF02148CC2B6007D8EBE /* AIQWeiboAccountViewController.m in Sources */,
 				94D39FBB148D159700D1A141 /* AIQWeiboReplyWindowController.m in Sources */,
+				94D39FCA148FB97D00D1A141 /* AIQWeiboPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,14 +220,6 @@
 				942FDE58148CACA7007D8EBE /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		942FDF07148CC543007D8EBE /* AIQWeiboAccountView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				942FDF06148CC543007D8EBE /* en */,
-			);
-			name = AIQWeiboAccountView.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

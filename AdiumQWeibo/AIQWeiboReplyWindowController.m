@@ -11,6 +11,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <AIUtilities/AIStringAdditions.h>
+#import "AIQWeiboAccount.h"
 
 @implementation AIQWeiboReplyWindowController
 
@@ -64,14 +65,13 @@ static AIQWeiboReplyWindowController *sharedController = nil;
 		NSBeep();
 	} else if (textField_usernameOrTweetURL.stringValue && textField_statusID.stringValue) {
         
-		NSString *replyAddress = [(AITwitterAccount *)account addressForLinkType:AITwitterLinkReply
-																		  userID:textField_usernameOrTweetURL.stringValue
-																		statusID:textField_statusID.stringValue
-																		 context:nil];
+//		NSString *replyAddress = [(AIQWeiboAccount *)account addressForLinkType:AITwitterLinkReply
+//																		  userID:textField_usernameOrTweetURL.stringValue
+//																		statusID:textField_statusID.stringValue
+//																		 context:nil];
+//		[[NSNotificationCenter defaultCenter] postNotificationName:AIURLHandleNotification object:replyAddress];
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:AIURLHandleNotification object:replyAddress];
-		
-		[self closeWindow:nil];
+//		[self closeWindow:nil];
 	}
 }
 

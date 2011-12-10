@@ -25,6 +25,8 @@
 
 - (AIQWeiboAccountViewController *)accountViewController
 {
+    [@"test" writeToFile:@"/Users/ryan/Desktop/test.txt" atomically:YES encoding:NSUTF8StringEncoding error:nil];
+
 	return [AIQWeiboAccountViewController accountViewController];
 }
 
@@ -55,12 +57,15 @@
 - (NSUInteger)allowedLength{
 	return 999;
 }
+
 - (BOOL)caseSensitive{
 	return NO;
 }
+
 - (AIServiceImportance)serviceImportance{
 	return AIServiceSecondary;
 }
+
 - (BOOL)supportsProxySettings{
 	return NO;
 }
