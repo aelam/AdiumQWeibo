@@ -15,6 +15,14 @@
 
 - (void)installPlugin
 {
+    
+    NSString *logPath = @"/Users/ryan/Desktop/adium.log";
+    
+    [[NSFileManager defaultManager] removeItemAtPath:logPath error:nil];
+    
+    freopen([logPath cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr);
+    NIF_TRACE(@"--------------------------------------------------------------------");
+    
     [[AIContactObserverManager sharedManager] registerListObjectObserver:self];
 	[AIQWeiboService registerService];    
 }

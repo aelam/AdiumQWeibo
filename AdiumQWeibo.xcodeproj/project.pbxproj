@@ -8,6 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		94187A891493AD48000F4AD1 /* AIQWeiboAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 94187A881493AD48000F4AD1 /* AIQWeiboAccountView.nib */; };
+		94187AE61493BF7B000F4AD1 /* NSData+QBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AD31493BF7B000F4AD1 /* NSData+QBase64.m */; };
+		94187AE71493BF7B000F4AD1 /* NSDictionary+Response.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AD51493BF7B000F4AD1 /* NSDictionary+Response.m */; };
+		94187AE81493BF7B000F4AD1 /* NSMutableURLRequest+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AD71493BF7B000F4AD1 /* NSMutableURLRequest+Category.m */; };
+		94187AE91493BF7B000F4AD1 /* NSString+QEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AD91493BF7B000F4AD1 /* NSString+QEncoding.m */; };
+		94187AEA1493BF7B000F4AD1 /* NSURL+QAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187ADB1493BF7B000F4AD1 /* NSURL+QAdditions.m */; };
+		94187AEB1493BF7B000F4AD1 /* OAuthURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187ADE1493BF7B000F4AD1 /* OAuthURLRequest.m */; };
+		94187AEC1493BF7B000F4AD1 /* QOAuthSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AE01493BF7B000F4AD1 /* QOAuthSession.m */; };
+		94187AED1493BF7B000F4AD1 /* RSimpleConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AE31493BF7B000F4AD1 /* RSimpleConnection.m */; };
+		94187AEE1493BF7B000F4AD1 /* WeiboEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AE51493BF7B000F4AD1 /* WeiboEngine.m */; };
 		942FDE4F148CACA7007D8EBE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDE4E148CACA7007D8EBE /* Cocoa.framework */; };
 		942FDE59148CACA7007D8EBE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 942FDE57148CACA7007D8EBE /* InfoPlist.strings */; };
 		942FDEA6148CB6AB007D8EBE /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDEA5148CB6AB007D8EBE /* Adium.framework */; };
@@ -23,6 +32,25 @@
 
 /* Begin PBXFileReference section */
 		94187A881493AD48000F4AD1 /* AIQWeiboAccountView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = AIQWeiboAccountView.nib; sourceTree = "<group>"; };
+		94187AD21493BF7B000F4AD1 /* NSData+QBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+QBase64.h"; sourceTree = "<group>"; };
+		94187AD31493BF7B000F4AD1 /* NSData+QBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+QBase64.m"; sourceTree = "<group>"; };
+		94187AD41493BF7B000F4AD1 /* NSDictionary+Response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Response.h"; sourceTree = "<group>"; };
+		94187AD51493BF7B000F4AD1 /* NSDictionary+Response.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Response.m"; sourceTree = "<group>"; };
+		94187AD61493BF7B000F4AD1 /* NSMutableURLRequest+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+Category.h"; sourceTree = "<group>"; };
+		94187AD71493BF7B000F4AD1 /* NSMutableURLRequest+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+Category.m"; sourceTree = "<group>"; };
+		94187AD81493BF7B000F4AD1 /* NSString+QEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+QEncoding.h"; sourceTree = "<group>"; };
+		94187AD91493BF7B000F4AD1 /* NSString+QEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+QEncoding.m"; sourceTree = "<group>"; };
+		94187ADA1493BF7B000F4AD1 /* NSURL+QAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+QAdditions.h"; sourceTree = "<group>"; };
+		94187ADB1493BF7B000F4AD1 /* NSURL+QAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+QAdditions.m"; sourceTree = "<group>"; };
+		94187ADD1493BF7B000F4AD1 /* OAuthURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAuthURLRequest.h; sourceTree = "<group>"; };
+		94187ADE1493BF7B000F4AD1 /* OAuthURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAuthURLRequest.m; sourceTree = "<group>"; };
+		94187ADF1493BF7B000F4AD1 /* QOAuthSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QOAuthSession.h; sourceTree = "<group>"; };
+		94187AE01493BF7B000F4AD1 /* QOAuthSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QOAuthSession.m; sourceTree = "<group>"; };
+		94187AE11493BF7B000F4AD1 /* QWeibo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QWeibo.h; sourceTree = "<group>"; };
+		94187AE21493BF7B000F4AD1 /* RSimpleConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSimpleConnection.h; sourceTree = "<group>"; };
+		94187AE31493BF7B000F4AD1 /* RSimpleConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSimpleConnection.m; sourceTree = "<group>"; };
+		94187AE41493BF7B000F4AD1 /* WeiboEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiboEngine.h; sourceTree = "<group>"; };
+		94187AE51493BF7B000F4AD1 /* WeiboEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeiboEngine.m; sourceTree = "<group>"; };
 		942FDE4B148CACA7007D8EBE /* AdiumQWeibo.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdiumQWeibo.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		942FDE4E148CACA7007D8EBE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		942FDE51148CACA7007D8EBE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -41,6 +69,7 @@
 		942FDF08148CCC43007D8EBE /* qweibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qweibo.png; sourceTree = "<group>"; };
 		942FDF09148CCC43007D8EBE /* qweibo-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qweibo-small.png"; sourceTree = "<group>"; };
 		942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AIUtilities.framework; sourceTree = "<group>"; };
+		94AC0E1914948A5F006F0610 /* NIFLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIFLog.h; sourceTree = "<group>"; };
 		94D39FB9148D159700D1A141 /* AIQWeiboReplyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQWeiboReplyWindowController.h; sourceTree = "<group>"; };
 		94D39FBA148D159700D1A141 /* AIQWeiboReplyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIQWeiboReplyWindowController.m; sourceTree = "<group>"; };
 		94D39FC8148FB97000D1A141 /* AIQWeiboPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQWeiboPlugin.h; sourceTree = "<group>"; };
@@ -61,6 +90,49 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		94187AD01493BF7B000F4AD1 /* QWeibo OAuth */ = {
+			isa = PBXGroup;
+			children = (
+				94187AD11493BF7B000F4AD1 /* Cocoa Categories */,
+				94187ADC1493BF7B000F4AD1 /* OAuth */,
+			);
+			name = "QWeibo OAuth";
+			path = "Linked Frameworks/QWeibo OAuth";
+			sourceTree = "<group>";
+		};
+		94187AD11493BF7B000F4AD1 /* Cocoa Categories */ = {
+			isa = PBXGroup;
+			children = (
+				94187AD21493BF7B000F4AD1 /* NSData+QBase64.h */,
+				94187AD31493BF7B000F4AD1 /* NSData+QBase64.m */,
+				94187AD41493BF7B000F4AD1 /* NSDictionary+Response.h */,
+				94187AD51493BF7B000F4AD1 /* NSDictionary+Response.m */,
+				94187AD61493BF7B000F4AD1 /* NSMutableURLRequest+Category.h */,
+				94187AD71493BF7B000F4AD1 /* NSMutableURLRequest+Category.m */,
+				94187AD81493BF7B000F4AD1 /* NSString+QEncoding.h */,
+				94187AD91493BF7B000F4AD1 /* NSString+QEncoding.m */,
+				94187ADA1493BF7B000F4AD1 /* NSURL+QAdditions.h */,
+				94187ADB1493BF7B000F4AD1 /* NSURL+QAdditions.m */,
+			);
+			path = "Cocoa Categories";
+			sourceTree = "<group>";
+		};
+		94187ADC1493BF7B000F4AD1 /* OAuth */ = {
+			isa = PBXGroup;
+			children = (
+				94187ADD1493BF7B000F4AD1 /* OAuthURLRequest.h */,
+				94187ADE1493BF7B000F4AD1 /* OAuthURLRequest.m */,
+				94187ADF1493BF7B000F4AD1 /* QOAuthSession.h */,
+				94187AE01493BF7B000F4AD1 /* QOAuthSession.m */,
+				94187AE11493BF7B000F4AD1 /* QWeibo.h */,
+				94187AE21493BF7B000F4AD1 /* RSimpleConnection.h */,
+				94187AE31493BF7B000F4AD1 /* RSimpleConnection.m */,
+				94187AE41493BF7B000F4AD1 /* WeiboEngine.h */,
+				94187AE51493BF7B000F4AD1 /* WeiboEngine.m */,
+			);
+			path = OAuth;
+			sourceTree = "<group>";
+		};
 		942FDE40148CACA6007D8EBE = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +173,7 @@
 		942FDE54148CACA7007D8EBE /* AdiumQWeibo */ = {
 			isa = PBXGroup;
 			children = (
+				94187AD01493BF7B000F4AD1 /* QWeibo OAuth */,
 				942FDE55148CACA7007D8EBE /* Supporting Files */,
 				94D39FC8148FB97000D1A141 /* AIQWeiboPlugin.h */,
 				94D39FC9148FB97200D1A141 /* AIQWeiboPlugin.m */,
@@ -120,6 +193,7 @@
 		942FDE55148CACA7007D8EBE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				94AC0E1914948A5F006F0610 /* NIFLog.h */,
 				942FDF08148CCC43007D8EBE /* qweibo.png */,
 				942FDF09148CCC43007D8EBE /* qweibo-small.png */,
 				942FDE56148CACA7007D8EBE /* AdiumQWeibo-Info.plist */,
@@ -149,6 +223,7 @@
 				942FDE47148CACA7007D8EBE /* Sources */,
 				942FDE48148CACA7007D8EBE /* Frameworks */,
 				942FDE49148CACA7007D8EBE /* Resources */,
+				94E8495F1494D1FF00B3D8F4 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -198,6 +273,23 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		94E8495F1494D1FF00B3D8F4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\necho \"installing plugin ...\"\nrm -rf $HOME/Library/Application\\ Support/Adium\\ 2.0/Plugins/AdiumQWeibo.AdiumPlugin\ncp -R $BUILT_PRODUCTS_DIR/ $HOME/Library/Application\\ Support/Adium\\ 2.0/Plugins/\necho \"install success!\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		942FDE47148CACA7007D8EBE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -208,6 +300,15 @@
 				942FDF02148CC2B6007D8EBE /* AIQWeiboAccountViewController.m in Sources */,
 				94D39FBB148D159700D1A141 /* AIQWeiboReplyWindowController.m in Sources */,
 				94D39FCA148FB97D00D1A141 /* AIQWeiboPlugin.m in Sources */,
+				94187AE61493BF7B000F4AD1 /* NSData+QBase64.m in Sources */,
+				94187AE71493BF7B000F4AD1 /* NSDictionary+Response.m in Sources */,
+				94187AE81493BF7B000F4AD1 /* NSMutableURLRequest+Category.m in Sources */,
+				94187AE91493BF7B000F4AD1 /* NSString+QEncoding.m in Sources */,
+				94187AEA1493BF7B000F4AD1 /* NSURL+QAdditions.m in Sources */,
+				94187AEB1493BF7B000F4AD1 /* OAuthURLRequest.m in Sources */,
+				94187AEC1493BF7B000F4AD1 /* QOAuthSession.m in Sources */,
+				94187AED1493BF7B000F4AD1 /* RSimpleConnection.m in Sources */,
+				94187AEE1493BF7B000F4AD1 /* WeiboEngine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,6 +332,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = NO;
+				DSTROOT = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -245,9 +347,12 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = "/Users/ryan/Library/Application Support/Adium 2.0/PlugIns";
+				LD_DYLIB_INSTALL_NAME = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRIP_INSTALLED_PRODUCT = NO;
 			};
 			name = Debug;
 		};
@@ -258,6 +363,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DSTROOT = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -265,8 +371,11 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = "/Users/ryan/Library/Application Support/Adium 2.0/PlugIns";
+				LD_DYLIB_INSTALL_NAME = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
+				STRIP_INSTALLED_PRODUCT = NO;
 			};
 			name = Release;
 		};
@@ -280,7 +389,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AdiumQWeibo/AdiumQWeibo-Prefix.pch";
 				INFOPLIST_FILE = "AdiumQWeibo/AdiumQWeibo-Info.plist";
-				INSTALL_PATH = "$(HOME)/Library/Application Support/Adium 2.0/PlugIns/";
+				INSTALL_PATH = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -296,7 +405,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AdiumQWeibo/AdiumQWeibo-Prefix.pch";
 				INFOPLIST_FILE = "AdiumQWeibo/AdiumQWeibo-Info.plist";
-				INSTALL_PATH = "$(HOME)/Library/Application Support/Adium 2.0/PlugIns/";
+				INSTALL_PATH = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};

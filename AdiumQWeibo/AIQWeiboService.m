@@ -25,8 +25,6 @@
 
 - (AIQWeiboAccountViewController *)accountViewController
 {
-    [@"test" writeToFile:@"/Users/ryan/Desktop/test.txt" atomically:YES encoding:NSUTF8StringEncoding error:nil];
-
 	return [AIQWeiboAccountViewController accountViewController];
 }
 

@@ -22,6 +22,8 @@
 
 #define VERIFY_URL          @"http://open.t.qq.com/cgi-bin/authorize"
 
+#define QWEIBO_URL_SCHEMA   @"yahoo"
+
 @interface WeiboEngine (Private)
 
 - (void)getAccessTokenWithHandledURL:(NSString *)urlString;
@@ -37,8 +39,10 @@
 
 
 - (BOOL)handleOpenURL:(NSURL *)url {
-    if ([[[url scheme] uppercaseString] isEqualToString:@"QWEIBO"]) {
-        NSLog(@"%@",url);
+    NSLog(@"%s %d",__func__,__LINE__);
+    NSLog(@"---- %@",url);
+    if ([[[url scheme] uppercaseString] isEqualToString:[QWEIBO_URL_SCHEMA uppercaseString]]) {
+
         [self getAccessTokenWithHandledURL:[url query]];
         return YES;
     }    
@@ -86,9 +90,11 @@
             }];            
         }
     } else {
-        [self authorizeWithBlock:^(NSString *result) {
-            NSLog(@"Authorize success");
-            if (_URL) {
+        [self authorizeWithBlock:^(NSString *desc,BOOL success) {
+            if (success) {
+                NSLog(@"Authorize success");                
+            }
+            else if (_URL) {
                 OAuthURLRequest *request = [OAuthURLRequest requestWithURL:[_URL absoluteString] parameters:_parameters HTTPMethod:HTTPMethod files:_multiParts session:self.session];
                 [RSimpleConnection sendAsynchronousRequest:request queue:_operationQueue completionHandler:^(NSData *data,NSURLResponse *response, NSError *error) {
                     handler(data,(NSHTTPURLResponse *)response,error); 
@@ -98,13 +104,14 @@
     }        
 }
          
-- (void)authorizeWithBlock:(void(^)(NSString *))resultBlock {
+- (void)authorizeWithBlock:(void(^)(NSString *,BOOL))resultBlock {
     [self.session logOut];
-    OAuthURLRequest *request = [OAuthURLRequest requestWithURL:REQUEST_TOKEN_URL callBackURL:@"QWeibo://qq.com" parameters:nil HTTPMethod:@"GET" session:self.session];
+    OAuthURLRequest *request = [OAuthURLRequest requestWithURL:REQUEST_TOKEN_URL callBackURL:[NSString stringWithFormat:@"%@://qq.com",QWEIBO_URL_SCHEMA] parameters:nil HTTPMethod:@"GET" session:self.session];
     
     [RSimpleConnection sendAsynchronousRequest:request queue:_operationQueue completionHandler:^(NSData *data,NSURLResponse *response, NSError *error) {
         if (data) {
             NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSLog(@"%s %d",__func__,__LINE__);
             NSLog(@"---- %@",responseString);
             
             NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:responseString];
@@ -117,15 +124,8 @@
             if (application) {
                 [application performSelector:@selector(openURL:) withObject:[NSURL URLWithString:authorizeURLString]];
             } else {
-                [[NSClassFromString(@"NSWorkspace") sharedWorkspace] openURL:[NSURL URLWithString:authorizeURLString]];
+                [[NSClassFromString(@"NSWorkspace") sharedWorkspace] openURL:[NSURL URLWithString:authorizeURLString]];                
             }            
-
-//#if TARGET_IPHONE_SIMULATOR | TARGET_IPHONE_OS
-//            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:authorizeURLString]];
-//            NSLog(@"iPhone");
-//#elif TARGET_OS_MAC
-//            NSLog(@"MAC");
-//#endif
 
             [responseString release];
             Block_release(accessTokenHandler);
@@ -137,18 +137,21 @@
 }
 
 - (void)getAccessTokenWithHandledURL:(NSString *)urlString {
+    NSLog(@"--  %s %d",__func__,__LINE__);
     
     NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:urlString];
     self.session.verify = [pairs objectForKey:@"oauth_verifier"];
 
     OAuthURLRequest *request = [OAuthURLRequest requestWithURL:ACCESS_TOKEN_URL verify:self.session.verify parameters:nil HTTPMethod:@"GET" session:self.session];
+    NSLog(@"%s %d",__func__,__LINE__);
 
     self.session.tokenKey = nil;
     self.session.tokenSecret = nil;
     
     [RSimpleConnection sendAsynchronousRequest:request queue:_operationQueue completionHandler:^(NSData *data,NSURLResponse *response,  NSError *error) {
-        if (data) {
+        if (data && !error) {
             NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSLog(@"%s %d",__func__,__LINE__);
             NSLog(@"---- %@",responseString);
             
             NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:responseString];
@@ -157,9 +160,16 @@
             self.session.username = [pairs objectForKey:@"name"];
             self.session.isValid = YES;
             
-            accessTokenHandler(responseString);
+
+            NSLog(@"---- %@",self.session.tokenKey);
+            NSLog(@"---- %@",self.session.tokenSecret);
+            NSLog(@"---- %@",self.session.username);
+
+            accessTokenHandler(responseString,YES);
             
             [responseString release];
+        } else {
+            accessTokenHandler(nil,NO);
         }
     }];
 

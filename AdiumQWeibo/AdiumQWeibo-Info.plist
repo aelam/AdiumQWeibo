@@ -28,5 +28,14 @@
 	<string>AdiM</string>
 	<key>NSPrincipalClass</key>
 	<string>AIQWeiboPlugin</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>QWeibo</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

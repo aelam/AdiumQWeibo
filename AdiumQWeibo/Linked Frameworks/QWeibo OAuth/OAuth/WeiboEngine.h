@@ -16,8 +16,8 @@ enum RequestMethod {
     RequestMethodPOST,
     RequestMethodDELETE
 };
-
 typedef enum RequestMethod RequestMethod; 
+
 
 typedef void(^RequestHandler)(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error);
 
@@ -26,7 +26,7 @@ typedef void(^RequestHandler)(NSData *responseData, NSHTTPURLResponse *urlRespon
     NSOperationQueue        *_operationQueue;
     NSMutableDictionary     *_multiParts;
         
-    void (^accessTokenHandler)(NSString *text);
+    void (^accessTokenHandler)(NSString *text,BOOL success);
 }
 
 @property (nonatomic, retain) QOAuthSession *session;
@@ -40,12 +40,8 @@ typedef void(^RequestHandler)(NSData *responseData, NSHTTPURLResponse *urlRespon
 // The parameters 
 @property (nonatomic, readonly) NSDictionary *parameters;
 
-//- (id)initWithQOAuthSession:(QOAuthSession*)auth;
-
 - (id)initWithURL:(NSURL *)url parameters:(NSDictionary *)parameters requestMethod:(RequestMethod)requestMethod;
 
-
-//- (void)addMultiPartData:(NSData*)data withName:(NSString*)name type:(NSString*)type; 
 - (void)addMultiPartData:(NSData*)data withName:(NSString*)name;
 
 - (void)performRequestWithHandler:(RequestHandler)handler;
@@ -53,7 +49,7 @@ typedef void(^RequestHandler)(NSData *responseData, NSHTTPURLResponse *urlRespon
 - (BOOL)handleOpenURL:(NSURL *)url;
 
 // test
-- (void)authorizeWithBlock:(void(^)(NSString *))resultBlock;
+- (void)authorizeWithBlock:(void(^)(NSString *desc,BOOL success))resultBlock;
 
 
 @end

@@ -30,7 +30,9 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIContentEvent.h>
 #import <Adium/AISharedAdium.h>
+#import <Adium/AIAdiumProtocol.h>
 
+#import "NSDictionary+Response.h"
 
 @implementation AIQWeiboAccount
 
@@ -67,18 +69,32 @@
 - (void)connect
 {
 	[super connect];
+    
+    NIF_TRACE(@"passwordWhileConnected : %@",self.passwordWhileConnected);
+    if (self.passwordWhileConnected.length) {
+
+        NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:self.passwordWhileConnected];
+        self.session.tokenKey = [pairs objectForKey:@"oauth_token"];
+        self.session.tokenSecret = [pairs objectForKey:@"oauth_token_secret"];
+        self.session.username = [pairs objectForKey:@"name"];
+        self.session.isValid = YES;
+        NIF_TRACE(@"authorize success");
+        
+        [self didConnect];
+    } 
 }
 
 - (void)didConnect
 {
 	[super didConnect];
+    NIF_TRACE();
 	
 }
 
 - (void)disconnect
 {
 	[super disconnect];
-	[self didDisconnect];
+    NIF_TRACE();
 }
 
 - (void)willBeDeleted
@@ -89,6 +105,7 @@
 - (void)didDisconnect
 {
 	[super didDisconnect];
+    NIF_TRACE();
 }
 
 /*!
@@ -268,9 +285,15 @@
 	return YES;
 }
 
+- (QOAuthSession *)session {
+    if (_session == nil) {
+        _session = [[QOAuthSession alloc] initWithIdentifier:self.internalObjectID];
+    }
+    return _session;
+}
 
 - (void)dealloc {
-    //    [_engine release];
+    [_session release];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[adium.preferenceController unregisterPreferenceObserver:self];
     

@@ -7,6 +7,7 @@
 //
 
 #import <Adium/AIAccountViewController.h>
+#import "QWeibo.h"
 
 @interface AIQWeiboAccountViewController : AIAccountViewController {
     // Setup - OAuth
@@ -39,6 +40,8 @@
 	IBOutlet	NSTextField		*textField_url;
 	IBOutlet	NSTextField		*textField_location;
 	IBOutlet	NSTextField		*textField_description;
+    
+    WeiboEngine  *_authorizeEngine;
 
 }
 

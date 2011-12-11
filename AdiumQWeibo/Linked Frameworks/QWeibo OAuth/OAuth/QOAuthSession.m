@@ -88,9 +88,6 @@ static NSData *HMAC_SHA1(NSString *data, NSString *key) {
     if (self = [super init]) {
         _identifier = [identifier copy];
 
-        _consumerKey = [AppKey copy];
-        _consumerSecret = [AppSecret copy];
-
         NSDictionary *pairs = [[NSUserDefaults standardUserDefaults] objectForKey:_identifier];
         
         _tokenKey = [[pairs valueForKey:AppTokenKey]copy];
@@ -113,6 +110,13 @@ static NSData *HMAC_SHA1(NSString *data, NSString *key) {
     [self setTokenSecret:nil];
 }
 
+- (NSString *)consumerKey {
+    return AppKey;
+}
+
+- (NSString *)consumerSecret {
+    return AppSecret;
+}
 
 //Normalizes the request parameters according to the spec.
 - (NSString *)normalizedRequestParameters:(NSDictionary *)aParameters {
@@ -320,8 +324,6 @@ static NSData *HMAC_SHA1(NSString *data, NSString *key) {
 
 
 - (void)dealloc {
-    [_consumerKey release];
-    [_consumerSecret release];
     [_tokenKey release];
     [_tokenSecret release];
     [_verify release];
