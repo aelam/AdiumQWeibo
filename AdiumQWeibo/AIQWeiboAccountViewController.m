@@ -126,10 +126,10 @@
     if (account.online) {
         
         NIF_TRACE(@"account is online");
-        textField_name.stringValue = @"test";//[account valueForProperty:@"Profile Name"] ?: @"";
-        textField_url.stringValue =  @"test";//[account valueForProperty:@"Profile URL"] ?: @"";
-        textField_location.stringValue =  @"test";//[account valueForProperty:@"Profile Location"] ?: @"";
-        textField_description.stringValue =  @"test";//[account valueForProperty:@"Profile Description"] ?: @"";
+        textField_name.stringValue = [account valueForProperty:@"Profile Name"] ?: @"";
+        textField_url.stringValue =  [account valueForProperty:@"Profile URL"] ?: @"";
+        textField_location.stringValue = [account valueForProperty:@"Profile Location"] ?: @"";
+        textField_description.stringValue = [account valueForProperty:@"Profile Description"] ?: @"";
         
         [textField_name setEnabled:account.online];
         [textField_url setEnabled:account.online];
@@ -206,15 +206,11 @@
                 textField_name.stringValue = [pairs objectForKey:@"name"];
                 NIF_INFO(@"%@", [pairs objectForKey:@"name"]);
 
+				textField_accountUID.stringValue = [pairs objectForKey:@"name"];
+//                [account filterAndSetUID:[pairs objectForKey:@"name"]];
                 textField_password.stringValue = desc;
                 [account setLastDisconnectionError:nil];
                 [account setValue:[NSNumber numberWithBool:YES] forProperty:@"Reconnect After Edit" notify:NotifyNever];
-                
-                dispatch_queue_t main_queue = dispatch_get_main_queue();
-                dispatch_sync(main_queue, ^{                    
-                    [account setFormattedUID:[pairs objectForKey:@"name"] notify:NotifyNow];
-                });
-                NIF_INFO(@"isOnline? %u", account.online);
                 
             } else {
                 [self setStatusText:AILocalizedString(@"An error occured while trying to gain access. Please try again.", nil)
