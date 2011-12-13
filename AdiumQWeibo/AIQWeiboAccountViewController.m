@@ -15,6 +15,7 @@
 #import <Adium/AIAdiumProtocol.h>
 #import <Adium/AIControllerProtocol.h>
 #import "NSDictionary+Response.h"
+#import <AIUtilities/AIMenuAdditions.h>
 
 #define BUTTON_TEXT_ALLOW_ACCESS		AILocalizedString(@"Allow Adium access", nil)
 
@@ -45,47 +46,47 @@
 - (void)awakeFromNib {
 	NSMenu *intervalMenu = [[[NSMenu alloc] init] autorelease];
 	
-//	[intervalMenu addItemWithTitle:AILocalizedString(@"never", "Update tweets: never")
-//							target:self
-//							action:nil
-//					 keyEquivalent:@""
-//				 representedObject:[NSNumber numberWithInt:0]];
-//	
-//	[intervalMenu addItemWithTitle:AILocalizedString(@"every 2 minutes", "Update tweets: every 2 minutes")
-//							target:self
-//							action:nil
-//					 keyEquivalent:@""
-//				 representedObject:[NSNumber numberWithInt:2]];
-//	
-//	[intervalMenu addItemWithTitle:AILocalizedString(@"every 5 minutes", "Update tweets: every 5 minutes")
-//							target:self
-//							action:nil
-//					 keyEquivalent:@""
-//				 representedObject:[NSNumber numberWithInt:5]];
-//	
-//	[intervalMenu addItemWithTitle:AILocalizedString(@"every 10 minutes", "Update tweets every: 10 minutes")
-//							target:self
-//							action:nil
-//					 keyEquivalent:@""
-//				 representedObject:[NSNumber numberWithInt:10]];
-//	
-//	[intervalMenu addItemWithTitle:AILocalizedString(@"every 15 minutes", "Update tweets every: 15 minutes")
-//							target:self
-//							action:nil
-//					 keyEquivalent:@""
-//				 representedObject:[NSNumber numberWithInt:15]];
-//	
-//	[intervalMenu addItemWithTitle:AILocalizedString(@"every half-hour", "Update tweets every: half-hour")
-//							target:self
-//							action:nil
-//					 keyEquivalent:@""
-//				 representedObject:[NSNumber numberWithInt:30]];
-//	
-//	[intervalMenu addItemWithTitle:AILocalizedString(@"every hour", "Update tweets every hour")
-//							target:self
-//							action:nil
-//					 keyEquivalent:@""
-//				 representedObject:[NSNumber numberWithInt:60]];
+	[intervalMenu addItemWithTitle:AILocalizedString(@"never", "Update tweets: never")
+							target:self
+							action:nil
+					 keyEquivalent:@""
+				 representedObject:[NSNumber numberWithInt:0]];
+	
+	[intervalMenu addItemWithTitle:AILocalizedString(@"every 2 minutes", "Update tweets: every 2 minutes")
+							target:self
+							action:nil
+					 keyEquivalent:@""
+				 representedObject:[NSNumber numberWithInt:2]];
+	
+	[intervalMenu addItemWithTitle:AILocalizedString(@"every 5 minutes", "Update tweets: every 5 minutes")
+							target:self
+							action:nil
+					 keyEquivalent:@""
+				 representedObject:[NSNumber numberWithInt:5]];
+	
+	[intervalMenu addItemWithTitle:AILocalizedString(@"every 10 minutes", "Update tweets every: 10 minutes")
+							target:self
+							action:nil
+					 keyEquivalent:@""
+				 representedObject:[NSNumber numberWithInt:10]];
+	
+	[intervalMenu addItemWithTitle:AILocalizedString(@"every 15 minutes", "Update tweets every: 15 minutes")
+							target:self
+							action:nil
+					 keyEquivalent:@""
+				 representedObject:[NSNumber numberWithInt:15]];
+	
+	[intervalMenu addItemWithTitle:AILocalizedString(@"every half-hour", "Update tweets every: half-hour")
+							target:self
+							action:nil
+					 keyEquivalent:@""
+				 representedObject:[NSNumber numberWithInt:30]];
+	
+	[intervalMenu addItemWithTitle:AILocalizedString(@"every hour", "Update tweets every hour")
+							target:self
+							action:nil
+					 keyEquivalent:@""
+				 representedObject:[NSNumber numberWithInt:60]];
 	
 	[intervalMenu setAutoenablesItems:YES];
 	
