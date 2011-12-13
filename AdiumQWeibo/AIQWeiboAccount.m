@@ -80,6 +80,8 @@
         self.session.isValid = YES;
         NIF_TRACE(@"authorize success");
         
+        NIF_INFO(@"UID: %@", self.UID);
+        
         [self didConnect];
     } 
 }
@@ -181,6 +183,7 @@
 	
 	if(chat.isGroupChat && chat.account == self) {
         //		[self updateTimelineChat:chat];
+        NIF_INFO();
 	}	
 }
 

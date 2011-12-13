@@ -282,6 +282,10 @@ static NSData *HMAC_SHA1(NSString *data, NSString *key) {
     }
 }
 
+- (NSString *)username {
+    return _username;
+}
+
 - (void)setUsername:(NSString *)text {
     if (![_username isEqualToString:text]) {
         [_username release];

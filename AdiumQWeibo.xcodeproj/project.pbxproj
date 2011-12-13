@@ -17,7 +17,6 @@
 		94187AEC1493BF7B000F4AD1 /* QOAuthSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AE01493BF7B000F4AD1 /* QOAuthSession.m */; };
 		94187AED1493BF7B000F4AD1 /* RSimpleConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AE31493BF7B000F4AD1 /* RSimpleConnection.m */; };
 		94187AEE1493BF7B000F4AD1 /* WeiboEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AE51493BF7B000F4AD1 /* WeiboEngine.m */; };
-		942FDE4F148CACA7007D8EBE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDE4E148CACA7007D8EBE /* Cocoa.framework */; };
 		942FDE59148CACA7007D8EBE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 942FDE57148CACA7007D8EBE /* InfoPlist.strings */; };
 		942FDEA6148CB6AB007D8EBE /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDEA5148CB6AB007D8EBE /* Adium.framework */; };
 		942FDED4148CBA99007D8EBE /* AIQWeiboAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDED3148CBA99007D8EBE /* AIQWeiboAccount.m */; };
@@ -26,6 +25,10 @@
 		942FDF0A148CCC43007D8EBE /* qweibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF08148CCC43007D8EBE /* qweibo.png */; };
 		942FDF0B148CCC43007D8EBE /* qweibo-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF09148CCC43007D8EBE /* qweibo-small.png */; };
 		942FDF0D148CCC8E007D8EBE /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */; };
+		94C7FD91149788400000139D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD90149788400000139D /* AppKit.framework */; };
+		94C7FD93149788400000139D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD92149788400000139D /* Cocoa.framework */; };
+		94C7FD95149788400000139D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD94149788400000139D /* CoreData.framework */; };
+		94C7FD97149788400000139D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD96149788400000139D /* Foundation.framework */; };
 		94D39FBB148D159700D1A141 /* AIQWeiboReplyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D39FBA148D159700D1A141 /* AIQWeiboReplyWindowController.m */; };
 		94D39FCA148FB97D00D1A141 /* AIQWeiboPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D39FC9148FB97200D1A141 /* AIQWeiboPlugin.m */; };
 /* End PBXBuildFile section */
@@ -52,10 +55,6 @@
 		94187AE41493BF7B000F4AD1 /* WeiboEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiboEngine.h; sourceTree = "<group>"; };
 		94187AE51493BF7B000F4AD1 /* WeiboEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeiboEngine.m; sourceTree = "<group>"; };
 		942FDE4B148CACA7007D8EBE /* AdiumQWeibo.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdiumQWeibo.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		942FDE4E148CACA7007D8EBE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		942FDE51148CACA7007D8EBE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		942FDE52148CACA7007D8EBE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		942FDE53148CACA7007D8EBE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		942FDE56148CACA7007D8EBE /* AdiumQWeibo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AdiumQWeibo-Info.plist"; sourceTree = "<group>"; };
 		942FDE58148CACA7007D8EBE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		942FDE5A148CACA7007D8EBE /* AdiumQWeibo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AdiumQWeibo-Prefix.pch"; sourceTree = "<group>"; };
@@ -70,6 +69,10 @@
 		942FDF09148CCC43007D8EBE /* qweibo-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qweibo-small.png"; sourceTree = "<group>"; };
 		942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AIUtilities.framework; sourceTree = "<group>"; };
 		94AC0E1914948A5F006F0610 /* NIFLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIFLog.h; sourceTree = "<group>"; };
+		94C7FD90149788400000139D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		94C7FD92149788400000139D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		94C7FD94149788400000139D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		94C7FD96149788400000139D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		94D39FB9148D159700D1A141 /* AIQWeiboReplyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQWeiboReplyWindowController.h; sourceTree = "<group>"; };
 		94D39FBA148D159700D1A141 /* AIQWeiboReplyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIQWeiboReplyWindowController.m; sourceTree = "<group>"; };
 		94D39FC8148FB97000D1A141 /* AIQWeiboPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQWeiboPlugin.h; sourceTree = "<group>"; };
@@ -81,9 +84,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				942FDE4F148CACA7007D8EBE /* Cocoa.framework in Frameworks */,
 				942FDEA6148CB6AB007D8EBE /* Adium.framework in Frameworks */,
 				942FDF0D148CCC8E007D8EBE /* AIUtilities.framework in Frameworks */,
+				94C7FD91149788400000139D /* AppKit.framework in Frameworks */,
+				94C7FD93149788400000139D /* Cocoa.framework in Frameworks */,
+				94C7FD95149788400000139D /* CoreData.framework in Frameworks */,
+				94C7FD97149788400000139D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,7 +160,6 @@
 			isa = PBXGroup;
 			children = (
 				942FDEA4148CB69C007D8EBE /* Linked Frameworks */,
-				942FDE4E148CACA7007D8EBE /* Cocoa.framework */,
 				942FDE50148CACA7007D8EBE /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -163,9 +168,10 @@
 		942FDE50148CACA7007D8EBE /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				942FDE51148CACA7007D8EBE /* AppKit.framework */,
-				942FDE52148CACA7007D8EBE /* CoreData.framework */,
-				942FDE53148CACA7007D8EBE /* Foundation.framework */,
+				94C7FD90149788400000139D /* AppKit.framework */,
+				94C7FD92149788400000139D /* Cocoa.framework */,
+				94C7FD94149788400000139D /* CoreData.framework */,
+				94C7FD96149788400000139D /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -330,7 +336,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -349,9 +355,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INSTALL_PATH = "/Users/ryan/Library/Application Support/Adium 2.0/PlugIns";
 				LD_DYLIB_INSTALL_NAME = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.6;
 				STRIP_INSTALLED_PRODUCT = NO;
 			};
 			name = Debug;
@@ -390,6 +396,7 @@
 				GCC_PREFIX_HEADER = "AdiumQWeibo/AdiumQWeibo-Prefix.pch";
 				INFOPLIST_FILE = "AdiumQWeibo/AdiumQWeibo-Info.plist";
 				INSTALL_PATH = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -398,6 +405,7 @@
 		942FDE5F148CACA7007D8EBE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/AdiumQWeibo/Linked Frameworks\"",
@@ -406,6 +414,7 @@
 				GCC_PREFIX_HEADER = "AdiumQWeibo/AdiumQWeibo-Prefix.pch";
 				INFOPLIST_FILE = "AdiumQWeibo/AdiumQWeibo-Info.plist";
 				INSTALL_PATH = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};

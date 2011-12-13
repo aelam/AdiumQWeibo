@@ -14,6 +14,7 @@
 #import <Adium/AISharedAdium.h>
 #import <Adium/AIAdiumProtocol.h>
 #import <Adium/AIControllerProtocol.h>
+#import "NSDictionary+Response.h"
 
 #define BUTTON_TEXT_ALLOW_ACCESS		AILocalizedString(@"Allow Adium access", nil)
 
@@ -42,7 +43,54 @@
 }
 
 - (void)awakeFromNib {
-
+	NSMenu *intervalMenu = [[[NSMenu alloc] init] autorelease];
+	
+//	[intervalMenu addItemWithTitle:AILocalizedString(@"never", "Update tweets: never")
+//							target:self
+//							action:nil
+//					 keyEquivalent:@""
+//				 representedObject:[NSNumber numberWithInt:0]];
+//	
+//	[intervalMenu addItemWithTitle:AILocalizedString(@"every 2 minutes", "Update tweets: every 2 minutes")
+//							target:self
+//							action:nil
+//					 keyEquivalent:@""
+//				 representedObject:[NSNumber numberWithInt:2]];
+//	
+//	[intervalMenu addItemWithTitle:AILocalizedString(@"every 5 minutes", "Update tweets: every 5 minutes")
+//							target:self
+//							action:nil
+//					 keyEquivalent:@""
+//				 representedObject:[NSNumber numberWithInt:5]];
+//	
+//	[intervalMenu addItemWithTitle:AILocalizedString(@"every 10 minutes", "Update tweets every: 10 minutes")
+//							target:self
+//							action:nil
+//					 keyEquivalent:@""
+//				 representedObject:[NSNumber numberWithInt:10]];
+//	
+//	[intervalMenu addItemWithTitle:AILocalizedString(@"every 15 minutes", "Update tweets every: 15 minutes")
+//							target:self
+//							action:nil
+//					 keyEquivalent:@""
+//				 representedObject:[NSNumber numberWithInt:15]];
+//	
+//	[intervalMenu addItemWithTitle:AILocalizedString(@"every half-hour", "Update tweets every: half-hour")
+//							target:self
+//							action:nil
+//					 keyEquivalent:@""
+//				 representedObject:[NSNumber numberWithInt:30]];
+//	
+//	[intervalMenu addItemWithTitle:AILocalizedString(@"every hour", "Update tweets every hour")
+//							target:self
+//							action:nil
+//					 keyEquivalent:@""
+//				 representedObject:[NSNumber numberWithInt:60]];
+	
+	[intervalMenu setAutoenablesItems:YES];
+	
+	[popUp_updateInterval setMenu:intervalMenu];
+	
 }
 
 - (void)configureForAccount:(AIQWeiboAccount *)inAccount
@@ -51,6 +99,8 @@
     
     NSLog(@"- - ----------  -- - - - - %@",[inAccount passwordWhileConnected]);
     NIF_INFO(@"----- %d",[inAccount shouldBeOnline]);
+    NIF_INFO(@"----- %@",inAccount.UID);
+    
     
 		if ([account.lastDisconnectionError isEqualToString:QWEIBO_OAUTH_NOT_AUTHORIZED]) {
 			[self setStatusText:QWEIBO_OAUTH_NOT_AUTHORIZED
@@ -151,12 +201,18 @@
                 [progressIndicator setHidden:YES];
                 [progressIndicator stopAnimation:nil];
                 
+                NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:desc];
+                textField_name.stringValue = [pairs objectForKey:@"name"];
+                NIF_INFO(@"%@", [pairs objectForKey:@"name"]);
+
                 textField_password.stringValue = desc;
                 [account setLastDisconnectionError:nil];
                 [account setValue:[NSNumber numberWithBool:YES] forProperty:@"Reconnect After Edit" notify:NotifyNever];
                 
-                [account setValue:[NSNumber numberWithBool:YES] forProperty:@"Online" notify:NotifyNever];
-
+                dispatch_queue_t main_queue = dispatch_get_main_queue();
+                dispatch_sync(main_queue, ^{                    
+                    [account setFormattedUID:[pairs objectForKey:@"name"] notify:NotifyNow];
+                });
                 NIF_INFO(@"isOnline? %u", account.online);
                 
             } else {

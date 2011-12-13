@@ -9,7 +9,17 @@
 #import <Foundation/Foundation.h>
 
 @interface QOAuthSession : NSObject {
-
+    NSString *_identifier;
+    NSString *_consumerKey;
+    NSString *_consumerSecret;
+    NSString *_tokenKey;
+    NSString *_tokenSecret;
+    NSString *_verify;
+    NSString *_callbackUrl;
+    NSString *_username;
+    
+    BOOL _isValid;
+    
 }
 
 @property (nonatomic, readonly)NSString *identifier;

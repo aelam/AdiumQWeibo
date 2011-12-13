@@ -27,17 +27,24 @@ typedef void(^RequestHandler)(NSData *responseData, NSHTTPURLResponse *urlRespon
     NSMutableDictionary     *_multiParts;
         
     void (^accessTokenHandler)(NSString *text,BOOL success);
+    
+    QOAuthSession *_session;
+    
+    RequestMethod _requestMethod;
+    
+    NSURL *_URL;
+    
+    NSDictionary *_parameters;
+
+    
 }
 
 @property (nonatomic, retain) QOAuthSession *session;
 
-// The request URL
 @property (nonatomic, readonly) RequestMethod requestMethod;
 
-// The request URL
 @property (nonatomic, readonly) NSURL *URL;
 
-// The parameters 
 @property (nonatomic, readonly) NSDictionary *parameters;
 
 - (id)initWithURL:(NSURL *)url parameters:(NSDictionary *)parameters requestMethod:(RequestMethod)requestMethod;
