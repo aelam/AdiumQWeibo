@@ -19,7 +19,7 @@
 #define QWEIBO_UPDATE_USER_INFO_COUNT		10
 
 #define QWEIBO_OAUTH_NOT_AUTHORIZED		AILocalizedString(@"Adium isn't allowed access to your account.", "Error message displayed when the server reports that our access has been revoked or invalid.")
-
+#define QWEIBO_PROPERTY_REQUESTED_USER_ICON     @"QWEIBO Requested User Icon"
 
 #define QWEIBO_PREFERENCE_EVER_LOADED_TIMELINE	@"QWEIBO Ever Loaded Timeline"
 #define QWEIBO_PREFERENCE_UPDATE_INTERVAL		@"QWEIBO Update Interval In Minutes"
@@ -37,14 +37,22 @@
 #define QWEIBO_REMOTE_GROUP_NAME			@"Tencent Weibo"
 #define QWEIBO_TIMELINE_NAME				@"Timeline (%@)"
 
+#define QWEIBO_WEBPAGE                      @"http://t.qq.com"
+
 @interface AIQWeiboAccount : AIAccount {
-    QOAuthSession *_session;
+    QOAuthSession       *_session;
+    
+    NSTimer				*updateTimer;
+
 }
 
 @property (readonly, nonatomic) NSString *defaultServer;
 @property (readonly, nonatomic) BOOL useOAuth;
 @property (readonly, nonatomic) QOAuthSession *session;
 
-- (BOOL)isSessionValid;
+@property (readonly, nonatomic) NSString *timelineChatName;
+
+- (void)periodicUpdate;
+
 
 @end

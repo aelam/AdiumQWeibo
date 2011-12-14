@@ -10,12 +10,6 @@
 #import "OAuthURLRequest.h"
 #import "RSimpleConnection.h"
 #import "NSDictionary+Response.h"
-//#if TARGET_IPHONE_SIMULATOR | TARGET_IPHONE_OS
-//    #import <UIKit/UIKit.h>
-//#else 
-//    #import <Cocoa/Cocoa.h>
-//#endif
-
 
 #define REQUEST_TOKEN_URL   @"https://open.t.qq.com/cgi-bin/request_token"
 #define ACCESS_TOKEN_URL    @"https://open.t.qq.com/cgi-bin/access_token"
@@ -39,8 +33,6 @@
 
 
 - (BOOL)handleOpenURL:(NSURL *)url {
-    NSLog(@"%s %d",__func__,__LINE__);
-    NSLog(@"---- %@",url);
     if ([[[url scheme] uppercaseString] isEqualToString:[QWEIBO_URL_SCHEMA uppercaseString]]) {
 
         [self getAccessTokenWithHandledURL:[url query]];
@@ -86,7 +78,9 @@
         if (_URL) {
             OAuthURLRequest *request = [OAuthURLRequest requestWithURL:[_URL absoluteString] parameters:_parameters HTTPMethod:HTTPMethod files:_multiParts session:self.session];
             [RSimpleConnection sendAsynchronousRequest:request queue:_operationQueue completionHandler:^(NSData *data,NSURLResponse *response, NSError *error) {
-                handler(data,(NSHTTPURLResponse *)response,error); 
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    handler(data,(NSHTTPURLResponse *)response,error); 
+                });
             }];            
         }
     } else {
@@ -97,7 +91,9 @@
             else if (_URL) {
                 OAuthURLRequest *request = [OAuthURLRequest requestWithURL:[_URL absoluteString] parameters:_parameters HTTPMethod:HTTPMethod files:_multiParts session:self.session];
                 [RSimpleConnection sendAsynchronousRequest:request queue:_operationQueue completionHandler:^(NSData *data,NSURLResponse *response, NSError *error) {
-                    handler(data,(NSHTTPURLResponse *)response,error); 
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        handler(data,(NSHTTPURLResponse *)response,error); 
+                    });
                 }];
             }
         }];
@@ -111,7 +107,6 @@
     [RSimpleConnection sendAsynchronousRequest:request queue:_operationQueue completionHandler:^(NSData *data,NSURLResponse *response, NSError *error) {
         if (data) {
             NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"%s %d",__func__,__LINE__);
             NSLog(@"---- %@",responseString);
             
             NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:responseString];
@@ -137,13 +132,11 @@
 }
 
 - (void)getAccessTokenWithHandledURL:(NSString *)urlString {
-    NSLog(@"--  %s %d",__func__,__LINE__);
     
     NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:urlString];
     self.session.verify = [pairs objectForKey:@"oauth_verifier"];
 
     OAuthURLRequest *request = [OAuthURLRequest requestWithURL:ACCESS_TOKEN_URL verify:self.session.verify parameters:nil HTTPMethod:@"GET" session:self.session];
-    NSLog(@"%s %d",__func__,__LINE__);
 
     self.session.tokenKey = nil;
     self.session.tokenSecret = nil;
@@ -151,7 +144,6 @@
     [RSimpleConnection sendAsynchronousRequest:request queue:_operationQueue completionHandler:^(NSData *data,NSURLResponse *response,  NSError *error) {
         if (data && !error) {
             NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"%s %d",__func__,__LINE__);
             NSLog(@"---- %@",responseString);
             
             NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:responseString];

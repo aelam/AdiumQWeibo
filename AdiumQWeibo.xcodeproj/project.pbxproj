@@ -31,6 +31,11 @@
 		94C7FD97149788400000139D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD96149788400000139D /* Foundation.framework */; };
 		94D39FBB148D159700D1A141 /* AIQWeiboReplyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D39FBA148D159700D1A141 /* AIQWeiboReplyWindowController.m */; };
 		94D39FCA148FB97D00D1A141 /* AIQWeiboPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D39FC9148FB97200D1A141 /* AIQWeiboPlugin.m */; };
+		94DA774314990D920057A291 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DA773E14990D920057A291 /* NSObject+SBJSON.m */; };
+		94DA774414990D920057A291 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DA774014990D920057A291 /* NSString+SBJSON.m */; };
+		94DA774514990D920057A291 /* SBJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DA774214990D920057A291 /* SBJSONScanner.m */; };
+		94DA7748149910EF0057A291 /* NSData+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DA7747149910EF0057A291 /* NSData+SBJSON.m */; };
+		94DD0AD71498FE8700399752 /* AdiumQWeiboEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DD0AD61498FE8700399752 /* AdiumQWeiboEngine.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +82,17 @@
 		94D39FBA148D159700D1A141 /* AIQWeiboReplyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIQWeiboReplyWindowController.m; sourceTree = "<group>"; };
 		94D39FC8148FB97000D1A141 /* AIQWeiboPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQWeiboPlugin.h; sourceTree = "<group>"; };
 		94D39FC9148FB97200D1A141 /* AIQWeiboPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIQWeiboPlugin.m; sourceTree = "<group>"; };
+		94DA773C14990D920057A291 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
+		94DA773D14990D920057A291 /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
+		94DA773E14990D920057A291 /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
+		94DA773F14990D920057A291 /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
+		94DA774014990D920057A291 /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBJSON.m"; sourceTree = "<group>"; };
+		94DA774114990D920057A291 /* SBJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJSONScanner.h; sourceTree = "<group>"; };
+		94DA774214990D920057A291 /* SBJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJSONScanner.m; sourceTree = "<group>"; };
+		94DA7746149910EF0057A291 /* NSData+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+SBJSON.h"; sourceTree = "<group>"; };
+		94DA7747149910EF0057A291 /* NSData+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+SBJSON.m"; sourceTree = "<group>"; };
+		94DD0AD51498FE8700399752 /* AdiumQWeiboEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdiumQWeiboEngine.h; sourceTree = "<group>"; };
+		94DD0AD61498FE8700399752 /* AdiumQWeiboEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdiumQWeiboEngine.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +151,8 @@
 				94187AE31493BF7B000F4AD1 /* RSimpleConnection.m */,
 				94187AE41493BF7B000F4AD1 /* WeiboEngine.h */,
 				94187AE51493BF7B000F4AD1 /* WeiboEngine.m */,
+				94DD0AD51498FE8700399752 /* AdiumQWeiboEngine.h */,
+				94DD0AD61498FE8700399752 /* AdiumQWeiboEngine.m */,
 			);
 			path = OAuth;
 			sourceTree = "<group>";
@@ -212,11 +230,28 @@
 		942FDEA4148CB69C007D8EBE /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				94DA773B14990D920057A291 /* SBJSON */,
 				942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */,
 				942FDEA5148CB6AB007D8EBE /* Adium.framework */,
 			);
 			name = "Linked Frameworks";
 			path = "AdiumQWeibo/Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		94DA773B14990D920057A291 /* SBJSON */ = {
+			isa = PBXGroup;
+			children = (
+				94DA773C14990D920057A291 /* JSON.h */,
+				94DA773D14990D920057A291 /* NSObject+SBJSON.h */,
+				94DA773E14990D920057A291 /* NSObject+SBJSON.m */,
+				94DA773F14990D920057A291 /* NSString+SBJSON.h */,
+				94DA774014990D920057A291 /* NSString+SBJSON.m */,
+				94DA7746149910EF0057A291 /* NSData+SBJSON.h */,
+				94DA7747149910EF0057A291 /* NSData+SBJSON.m */,
+				94DA774114990D920057A291 /* SBJSONScanner.h */,
+				94DA774214990D920057A291 /* SBJSONScanner.m */,
+			);
+			path = SBJSON;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -315,6 +350,11 @@
 				94187AEC1493BF7B000F4AD1 /* QOAuthSession.m in Sources */,
 				94187AED1493BF7B000F4AD1 /* RSimpleConnection.m in Sources */,
 				94187AEE1493BF7B000F4AD1 /* WeiboEngine.m in Sources */,
+				94DD0AD71498FE8700399752 /* AdiumQWeiboEngine.m in Sources */,
+				94DA774314990D920057A291 /* NSObject+SBJSON.m in Sources */,
+				94DA774414990D920057A291 /* NSString+SBJSON.m in Sources */,
+				94DA774514990D920057A291 /* SBJSONScanner.m in Sources */,
+				94DA7748149910EF0057A291 /* NSData+SBJSON.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,6 +397,10 @@
 				LD_DYLIB_INSTALL_NAME = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				SDKROOT = macosx10.6;
 				STRIP_INSTALLED_PRODUCT = NO;
 			};
@@ -380,6 +424,10 @@
 				INSTALL_PATH = "/Users/ryan/Library/Application Support/Adium 2.0/PlugIns";
 				LD_DYLIB_INSTALL_NAME = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
 			};
