@@ -48,7 +48,7 @@
                                                object:nil];
 	
 	[adium.preferenceController registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
-												  [NSNumber numberWithInt:QWEIBO_UPDATE_INTERVAL_MINUTES], QWEIBO_PREFERENCE_UPDATE_INTERVAL,
+												  [NSNumber numberWithInt:QWEIBO_UPDATE_INTERVAL_MINUTES],QWEIBO_PREFERENCE_UPDATE_INTERVAL,
 												  [NSNumber numberWithBool:YES], QWEIBO_PREFERENCE_UPDATE_AFTER_SEND,
 												  [NSNumber numberWithBool:YES], QWEIBO_PREFERENCE_LOAD_CONTACTS, nil]
 										forGroup:QWEIBO_PREFERENCE_GROUP_UPDATES
@@ -112,6 +112,9 @@
                              forKey:KEY_ACCOUNT_DISPLAY_NAME
                               group:GROUP_ACCOUNT_STATUS];		
             }
+            
+            [self filterAndSetUID:nick];
+
                         
             [self setValue:nick forProperty:@"Profile Name" notify:NotifyLater];
             [self setValue:link forProperty:@"Profile URL" notify:NotifyLater];
@@ -129,13 +132,13 @@
 {
 	[super didConnect];
     [self setLastDisconnectionError:nil];
-	// Creating the fake timeline account.
+	
+    // Creating the fake timeline account.
     
     NIF_INFO(@"timelineChatName: %@", self.timelineChatName);
 	AIListBookmark *timelineBookmark = [adium.contactController existingBookmarkForChatName:self.timelineChatName
 																				  onAccount:self
 																		   chatCreationInfo:nil];
-    NIF_INFO(@"timelineChatName: %@", timelineBookmark);
 	if(!timelineBookmark) {
 		AIChat *newTimelineChat = [adium.chatController chatWithName:self.timelineChatName
 														  identifier:nil
@@ -143,10 +146,12 @@
 													chatCreationInfo:nil];
 		
 		[newTimelineChat setDisplayName:self.timelineChatName];
-        NIF_INFO(@"timelineChatName: %@", timelineBookmark);
+        timelineBookmark = [adium.contactController bookmarkForChat:newTimelineChat inGroup:[adium.contactController groupWithUID:QWEIBO_REMOTE_GROUP_NAME]];
+
         if(!timelineBookmark) {
-//            NSLog(@"%@ Timeline bookmark is nil! Tried checking for existing bookmark for chat name %@, and creating a bookmark for chat %@ in group %@", self.timelineChatName, newTimelineChat, [adium.contactController groupWithUID:QWEIBO_REMOTE_GROUP_NAME]);
-        }            
+            NSLog(@"%@ Timeline bookmark is nil! Tried checking for existing bookmark for chat name %@, and creating a bookmark for chat %@ in group %@", self.timelineChatName, newTimelineChat, [adium.contactController groupWithUID:QWEIBO_REMOTE_GROUP_NAME]);
+        }       
+        NIF_INFO(@"timelineBookmark : %@", timelineBookmark);
     }
     
     NSTimeInterval updateInterval = [[self preferenceForKey:QWEIBO_PREFERENCE_UPDATE_INTERVAL group:QWEIBO_PREFERENCE_GROUP_UPDATES] integerValue] * 60;
@@ -301,11 +306,11 @@
 {
 	AIReconnectDelayType reconnectDelayType = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
 	
-    //	if ([*disconnectionError isEqualToString:TWITTER_INCORRECT_PASSWORD_MESSAGE]) {
-    //		reconnectDelayType = AIReconnectImmediately;
-    //	} else if ([*disconnectionError isEqualToString:TWITTER_OAUTH_NOT_AUTHORIZED]) {
-    //		reconnectDelayType = AIReconnectNeverNoMessage;
-    //	}
+    if ([*disconnectionError isEqualToString:QWEIBO_INCORRECT_PASSWORD_MESSAGE]) {
+        reconnectDelayType = AIReconnectImmediately;
+    } else if ([*disconnectionError isEqualToString:QWEIBO_OAUTH_NOT_AUTHORIZED]) {
+        reconnectDelayType = AIReconnectNeverNoMessage;
+    }
 	
 	return reconnectDelayType;
 }
@@ -340,6 +345,36 @@
 
 /////////////////////
 /////////////////////
+/*!
+ * @brief Trigger an info update
+ *
+ * This is called when the info inspector wants more information on a contact.
+ * Grab the user's profile information, set everything up accordingly in the user info method.
+ */
+- (void)delayedUpdateContactStatus:(AIListContact *)inContact
+{
+	if(!self.online) {
+		return;
+	}
+	
+//	NSString *requestID = [twitterEngine getUserInformationFor:inContact.UID];
+//	
+//	if(requestID) {
+//		[self setRequestType:AITwitterProfileUserInfo
+//				forRequestID:requestID
+//			  withDictionary:[NSDictionary dictionaryWithObject:inContact forKey:@"ListContact"]];
+//	}
+}
+
+
+/*!
+ * @brief Should an autoreply be sent to this message?
+ */
+- (BOOL)shouldSendAutoreplyToMessage:(AIContentMessage *)message
+{
+	return NO;
+}
+
 
 #pragma mark OAuth
 /*!
@@ -434,6 +469,7 @@
  */
 - (void)updateUserIcon:(NSString *)url forContact:(AIListContact *)listContact;
 {
+    NIF_INFO(@"icon URL : %@", url);
 	// If we don't already have an icon for the user...
 	if(![[listContact valueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON] boolValue]) {
 		NSString *fileName = [[url lastPathComponent] stringByReplacingOccurrencesOfString:@"_normal." withString:@"_bigger."];
@@ -453,7 +489,6 @@
 	}
 }
 
-#warning REMOVE
 /*!
  * @brief Unfollow the requested contacts.
  */
@@ -503,20 +538,25 @@
 #pragma mark Preference updating
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-    NIF_INFO(@"%@", group);
-    NIF_INFO(@"%@", key);
-    NIF_INFO(@"%@", prefDict);
-    
+//    NIF_INFO(@"%@", group);
+//    NIF_INFO(@"%@", key);
+//    NIF_INFO(@"%@", prefDict);
+    NIF_INFO(@"group : %@ key : %@",group,key);
+
 	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
 	
-    NIF_INFO(@"");
+//    NIF_INFO(@"");
 	// We only care about our changes.
 	if (object != self) {
 		return;
 	}
 	
 	if([group isEqualToString:GROUP_ACCOUNT_STATUS]) {
+        NIF_INFO(@"[group isEqualToString:GROUP_ACCOUNT_STATUS]) {");
+
 		if([key isEqualToString:KEY_USER_ICON]) {
+            NIF_INFO(@"----------------[group isEqualToString:KEY_USER_ICON]) {");
+
 			// Avoid pushing an icon update which we just downloaded.
 			if(![self boolValueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON]) {
 //				NSString *requestID = [twitterEngine updateProfileImage:[prefDict objectForKey:KEY_USER_ICON]];
@@ -535,10 +575,11 @@
 	}
 	
 	if([group isEqualToString:QWEIBO_PREFERENCE_GROUP_UPDATES]) {
-		if(!firstTime && [key isEqualToString:QWEIBO_PREFERENCE_UPDATE_INTERVAL]) {
+        if(!firstTime && [key isEqualToString:QWEIBO_PREFERENCE_UPDATE_INTERVAL]) {
+        NIF_INFO(@"[group isEqualToString:GROUP_ACCOUNT_STATUS]) {");
 			NSTimeInterval timeInterval = [updateTimer timeInterval];
 			NSTimeInterval newTimeInterval = [[prefDict objectForKey:QWEIBO_PREFERENCE_UPDATE_INTERVAL] intValue] * 60;
-			
+ 			
 			if (timeInterval != newTimeInterval && self.online) {
 				[updateTimer invalidate]; updateTimer = nil;
 				
@@ -556,6 +597,7 @@
 //		retweetLink = [[prefDict objectForKey:QWEIBO_PREFERENCE_RETWEET_SPAM] boolValue];
 		
 		if ([key isEqualToString:QWEIBO_PREFERENCE_LOAD_CONTACTS] && self.online) {
+            NIF_INFO(@"fan list");
 			if ([[prefDict objectForKey:QWEIBO_PREFERENCE_LOAD_CONTACTS] boolValue]) {
 				// Delay updates when loading our contacts list.
 				[self silenceAllContactUpdatesForInterval:18.0];
@@ -611,7 +653,7 @@
 }
 
 - (void)periodicUpdate {
-    
+    NIF_INFO();
 }
 
 - (QOAuthSession *)session {

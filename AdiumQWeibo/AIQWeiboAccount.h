@@ -18,6 +18,9 @@
 #define QWEIBO_UPDATE_REPLIES_COUNT         20
 #define QWEIBO_UPDATE_USER_INFO_COUNT		10
 
+
+#define QWEIBO_INCORRECT_PASSWORD_MESSAGE	AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")
+
 #define QWEIBO_OAUTH_NOT_AUTHORIZED		AILocalizedString(@"Adium isn't allowed access to your account.", "Error message displayed when the server reports that our access has been revoked or invalid.")
 #define QWEIBO_PROPERTY_REQUESTED_USER_ICON     @"QWEIBO Requested User Icon"
 

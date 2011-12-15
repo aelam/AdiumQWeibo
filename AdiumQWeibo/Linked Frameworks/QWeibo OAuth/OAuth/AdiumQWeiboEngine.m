@@ -10,7 +10,6 @@
 #import "QOAuthSession.h"
 
 static NSString *const APIDomain = @"http://open.t.qq.com/api";
-//#define API_DOMAIN  @"http://open.t.qq.com/api"
 
 @implementation AdiumQWeiboEngine
 
