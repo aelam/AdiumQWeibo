@@ -26,9 +26,20 @@ typedef void(^JSONRequestHandler)(NSDictionary *responseJSON, NSHTTPURLResponse 
     AdiumQWeiboRequestType  requestType;
 }
 
++ (void)fetchMyInfoWithSession:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
+
+
 + (void)fetchUserInfoWithSession:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
 
-+ (void)fetchUsersListWithSession:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
+// 我收听的人
++ (void)fetchFollowingListWithSession:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
+
+// 我的听众
++ (void)fetchFollowersListWithSession:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
+
+// 获取用户信息
++ (void)fetchUserInfoWithUID:(NSString *)UID session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
+
 
 
 @end

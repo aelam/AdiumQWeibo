@@ -37,6 +37,16 @@
 #import <Adium/AIControllerProtocol.h>
 #import "AdiumQWeiboEngine.h"
 
+@interface AIQWeiboAccount (Private)
+
+- (void)_fetchImageWithURL:(NSString *)url imageHander:(void(^)(NSImage *image))imageHander;
+- (void)updateUserIcon:(NSString *)url forContact:(AIListContact *)listContact;
+- (NSString *)addressForLinkType:(AITwitterLinkType)linkType
+						  userID:(NSString *)userID
+						statusID:(NSString *)statusID
+						 context:(NSString *)context;
+@end
+
 @implementation AIQWeiboAccount
 
 - (void)initAccount {
@@ -73,7 +83,6 @@
 {
 	[super connect];
     
-    NIF_TRACE(@"passwordWhileConnected : %@",self.passwordWhileConnected);
     if (self.passwordWhileConnected.length) {        
         NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:self.passwordWhileConnected];
         self.session.tokenKey = [pairs objectForKey:@"oauth_token"];
@@ -81,10 +90,7 @@
         self.session.username = [pairs objectForKey:@"name"];
         self.session.isValid = YES;
 
-        NIF_TRACE(@"authorize success");
-        
-        NIF_INFO(@"UID: %@", self.UID);
-        
+        NIF_TRACE(@"authorize success UID: %@", self.UID);                
 
     } else {
         [self setLastDisconnectionError:QWEIBO_OAUTH_NOT_AUTHORIZED];
@@ -92,9 +98,6 @@
                                                             object:self];
         [self didDisconnect];
 
-        NIF_TRACE(@"self.passwordWhileConnected.length == 0");
-        
-        NIF_INFO(@"UID: %@", self.UID);        
     }
     
     [AdiumQWeiboEngine fetchUserInfoWithSession:self.session resultHandler:^(NSDictionary *json, NSHTTPURLResponse *urlResponse, NSError *error) {        
@@ -102,24 +105,113 @@
             NIF_INFO(@"%@", error);
             [self didDisconnect];
         } else {
+
+            // 
+            // SET MY INFORMATION
+            //
             NSString *name = [json valueForKeyPath:@"data.name"];
+            NSString *head = [json valueForKeyPath:@"data.head"];
             NSString *nick = [json valueForKeyPath:@"data.nick"];
             NSString *link = [NSString stringWithFormat:@"%@/%@",QWEIBO_WEBPAGE,self.UID];
             NSString *location = [json valueForKeyPath:@"data.location"];
             
-            if (name) {
-                [self setPreference:[[NSAttributedString stringWithString:name] dataRepresentation]
+            [self filterAndSetUID:name];
+            
+            if (nick) {
+                [self setPreference:[[NSAttributedString stringWithString:nick] dataRepresentation]
                              forKey:KEY_ACCOUNT_DISPLAY_NAME
                               group:GROUP_ACCOUNT_STATUS];		
             }
-            
-            [self filterAndSetUID:nick];
-
-                        
+                                    
             [self setValue:nick forProperty:@"Profile Name" notify:NotifyLater];
             [self setValue:link forProperty:@"Profile URL" notify:NotifyLater];
             [self setValue:location forProperty:@"Profile Location" notify:NotifyLater];
             [self notifyOfChangedPropertiesSilently:NO];
+            
+            //
+            // grab SELF HEAD icon
+            //
+            
+            NSString *imageURL = [head stringByAppendingFormat:@"/%d",200];
+
+            [self _fetchImageWithURL:imageURL imageHander:^(NSImage *image) {
+                [self setValue:[NSNumber numberWithBool:YES] forProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON notify:NotifyNever];
+                
+                [self setPreference:[NSNumber numberWithBool:YES]
+                             forKey:KEY_USE_USER_ICON
+                              group:GROUP_ACCOUNT_STATUS];
+                
+                
+                [self setPreference:[image TIFFRepresentation]
+                             forKey:KEY_USER_ICON
+                              group:GROUP_ACCOUNT_STATUS];
+            }];
+                        
+			// Our UID is definitely set; grab our friends.
+			if ([[self preferenceForKey:QWEIBO_PREFERENCE_LOAD_CONTACTS group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue]) {
+				// If we load our follows as contacts, do so now.
+				// Delay updates on initial login.
+				[self silenceAllContactUpdatesForInterval:18.0];
+				// Grab our user list.
+                
+                [AdiumQWeiboEngine fetchFollowingListWithSession:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+//                    NIF_INFO(@"%@", responseJSON);
+                    NSArray *users = [responseJSON valueForKeyPath:@"data.info"];
+                    for(NSDictionary *user in users) {
+                        
+                        AIListContact *listContact = [self contactWithUID:[user objectForKey:QWEIBO_INFO_UID]];
+
+                        // If the user isn't in a group, set them in the Twitter group.
+                        if(listContact.countOfRemoteGroupNames == 0) {
+                            [listContact addRemoteGroupName:QWEIBO_REMOTE_GROUP_NAME];
+                        }
+                        
+                        // Grab the Twitter display name and set it as the remote alias.
+                        if (![[listContact valueForProperty:@"Server Display Name"] isEqualToString:[user objectForKey:QWEIBO_INFO_SCREEN_NAME]]) {
+                            [listContact setServersideAlias:[user objectForKey:QWEIBO_INFO_SCREEN_NAME]
+                                                   silently:silentAndDelayed];
+                        }
+                        
+                        // Grab the user icon and set it as their serverside icon.
+                        [self updateUserIcon:[user objectForKey:QWEIBO_INFO_ICON_URL] forContact:listContact];
+                        
+                        // Grab the user icon and set it as their serverside icon.
+//                        [self updateUserIcon:(NSString *)[user objectForKey:QWEIBO_INFO_ICON_URL] forContact:listContact];
+                        
+                        // Set the user as available.
+                        [listContact setStatusWithName:nil
+                                            statusType:AIAvailableStatusType
+                                                notify:NotifyLater];
+                        
+                        // Set the user's status message to their current twitter status text
+                        NSArray *tweets = [user valueForKey:QWEIBO_INFO_STATUS];
+                        NSString *statusText = @"";
+                        if (tweets && [tweets count]) {
+                            NSDictionary *tweet = [tweets objectAtIndex:0];
+                            statusText = [tweet objectForKey:QWEIBO_INFO_STATUS_TEXT];
+                            if (!statusText) //nil if they've never tweeted
+                                statusText = @"";
+
+                        } else {
+                            
+                        }
+                        
+                        [listContact setStatusMessage:[NSAttributedString stringWithString:[statusText stringByUnescapingFromXMLWithEntities:nil]] notify:NotifyLater];
+                        
+                        // Set the user as online.
+                        [listContact setOnline:YES notify:NotifyLater silently:silentAndDelayed];
+                        
+                        [listContact notifyOfChangedPropertiesSilently:silentAndDelayed];
+                    }
+                    
+                    [[AIContactObserverManager sharedManager] endListObjectNotificationsDelay];
+                }];
+                
+                
+            }
+            
+            
+            
             
             [self didConnect];
         }
@@ -356,7 +448,154 @@
 	if(!self.online) {
 		return;
 	}
-	
+
+    [AdiumQWeiboEngine fetchUserInfoWithUID:inContact.UID session:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        if (!error) {
+            NSDictionary *thisUserInfo = [responseJSON objectForKey:@"data"];
+            NIF_TRACE(@"-------------------------- %@", thisUserInfo);
+
+            if (thisUserInfo && [thisUserInfo count]) {
+//                NSArray *keyNames = [NSArray arrayWithObjects:@"nick",@"fansnum",@"idolnum",@"location",@"province_code",@"sex",@"tag",@"tweetnum",@"verifyinfo",@"ismyfans",@"ismyblack",@"isent",@"introduction",@"email",@"country_code",@"city_code",@"birth_year",@"birth_month",@"birth_day",nil];
+//                NSArray *keyNames = [NSArray arrayWithObjects:@"nick",@"location",@"tag",@"tweetnum",@"verifyinfo",@"introduction",@"email",nil];
+
+                NSMutableArray *profileArray = [NSMutableArray array];
+                NSMutableArray *readableNames = [NSMutableArray array];
+                
+                // Screen Name
+                [readableNames addObject:AILocalizedString(@"Name", nil)];
+                NSString *name = [thisUserInfo objectForKey:@"nick"];
+                [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                         AILocalizedString(@"Name", nil), KEY_KEY, 
+                                         name, KEY_VALUE, nil]
+                 ];
+                
+                // Birthday
+                NSString *birthday = nil;
+                NSNumber *year = [thisUserInfo objectForKey:@"birth_year"];
+                NSNumber *month = [thisUserInfo objectForKey:@"birth_month"];
+                NSNumber *day = [thisUserInfo objectForKey:@"birth_day"];
+                
+                if (year && month && day && [year intValue] && [month intValue] && [day intValue]) {
+                    birthday = [NSString stringWithFormat:@"%@/%@/%@",year,month,day];
+
+                    [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                             AILocalizedString(@"Birth", nil), KEY_KEY, 
+                                             [NSAttributedString stringWithString:birthday], KEY_VALUE, nil]
+                    ];
+                }
+                
+                // Gender 
+                BOOL gender = [[thisUserInfo valueForKey:@"sex"]boolValue];
+                [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                         AILocalizedString(@"Gender", nil), KEY_KEY, 
+                                         [NSAttributedString stringWithString:(gender?AILocalizedString(@"Male", nil):AILocalizedString(@"Female", nil))], KEY_VALUE, nil]
+                ];
+                
+                // Email
+                NSString *email = [thisUserInfo objectForKey:@"email"];
+                if (email && [email length]) {
+                    [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                             AILocalizedString(@"Email", nil), KEY_KEY, 
+                                             [NSAttributedString stringWithString:email], KEY_VALUE, nil]
+                    ];
+                }
+                
+                // Webpage : unknown
+
+                // Location
+                NSString *location = [thisUserInfo objectForKey:@"location"];
+                if (location && [location length]) {
+                    [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                             AILocalizedString(@"Location", nil), KEY_KEY, 
+                                             [NSAttributedString stringWithString:location], KEY_VALUE, nil]
+                     ];
+                }
+                
+                // Followers Link
+                NSInteger followers = [[thisUserInfo objectForKey:@"fansnum"] intValue];
+                if(followers != 0) {
+                    NSString *followersString = [NSString stringWithFormat:@"%d",followers];
+                    NSAttributedString *value = [NSAttributedString attributedStringWithLinkLabel:followersString
+                                                                                  linkDestination:[self addressForLinkType:AITwitterLinkFollowers userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
+                    
+                    [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                             AILocalizedString(@"Followers", nil), KEY_KEY, 
+                                             value, KEY_VALUE, nil]
+                     ];
+                }
+                
+                // Following Link
+                NSInteger following = [[thisUserInfo objectForKey:@"idolnum"] intValue];
+                if(followers != 0) {
+                    NSString *followingString = [NSString stringWithFormat:@"%d",following];
+                    NSAttributedString *value = [NSAttributedString attributedStringWithLinkLabel:followingString
+                                                                                  linkDestination:[self addressForLinkType:AITwitterLinkFollowings userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
+                    
+                    [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                             AILocalizedString(@"Following", nil), KEY_KEY, 
+                                             value, KEY_VALUE, nil]
+                     ];
+                }
+                
+                // Tweets
+                NSInteger tweets = [[thisUserInfo objectForKey:@"tweetnum"] intValue];
+                if(followers != 0) {
+                    NSString *tweetsString = [NSString stringWithFormat:@"%d",tweets];
+                    NSAttributedString *value = [NSAttributedString attributedStringWithLinkLabel:tweetsString
+                                                                                  linkDestination:[self addressForLinkType:AITwitterLinkTweetCount userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
+                    
+                    [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                             AILocalizedString(@"Tweets", nil), KEY_KEY, 
+                                             value, KEY_VALUE, nil]
+                     ];
+                }
+                
+                // Introduction
+                NSString *introduction = [thisUserInfo objectForKey:@"introduction"];
+                if (introduction && [introduction length]) {
+                    [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                             AILocalizedString(@"Introduction", nil), KEY_KEY, 
+                                             [NSAttributedString stringWithString:introduction], KEY_VALUE, nil]
+                     ];
+                }
+                
+                // Verify Info
+                NSString *verifyInfo = [thisUserInfo objectForKey:@"verifyinfo"];
+                if (verifyInfo && [verifyInfo length]) {
+                    [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                             AILocalizedString(@"Verify Info", nil), KEY_KEY, 
+                                             [NSAttributedString stringWithString:verifyInfo], KEY_VALUE, nil]
+                    ];
+                }
+                
+
+                
+                                                 
+//                                                AILocalizedString(@"Gender", nil), 
+//                                                AILocalizedString(@"Birth", nil), 
+//                                                AILocalizedString(@"Email", nil), 
+//                                                AILocalizedString(@"Education", nil), 
+//                                                AILocalizedString(@"Location", nil),
+//                                                AILocalizedString(@"Biography", nil), 
+//                                                AILocalizedString(@"Website", nil), 
+//                                                AILocalizedString(@"Following", nil),
+//                                                AILocalizedString(@"Followers", nil), 
+//                                                AILocalizedString(@"Updates", nil), 
+//                                          AILocalizedString(@"Introduction", nil), 
+//                                          AILocalizedString(@"Verify Info", nil), 
+//                                          AILocalizedString(@"Updates", nil), 
+
+//                AILogWithSignature(@"%@ Updating profileArray for user %@", self, listContact);
+                
+                [inContact setProfileArray:profileArray notify:NotifyNow];
+
+            }
+            
+        } else {
+            
+        }
+    }];
+    
 //	NSString *requestID = [twitterEngine getUserInformationFor:inContact.UID];
 //	
 //	if(requestID) {
@@ -472,19 +711,23 @@
     NIF_INFO(@"icon URL : %@", url);
 	// If we don't already have an icon for the user...
 	if(![[listContact valueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON] boolValue]) {
-		NSString *fileName = [[url lastPathComponent] stringByReplacingOccurrencesOfString:@"_normal." withString:@"_bigger."];
-		
-		url = [[url stringByDeletingLastPathComponent] stringByAppendingPathComponent:fileName];
+        NSString *realURL = [url stringByAppendingFormat:@"/%d",QWEIBO_ICON_SIZE];
 		
 		// Grab the user icon and set it as their serverside icon.
-//		NSString *requestID = [twitterEngine getImageAtURL:url];
-		
-//		if(requestID) {
-//			[self setRequestType:AITwitterUserIconPull
-//					forRequestID:requestID
-//				  withDictionary:[NSDictionary dictionaryWithObject:listContact forKey:@"ListContact"]];
-//		}
-		
+
+        [self _fetchImageWithURL:realURL imageHander:^(NSImage *image) {
+            NIF_INFO(@"finished download an image");
+            
+            
+            NIF_INFO(@"%@ Updated user icon for %@", self, listContact);
+            
+            [listContact setServersideIconData:[image TIFFRepresentation]
+                                        notify:NotifyLater];
+            
+            [listContact setValue:nil forProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON notify:NotifyNever];
+
+        }];
+        
 		[listContact setValue:[NSNumber numberWithBool:YES] forProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON notify:NotifyNever];
 	}
 }
@@ -495,15 +738,7 @@
 - (void)removeContacts:(NSArray *)objects fromGroups:(NSArray *)groups
 {	
 	for (AIListContact *object in objects) {
-//		NSString *requestID = [twitterEngine disableUpdatesFor:object.UID];
-		
-//		AILogWithSignature(@"%@ Requesting unfollow for: %@", self, object.UID);
-		
-//		if(requestID) {
-//			[self setRequestType:AITwitterRemoveFollow
-//					forRequestID:requestID
-//				  withDictionary:[NSDictionary dictionaryWithObject:object forKey:@"ListContact"]];
-//		}	
+
 	}
 }
 
@@ -538,9 +773,7 @@
 #pragma mark Preference updating
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-//    NIF_INFO(@"%@", group);
-//    NIF_INFO(@"%@", key);
-//    NIF_INFO(@"%@", prefDict);
+
     NIF_INFO(@"group : %@ key : %@",group,key);
 
 	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
@@ -559,6 +792,9 @@
 
 			// Avoid pushing an icon update which we just downloaded.
 			if(![self boolValueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON]) {
+                NIF_INFO(@"---------------self boolValueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON-[group isEqualToString:KEY_USER_ICON]) {");
+#warning UPLOAD MY ICON
+                
 //				NSString *requestID = [twitterEngine updateProfileImage:[prefDict objectForKey:KEY_USER_ICON]];
                 
 //				if(requestID) {
@@ -610,7 +846,7 @@
 //						  withDictionary:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:1] forKey:@"Page"]];
 //				}
                 NIF_INFO(@"fan list");
-                [AdiumQWeiboEngine fetchUsersListWithSession:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+                [AdiumQWeiboEngine fetchFollowingListWithSession:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
                     NIF_INFO(@"fan list : %@", responseJSON);
                 }];
                 
@@ -718,6 +954,59 @@
 - (void)_updateProfileWithInfo:(NSDictionary *)json {
     
 }
+
+- (void)_fetchImageWithURL:(NSString *)url imageHander:(void(^)(NSImage *image))imageHander {
+    dispatch_queue_t queue = dispatch_queue_create("com.ryan.downloadimage", NULL);
+    dispatch_async(queue, ^{
+        NSImage *image = [[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            imageHander(image);
+        });
+    });
+}
+
+
+/*!
+ * @brief Returns the link URL for a specific type of link
+ */
+- (NSString *)addressForLinkType:(AITwitterLinkType)linkType
+						  userID:(NSString *)userID
+						statusID:(NSString *)statusID
+						 context:(NSString *)context
+{
+	NSString *address = nil;
+	
+	if (linkType == AITwitterLinkStatus) {
+		address = [NSString stringWithFormat:@"http://t.qq.com/%@/status/%@", userID, statusID];
+	} else if (linkType == AITwitterLinkFriends) {
+		address = [NSString stringWithFormat:@"http://t.qq.com/%@/friends", userID];
+	} else if (linkType == AITwitterLinkFollowings) {
+		address = [NSString stringWithFormat:@"http://t.qq.com/%@/following", userID];        
+	} else if (linkType == AITwitterLinkFollowers) {
+		address = [NSString stringWithFormat:@"http://t.qq.com/%@/follower", userID]; 
+	} else if (linkType == AITwitterLinkTweetCount) {
+		address = [NSString stringWithFormat:@"http://t.qq.com/%@/mine", userID];
+	} else if (linkType == AITwitterLinkUserPage) {
+		address = [NSString stringWithFormat:@"http://t.qq.com/%@", userID]; 
+	} else if (linkType == AITwitterLinkSearchHash) {
+		address = [NSString stringWithFormat:@"http://search.twitter.com/search?q=%%23%@", context];
+    } else if (linkType == AITwitterLinkReply) {
+		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=reply&status=%@", self.internalObjectID, userID, statusID];
+	} else if (linkType == AITwitterLinkRetweet) {
+		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=retweet&status=%@", self.internalObjectID, userID, statusID];
+	} else if (linkType == AITwitterLinkFavorite) {
+		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=favorite&status=%@", self.internalObjectID, userID, statusID];
+	} else if (linkType == AITwitterLinkDestroyStatus) {
+		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=destroy&status=%@&message=%@", self.internalObjectID, userID, statusID, context];
+	} else if (linkType == AITwitterLinkDestroyDM) {
+		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=destroy&dm=%@&message=%@", self.internalObjectID, userID, statusID, context];		
+	} else if (linkType == AITwitterLinkQuote) {
+		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=quote&message=%@", self.internalObjectID, userID, context];
+	}
+	
+	return address;
+}
+
 
 
 - (void)dealloc {

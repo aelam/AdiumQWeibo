@@ -35,6 +35,7 @@
 		94DA774414990D920057A291 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DA774014990D920057A291 /* NSString+SBJSON.m */; };
 		94DA774514990D920057A291 /* SBJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DA774214990D920057A291 /* SBJSONScanner.m */; };
 		94DA7748149910EF0057A291 /* NSData+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DA7747149910EF0057A291 /* NSData+SBJSON.m */; };
+		94DA77AC149A51FD0057A291 /* NSError+QWeiboError.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DA77AB149A51FD0057A291 /* NSError+QWeiboError.m */; };
 		94DD0AD71498FE8700399752 /* AdiumQWeiboEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DD0AD61498FE8700399752 /* AdiumQWeiboEngine.m */; };
 /* End PBXBuildFile section */
 
@@ -91,6 +92,8 @@
 		94DA774214990D920057A291 /* SBJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJSONScanner.m; sourceTree = "<group>"; };
 		94DA7746149910EF0057A291 /* NSData+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+SBJSON.h"; sourceTree = "<group>"; };
 		94DA7747149910EF0057A291 /* NSData+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+SBJSON.m"; sourceTree = "<group>"; };
+		94DA77AA149A51FD0057A291 /* NSError+QWeiboError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+QWeiboError.h"; sourceTree = "<group>"; };
+		94DA77AB149A51FD0057A291 /* NSError+QWeiboError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+QWeiboError.m"; sourceTree = "<group>"; };
 		94DD0AD51498FE8700399752 /* AdiumQWeiboEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdiumQWeiboEngine.h; sourceTree = "<group>"; };
 		94DD0AD61498FE8700399752 /* AdiumQWeiboEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdiumQWeiboEngine.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -135,6 +138,8 @@
 				94187AD91493BF7B000F4AD1 /* NSString+QEncoding.m */,
 				94187ADA1493BF7B000F4AD1 /* NSURL+QAdditions.h */,
 				94187ADB1493BF7B000F4AD1 /* NSURL+QAdditions.m */,
+				94DA77AA149A51FD0057A291 /* NSError+QWeiboError.h */,
+				94DA77AB149A51FD0057A291 /* NSError+QWeiboError.m */,
 			);
 			path = "Cocoa Categories";
 			sourceTree = "<group>";
@@ -355,6 +360,7 @@
 				94DA774414990D920057A291 /* NSString+SBJSON.m in Sources */,
 				94DA774514990D920057A291 /* SBJSONScanner.m in Sources */,
 				94DA7748149910EF0057A291 /* NSData+SBJSON.m in Sources */,
+				94DA77AC149A51FD0057A291 /* NSError+QWeiboError.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
