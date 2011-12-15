@@ -326,7 +326,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\necho \"installing plugin ...\"\nrm -rf $HOME/Library/Application\\ Support/Adium\\ 2.0/Plugins/AdiumQWeibo.AdiumPlugin\ncp -R $BUILT_PRODUCTS_DIR/ $HOME/Library/Application\\ Support/Adium\\ 2.0/Plugins/\necho \"install success!\"\n";
+			shellScript = "\necho \"installing plugin ...\"\nrm -rf $HOME/Library/Application\\ Support/Adium\\ 2.0/Plugins/AdiumQWeibo.AdiumPlugin*\ncp -R $BUILT_PRODUCTS_DIR/AdiumQWeibo.AdiumPlugin $HOME/Library/Application\\ Support/Adium\\ 2.0/Plugins/\necho \"install success!\"\n\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

@@ -115,12 +115,14 @@
             self.session.isValid = NO;
             NSString *authorizeURLString = [VERIFY_URL stringByAppendingFormat:@"?%@",responseString];
 
-            id application = NSClassFromString(@"UIApplication");
-            if (application) {
-                [application performSelector:@selector(openURL:) withObject:[NSURL URLWithString:authorizeURLString]];
-            } else {
-                [[NSClassFromString(@"NSWorkspace") sharedWorkspace] openURL:[NSURL URLWithString:authorizeURLString]];                
-            }            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                id application = NSClassFromString(@"UIApplication");
+                if (application) {
+                    [application performSelector:@selector(openURL:) withObject:[NSURL URLWithString:authorizeURLString]];
+                } else {
+                    [[NSClassFromString(@"NSWorkspace") sharedWorkspace] openURL:[NSURL URLWithString:authorizeURLString]];                
+                }            
+            });
 
             [responseString release];
             Block_release(accessTokenHandler);
