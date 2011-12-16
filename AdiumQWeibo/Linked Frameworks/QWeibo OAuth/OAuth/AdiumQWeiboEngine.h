@@ -20,11 +20,16 @@ typedef enum {
 
 typedef void(^JSONRequestHandler)(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error);
 
+typedef BOOL(^PageableJSONRequestHandler)(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error);
+
 
 @interface AdiumQWeiboEngine : WeiboEngine {
     NSInteger       engineId;
     AdiumQWeiboRequestType  requestType;
 }
+
++ (void)fetchDataWithAPIPath:(NSString *)path params:(NSDictionary *)params session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
+
 
 + (void)fetchMyInfoWithSession:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
 
@@ -33,6 +38,10 @@ typedef void(^JSONRequestHandler)(NSDictionary *responseJSON, NSHTTPURLResponse 
 
 // 我收听的人
 + (void)fetchFollowingListWithSession:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
+
+// Test
+// 我收听的人
++ (void)fetchFollowingListFromPage:(NSInteger)page session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
 
 // 我的听众
 + (void)fetchFollowersListWithSession:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;

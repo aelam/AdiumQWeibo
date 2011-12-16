@@ -10,21 +10,21 @@
 #import "QWeibo.h"
 
 typedef enum {
-	AITwitterLinkReply = 0,
-	AITwitterLinkRetweet,
-	AITwitterLinkQuote,
-	AITwitterLinkFavorite,
-	AITwitterLinkStatus,
-	AITwitterLinkFriends,
-    AITwitterLinkFollowings,
-    AITwitterLinkTweetCount,
-	AITwitterLinkFollowers,
-	AITwitterLinkUserPage,
-	AITwitterLinkSearchHash,
-	AITwitterLinkGroup,
-	AITwitterLinkDestroyStatus,
-	AITwitterLinkDestroyDM
-} AITwitterLinkType;
+	AIQWeiboLinkReply = 0,
+	AIQWeiboLinkRetweet,
+	AIQWeiboLinkQuote,
+	AIQWeiboLinkFavorite,
+	AIQWeiboLinkStatus,
+	AIQWeiboLinkFriends,
+    AIQWeiboLinkFollowings,
+    AIQWeiboLinkTweetCount,
+	AIQWeiboLinkFollowers,
+	AIQWeiboLinkUserPage,
+	AIQWeiboLinkSearchHash,
+	AIQWeiboLinkGroup,
+	AIQWeiboLinkDestroyStatus,
+	AIQWeiboLinkDestroyDM
+} AIQWeiboLinkType;
 
 
 #define QWEIBO_UPDATE_INTERVAL_MINUTES 20

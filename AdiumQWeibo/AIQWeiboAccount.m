@@ -41,7 +41,7 @@
 
 - (void)_fetchImageWithURL:(NSString *)url imageHander:(void(^)(NSImage *image))imageHander;
 - (void)updateUserIcon:(NSString *)url forContact:(AIListContact *)listContact;
-- (NSString *)addressForLinkType:(AITwitterLinkType)linkType
+- (NSString *)addressForLinkType:(AIQWeiboLinkType)linkType
 						  userID:(NSString *)userID
 						statusID:(NSString *)statusID
 						 context:(NSString *)context;
@@ -154,8 +154,13 @@
 				[self silenceAllContactUpdatesForInterval:18.0];
 				// Grab our user list.
                 
-                [AdiumQWeiboEngine fetchFollowingListWithSession:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
-//                    NIF_INFO(@"%@", responseJSON);
+                [AdiumQWeiboEngine fetchFollowingListFromPage:0 session:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+                    
+                    if(!self.online || error) {
+                        return ;
+                    }
+                    
+                    
                     NSArray *users = [responseJSON valueForKeyPath:@"data.info"];
                     for(NSDictionary *user in users) {
                         
@@ -205,9 +210,7 @@
                     }
                     
                     [[AIContactObserverManager sharedManager] endListObjectNotificationsDelay];
-                }];
-                
-                
+                }];                
             }
             
             
@@ -424,7 +427,7 @@
     //	NSString *requestID = [twitterEngine sendUpdate:[statusMessage string]];
     //    
     //	if(requestID) {
-    //		[self setRequestType:AITwitterSendUpdate
+    //		[self setRequestType:AIQWeiboSendUpdate
     //				forRequestID:requestID
     //			  withDictionary:nil];
     //	}
@@ -516,7 +519,7 @@
                 if(followers != 0) {
                     NSString *followersString = [NSString stringWithFormat:@"%d",followers];
                     NSAttributedString *value = [NSAttributedString attributedStringWithLinkLabel:followersString
-                                                                                  linkDestination:[self addressForLinkType:AITwitterLinkFollowers userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
+                                                                                  linkDestination:[self addressForLinkType:AIQWeiboLinkFollowers userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
                     
                     [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                              AILocalizedString(@"Followers", nil), KEY_KEY, 
@@ -529,7 +532,7 @@
                 if(followers != 0) {
                     NSString *followingString = [NSString stringWithFormat:@"%d",following];
                     NSAttributedString *value = [NSAttributedString attributedStringWithLinkLabel:followingString
-                                                                                  linkDestination:[self addressForLinkType:AITwitterLinkFollowings userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
+                                                                                  linkDestination:[self addressForLinkType:AIQWeiboLinkFollowings userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
                     
                     [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                              AILocalizedString(@"Following", nil), KEY_KEY, 
@@ -542,7 +545,7 @@
                 if(followers != 0) {
                     NSString *tweetsString = [NSString stringWithFormat:@"%d",tweets];
                     NSAttributedString *value = [NSAttributedString attributedStringWithLinkLabel:tweetsString
-                                                                                  linkDestination:[self addressForLinkType:AITwitterLinkTweetCount userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
+                                                                                  linkDestination:[self addressForLinkType:AIQWeiboLinkTweetCount userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
                     
                     [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                              AILocalizedString(@"Tweets", nil), KEY_KEY, 
@@ -599,7 +602,7 @@
 //	NSString *requestID = [twitterEngine getUserInformationFor:inContact.UID];
 //	
 //	if(requestID) {
-//		[self setRequestType:AITwitterProfileUserInfo
+//		[self setRequestType:AIQWeiboProfileUserInfo
 //				forRequestID:requestID
 //			  withDictionary:[NSDictionary dictionaryWithObject:inContact forKey:@"ListContact"]];
 //	}
@@ -762,7 +765,7 @@
 //		NSString	*updateRequestID = [twitterEngine getUserInformationFor:contact.UID];
 //		
 //		if (updateRequestID) {
-//			[self setRequestType:AITwitterAddFollow
+//			[self setRequestType:AIQWeiboAddFollow
 //					forRequestID:updateRequestID
 //				  withDictionary:[NSDictionary dictionaryWithObjectsAndKeys:contact.UID, @"UID", nil]];
 //		}
@@ -800,7 +803,7 @@
 //				if(requestID) {
 //					AILogWithSignature(@"%@ Pushing self icon update", self);
 //					
-//					[self setRequestType:AITwitterProfileSelf
+//					[self setRequestType:AIQWeiboProfileSelf
 //							forRequestID:requestID
 //						  withDictionary:nil];
 //				}
@@ -841,7 +844,7 @@
 //				NSString	*requestID = [twitterEngine getRecentlyUpdatedFriendsFor:self.UID startingAtPage:1];
 				
 //				if (requestID) {
-//					[self setRequestType:AITwitterInitialUserInfo
+//					[self setRequestType:AIQWeiboInitialUserInfo
 //							forRequestID:requestID
 //						  withDictionary:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:1] forKey:@"Page"]];
 //				}
@@ -969,38 +972,38 @@
 /*!
  * @brief Returns the link URL for a specific type of link
  */
-- (NSString *)addressForLinkType:(AITwitterLinkType)linkType
+- (NSString *)addressForLinkType:(AIQWeiboLinkType)linkType
 						  userID:(NSString *)userID
 						statusID:(NSString *)statusID
 						 context:(NSString *)context
 {
 	NSString *address = nil;
 	
-	if (linkType == AITwitterLinkStatus) {
+	if (linkType == AIQWeiboLinkStatus) {
 		address = [NSString stringWithFormat:@"http://t.qq.com/%@/status/%@", userID, statusID];
-	} else if (linkType == AITwitterLinkFriends) {
+	} else if (linkType == AIQWeiboLinkFriends) {
 		address = [NSString stringWithFormat:@"http://t.qq.com/%@/friends", userID];
-	} else if (linkType == AITwitterLinkFollowings) {
+	} else if (linkType == AIQWeiboLinkFollowings) {
 		address = [NSString stringWithFormat:@"http://t.qq.com/%@/following", userID];        
-	} else if (linkType == AITwitterLinkFollowers) {
+	} else if (linkType == AIQWeiboLinkFollowers) {
 		address = [NSString stringWithFormat:@"http://t.qq.com/%@/follower", userID]; 
-	} else if (linkType == AITwitterLinkTweetCount) {
+	} else if (linkType == AIQWeiboLinkTweetCount) {
 		address = [NSString stringWithFormat:@"http://t.qq.com/%@/mine", userID];
-	} else if (linkType == AITwitterLinkUserPage) {
+	} else if (linkType == AIQWeiboLinkUserPage) {
 		address = [NSString stringWithFormat:@"http://t.qq.com/%@", userID]; 
-	} else if (linkType == AITwitterLinkSearchHash) {
+	} else if (linkType == AIQWeiboLinkSearchHash) {
 		address = [NSString stringWithFormat:@"http://search.twitter.com/search?q=%%23%@", context];
-    } else if (linkType == AITwitterLinkReply) {
+    } else if (linkType == AIQWeiboLinkReply) {
 		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=reply&status=%@", self.internalObjectID, userID, statusID];
-	} else if (linkType == AITwitterLinkRetweet) {
+	} else if (linkType == AIQWeiboLinkRetweet) {
 		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=retweet&status=%@", self.internalObjectID, userID, statusID];
-	} else if (linkType == AITwitterLinkFavorite) {
+	} else if (linkType == AIQWeiboLinkFavorite) {
 		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=favorite&status=%@", self.internalObjectID, userID, statusID];
-	} else if (linkType == AITwitterLinkDestroyStatus) {
+	} else if (linkType == AIQWeiboLinkDestroyStatus) {
 		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=destroy&status=%@&message=%@", self.internalObjectID, userID, statusID, context];
-	} else if (linkType == AITwitterLinkDestroyDM) {
+	} else if (linkType == AIQWeiboLinkDestroyDM) {
 		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=destroy&dm=%@&message=%@", self.internalObjectID, userID, statusID, context];		
-	} else if (linkType == AITwitterLinkQuote) {
+	} else if (linkType == AIQWeiboLinkQuote) {
 		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=quote&message=%@", self.internalObjectID, userID, context];
 	}
 	

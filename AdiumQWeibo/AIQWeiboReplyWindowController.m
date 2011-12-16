@@ -22,7 +22,7 @@ static AIQWeiboReplyWindowController *sharedController = nil;
 + (void)showReplyWindowForAccount:(AIAccount *)inAccount
 {
 	if (!sharedController) {
-		sharedController = [[self alloc] initWithWindowNibName:@"AITwitterReplyWindow"];
+		sharedController = [[self alloc] initWithWindowNibName:@"AIQWeiboReplyWindow"];
 	}
 	
 	// Make sure the window has loaded
@@ -65,7 +65,7 @@ static AIQWeiboReplyWindowController *sharedController = nil;
 		NSBeep();
 	} else if (textField_usernameOrTweetURL.stringValue && textField_statusID.stringValue) {
         
-//		NSString *replyAddress = [(AIQWeiboAccount *)account addressForLinkType:AITwitterLinkReply
+//		NSString *replyAddress = [(AIQWeiboAccount *)account addressForLinkType:AIQWeiboLinkReply
 //																		  userID:textField_usernameOrTweetURL.stringValue
 //																		statusID:textField_statusID.stringValue
 //																		 context:nil];
