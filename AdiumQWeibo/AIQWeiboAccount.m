@@ -36,6 +36,8 @@
 #import "NSDictionary+Response.h"
 #import <Adium/AIControllerProtocol.h>
 #import "AdiumQWeiboEngine.h"
+#import "AdiumQWeiboEngine+Helper.h"
+
 
 @interface AIQWeiboAccount (Private)
 
@@ -230,7 +232,6 @@
 	
     // Creating the fake timeline account.
     
-    NIF_INFO(@"timelineChatName: %@", self.timelineChatName);
 	AIListBookmark *timelineBookmark = [adium.contactController existingBookmarkForChatName:self.timelineChatName
 																				  onAccount:self
 																		   chatCreationInfo:nil];
@@ -244,9 +245,8 @@
         timelineBookmark = [adium.contactController bookmarkForChat:newTimelineChat inGroup:[adium.contactController groupWithUID:QWEIBO_REMOTE_GROUP_NAME]];
 
         if(!timelineBookmark) {
-            NSLog(@"%@ Timeline bookmark is nil! Tried checking for existing bookmark for chat name %@, and creating a bookmark for chat %@ in group %@", self.timelineChatName, newTimelineChat, [adium.contactController groupWithUID:QWEIBO_REMOTE_GROUP_NAME]);
+
         }       
-        NIF_INFO(@"timelineBookmark : %@", timelineBookmark);
     }
     
     NSTimeInterval updateInterval = [[self preferenceForKey:QWEIBO_PREFERENCE_UPDATE_INTERVAL group:QWEIBO_PREFERENCE_GROUP_UPDATES] integerValue] * 60;
@@ -458,8 +458,6 @@
             NIF_TRACE(@"-------------------------- %@", thisUserInfo);
 
             if (thisUserInfo && [thisUserInfo count]) {
-//                NSArray *keyNames = [NSArray arrayWithObjects:@"nick",@"fansnum",@"idolnum",@"location",@"province_code",@"sex",@"tag",@"tweetnum",@"verifyinfo",@"ismyfans",@"ismyblack",@"isent",@"introduction",@"email",@"country_code",@"city_code",@"birth_year",@"birth_month",@"birth_day",nil];
-//                NSArray *keyNames = [NSArray arrayWithObjects:@"nick",@"location",@"tag",@"tweetnum",@"verifyinfo",@"introduction",@"email",nil];
 
                 NSMutableArray *profileArray = [NSMutableArray array];
                 NSMutableArray *readableNames = [NSMutableArray array];
@@ -519,7 +517,7 @@
                 if(followers != 0) {
                     NSString *followersString = [NSString stringWithFormat:@"%d",followers];
                     NSAttributedString *value = [NSAttributedString attributedStringWithLinkLabel:followersString
-                                                                                  linkDestination:[self addressForLinkType:AIQWeiboLinkFollowers userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
+                                                                                   linkDestination:[AdiumQWeiboEngine addressForLinkType:AIQWeiboLinkFollowers userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
                     
                     [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                              AILocalizedString(@"Followers", nil), KEY_KEY, 
@@ -531,8 +529,9 @@
                 NSInteger following = [[thisUserInfo objectForKey:@"idolnum"] intValue];
                 if(followers != 0) {
                     NSString *followingString = [NSString stringWithFormat:@"%d",following];
+                    NSString *address = [AdiumQWeiboEngine addressForLinkType:AIQWeiboLinkFollowings userID:inContact.UID statusID:@"123" context:@"34232423"];
                     NSAttributedString *value = [NSAttributedString attributedStringWithLinkLabel:followingString
-                                                                                  linkDestination:[self addressForLinkType:AIQWeiboLinkFollowings userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
+                                                                                  linkDestination:address]; 
                     
                     [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                              AILocalizedString(@"Following", nil), KEY_KEY, 
@@ -544,8 +543,9 @@
                 NSInteger tweets = [[thisUserInfo objectForKey:@"tweetnum"] intValue];
                 if(followers != 0) {
                     NSString *tweetsString = [NSString stringWithFormat:@"%d",tweets];
+                    NSString *address = [AdiumQWeiboEngine addressForLinkType:AIQWeiboLinkTweetCount userID:inContact.UID statusID:@"123" context:@"34232423"];
                     NSAttributedString *value = [NSAttributedString attributedStringWithLinkLabel:tweetsString
-                                                                                  linkDestination:[self addressForLinkType:AIQWeiboLinkTweetCount userID:inContact.UID statusID:@"123" context:@"34232423"]]; 
+                                                                                  linkDestination:address]; 
                     
                     [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                              AILocalizedString(@"Tweets", nil), KEY_KEY, 
@@ -571,28 +571,38 @@
                     ];
                 }
                 
-
-                
-                                                 
-//                                                AILocalizedString(@"Gender", nil), 
-//                                                AILocalizedString(@"Birth", nil), 
-//                                                AILocalizedString(@"Email", nil), 
-//                                                AILocalizedString(@"Education", nil), 
-//                                                AILocalizedString(@"Location", nil),
-//                                                AILocalizedString(@"Biography", nil), 
-//                                                AILocalizedString(@"Website", nil), 
-//                                                AILocalizedString(@"Following", nil),
-//                                                AILocalizedString(@"Followers", nil), 
-//                                                AILocalizedString(@"Updates", nil), 
-//                                          AILocalizedString(@"Introduction", nil), 
-//                                          AILocalizedString(@"Verify Info", nil), 
-//                                          AILocalizedString(@"Updates", nil), 
-
-//                AILogWithSignature(@"%@ Updating profileArray for user %@", self, listContact);
-                
                 [inContact setProfileArray:profileArray notify:NotifyNow];
 
             }
+
+            // Update this user's status 
+            NSString *path = @"statuses/user_timeline";
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    @"json",@"format",
+                                    inContact.UID,@"name",
+                                    @"0",@"pageflag",
+                                    @"0",@"pagetime",
+                                    @"10",@"reqnum",
+                                    @"0",@"lastid",
+                                    nil];
+            [AdiumQWeiboEngine fetchDataWithAPIPath:path params:params session:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+                if (!error) {
+
+                    NSMutableArray *profileArray = [[[inContact profileArray] mutableCopy] autorelease];
+                    
+                    NSArray *statuses = [responseJSON valueForKeyPath:@"data.info"];                    
+                    
+
+                    for (NSDictionary *update in statuses) {
+                        NSAttributedString *text = [AdiumQWeiboEngine attributedTweetFromTweetDictionary:update];                        
+                        [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:text,KEY_VALUE,nil]];                        
+                    }
+
+                    [inContact setProfileArray:profileArray notify:NotifyNow];
+                }
+                
+            }];
+            
             
         } else {
             
@@ -711,7 +721,7 @@
  */
 - (void)updateUserIcon:(NSString *)url forContact:(AIListContact *)listContact;
 {
-    NIF_INFO(@"icon URL : %@", url);
+//    NIF_INFO(@"icon URL : %@", url);
 	// If we don't already have an icon for the user...
 	if(![[listContact valueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON] boolValue]) {
         NSString *realURL = [url stringByAppendingFormat:@"/%d",QWEIBO_ICON_SIZE];
@@ -719,10 +729,6 @@
 		// Grab the user icon and set it as their serverside icon.
 
         [self _fetchImageWithURL:realURL imageHander:^(NSImage *image) {
-            NIF_INFO(@"finished download an image");
-            
-            
-            NIF_INFO(@"%@ Updated user icon for %@", self, listContact);
             
             [listContact setServersideIconData:[image TIFFRepresentation]
                                         notify:NotifyLater];
@@ -750,8 +756,8 @@
  */
 - (void)addContact:(AIListContact *)contact toGroup:(AIListGroup *)group
 {
-    NIF_INFO(@"%@", contact);
-    NIF_INFO(@"%@", group);
+//    NIF_INFO(@"%@", contact);
+//    NIF_INFO(@"%@", group);
 	if ([contact.UID isCaseInsensitivelyEqualToString:self.UID]) {
 //		AILogWithSignature(@"Not adding contact %@ to group %@, it's me!", contact.UID, group.UID);
 		return;
@@ -777,7 +783,7 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 
-    NIF_INFO(@"group : %@ key : %@",group,key);
+//    NIF_INFO(@"group : %@ key : %@",group,key);
 
 	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
 	
@@ -788,15 +794,15 @@
 	}
 	
 	if([group isEqualToString:GROUP_ACCOUNT_STATUS]) {
-        NIF_INFO(@"[group isEqualToString:GROUP_ACCOUNT_STATUS]) {");
+//        NIF_INFO(@"[group isEqualToString:GROUP_ACCOUNT_STATUS]) {");
 
 		if([key isEqualToString:KEY_USER_ICON]) {
-            NIF_INFO(@"----------------[group isEqualToString:KEY_USER_ICON]) {");
+//            NIF_INFO(@"----------------[group isEqualToString:KEY_USER_ICON]) {");
 
 			// Avoid pushing an icon update which we just downloaded.
 			if(![self boolValueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON]) {
-                NIF_INFO(@"---------------self boolValueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON-[group isEqualToString:KEY_USER_ICON]) {");
-#warning UPLOAD MY ICON
+//                NIF_INFO(@"---------------self boolValueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON-[group isEqualToString:KEY_USER_ICON]) {");
+//#warning UPLOAD MY ICON
                 
 //				NSString *requestID = [twitterEngine updateProfileImage:[prefDict objectForKey:KEY_USER_ICON]];
                 
@@ -836,7 +842,7 @@
 //		retweetLink = [[prefDict objectForKey:QWEIBO_PREFERENCE_RETWEET_SPAM] boolValue];
 		
 		if ([key isEqualToString:QWEIBO_PREFERENCE_LOAD_CONTACTS] && self.online) {
-            NIF_INFO(@"fan list");
+//            NIF_INFO(@"fan list");
 			if ([[prefDict objectForKey:QWEIBO_PREFERENCE_LOAD_CONTACTS] boolValue]) {
 				// Delay updates when loading our contacts list.
 				[self silenceAllContactUpdatesForInterval:18.0];
@@ -848,9 +854,9 @@
 //							forRequestID:requestID
 //						  withDictionary:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:1] forKey:@"Page"]];
 //				}
-                NIF_INFO(@"fan list");
+//                NIF_INFO(@"fan list");
                 [AdiumQWeiboEngine fetchFollowingListWithSession:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
-                    NIF_INFO(@"fan list : %@", responseJSON);
+//                    NIF_INFO(@"fan list : %@", responseJSON);
                 }];
                 
                 
@@ -902,58 +908,6 @@
     return _session;
 }
 
-
-#pragma mark Message Display
-/*!
- * @brief Returns a user-readable message for an error code.
- */
-- (NSString *)errorMessageForError:(NSError *)error
-{
-	switch (error.code) {
-		case 400:
-			// Bad Request: your request is invalid, and we'll return an error message that tells you why.
-			// This is the status code returned if you've exceeded the rate limit. 
-			return AILocalizedString(@"You've exceeded the rate limit.", nil);
-			break;
-			
-		case 401:
-			// Not Authorized: either you need to provide authentication credentials, or the credentials provided aren't valid.
-			return AILocalizedString(@"Your credentials do not allow you access.", nil);
-			break;
-			
-		case 403:
-			// Forbidden: we understand your request, but are refusing to fulfill it.  An accompanying error message should explain why.
-			return AILocalizedString(@"Request refused by the server.", nil);
-			break;
-			
-		case 404:
-			// Not Found: either you're requesting an invalid URI or the resource in question doesn't exist (ex: no such user). 
-			return AILocalizedString(@"Requested resource not found.", nil);
-			break;
-			
-		case 500:
-			// Internal Server Error: we did something wrong.  Please post to the group about it and the Twitter team will investigate.
-			return AILocalizedString(@"The server reported an internal error.", nil);
-			break;
-			
-		case 502:
-			// Bad Gateway: returned if Twitter is down or being upgraded.
-			return AILocalizedString(@"The server is currently down.", nil);
-			break;
-			
-		case -1001:
-			// Timeout
-		case 503:
-			// Service Unavailable: the Twitter servers are up, but are overloaded with requests.  Try again later.
-			return AILocalizedString(@"The server is overloaded with requests.", nil);
-			break;
-			
-	}
-	
-	return [NSString stringWithFormat:AILocalizedString(@"Unknown error: code %d, %@", nil), error.code, error.localizedDescription];
-}
-
-
 - (void)_updateProfileWithInfo:(NSDictionary *)json {
     
 }
@@ -967,50 +921,6 @@
         });
     });
 }
-
-
-/*!
- * @brief Returns the link URL for a specific type of link
- */
-- (NSString *)addressForLinkType:(AIQWeiboLinkType)linkType
-						  userID:(NSString *)userID
-						statusID:(NSString *)statusID
-						 context:(NSString *)context
-{
-	NSString *address = nil;
-	
-	if (linkType == AIQWeiboLinkStatus) {
-		address = [NSString stringWithFormat:@"http://t.qq.com/%@/status/%@", userID, statusID];
-	} else if (linkType == AIQWeiboLinkFriends) {
-		address = [NSString stringWithFormat:@"http://t.qq.com/%@/friends", userID];
-	} else if (linkType == AIQWeiboLinkFollowings) {
-		address = [NSString stringWithFormat:@"http://t.qq.com/%@/following", userID];        
-	} else if (linkType == AIQWeiboLinkFollowers) {
-		address = [NSString stringWithFormat:@"http://t.qq.com/%@/follower", userID]; 
-	} else if (linkType == AIQWeiboLinkTweetCount) {
-		address = [NSString stringWithFormat:@"http://t.qq.com/%@/mine", userID];
-	} else if (linkType == AIQWeiboLinkUserPage) {
-		address = [NSString stringWithFormat:@"http://t.qq.com/%@", userID]; 
-	} else if (linkType == AIQWeiboLinkSearchHash) {
-		address = [NSString stringWithFormat:@"http://search.twitter.com/search?q=%%23%@", context];
-    } else if (linkType == AIQWeiboLinkReply) {
-		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=reply&status=%@", self.internalObjectID, userID, statusID];
-	} else if (linkType == AIQWeiboLinkRetweet) {
-		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=retweet&status=%@", self.internalObjectID, userID, statusID];
-	} else if (linkType == AIQWeiboLinkFavorite) {
-		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=favorite&status=%@", self.internalObjectID, userID, statusID];
-	} else if (linkType == AIQWeiboLinkDestroyStatus) {
-		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=destroy&status=%@&message=%@", self.internalObjectID, userID, statusID, context];
-	} else if (linkType == AIQWeiboLinkDestroyDM) {
-		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=destroy&dm=%@&message=%@", self.internalObjectID, userID, statusID, context];		
-	} else if (linkType == AIQWeiboLinkQuote) {
-		address = [NSString stringWithFormat:@"twitterreply://%@@%@?action=quote&message=%@", self.internalObjectID, userID, context];
-	}
-	
-	return address;
-}
-
-
 
 - (void)dealloc {
     [_session release];

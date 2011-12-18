@@ -10,23 +10,15 @@
 #import "QOAuthSession.h"
 
 static NSString *const APIDomain = @"http://open.t.qq.com/api";
+static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
 
 @implementation AdiumQWeiboEngine
 
 + (void)fetchMyInfoWithSession:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler {
     NSString *path = @"user/info";
-//    NSString *url = [APIDomain stringByAppendingFormat:@"/%@",path];
     
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"json",@"format",nil];
     
-//    AdiumQWeiboEngine *engine = [[[AdiumQWeiboEngine alloc] initWithURL:[NSURL URLWithString:url] parameters:params requestMethod:RequestMethodGET] autorelease];
-//    engine.session = aSession;
-//    
-//    [engine performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-//        
-//        NSDictionary *json = [responseData JSONValue];
-//        handler(json,urlResponse,error);            
-//    }];    
     [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         handler(responseJSON,urlResponse,error);            
     }];
@@ -115,7 +107,11 @@ static NSString *const APIDomain = @"http://open.t.qq.com/api";
     }];
 }
 
-// Start Point
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// Start Point                                                          //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
 + (void)fetchDataWithAPIPath:(NSString *)path params:(NSDictionary *)params session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler {
     NSString *url = [APIDomain stringByAppendingFormat:@"/%@",path];
     
@@ -123,11 +119,38 @@ static NSString *const APIDomain = @"http://open.t.qq.com/api";
     engine.session = aSession;
     
     [engine performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-        
-        NSDictionary *json = [responseData JSONValue];
-        handler(json,urlResponse,error);            
+        if (!error && responseData) {
+            @try {
+                NSDictionary *json = [responseData JSONValue];
+                if (json == nil) {
+                    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"JSON parse error" forKey:NSLocalizedDescriptionKey];
+                    NSError *weiboError = [NSError errorWithDomain:WeiboErrorDomain code:1000000 userInfo:userInfo];
+                    handler(nil,urlResponse,weiboError);
+                } else {
+                    int returnCode = [[json objectForKey:@"ret"] intValue];
+                    int errorCode = [[json objectForKey:@"errcode"] intValue];
+                    NSString *errorMessage = [json objectForKey:@"msg"];
+                    if (returnCode != 0 || errorCode != 0) {
+                        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errorMessage forKey:NSLocalizedDescriptionKey];
+                        NSInteger weiboErrorCode = returnCode * 10000 + errorCode;
+                        NSError *weiboError = [NSError errorWithDomain:WeiboErrorDomain code:weiboErrorCode userInfo:userInfo];                
+                        handler(json,urlResponse,weiboError);            
+                    } else {
+                        handler(json,urlResponse,nil);                                    
+                    }
+                }
+            }
+            @catch (NSException *exception) {
+                
+            }
+            @finally {
+                
+            }
+                    
+        } else {
+            handler(nil,urlResponse,error);            
+        }        
     }];
 }
-
 
 @end

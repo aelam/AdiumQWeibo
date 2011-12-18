@@ -9,23 +9,6 @@
 #import <Adium/AIAccount.h>
 #import "QWeibo.h"
 
-typedef enum {
-	AIQWeiboLinkReply = 0,
-	AIQWeiboLinkRetweet,
-	AIQWeiboLinkQuote,
-	AIQWeiboLinkFavorite,
-	AIQWeiboLinkStatus,
-	AIQWeiboLinkFriends,
-    AIQWeiboLinkFollowings,
-    AIQWeiboLinkTweetCount,
-	AIQWeiboLinkFollowers,
-	AIQWeiboLinkUserPage,
-	AIQWeiboLinkSearchHash,
-	AIQWeiboLinkGroup,
-	AIQWeiboLinkDestroyStatus,
-	AIQWeiboLinkDestroyDM
-} AIQWeiboLinkType;
-
 
 #define QWEIBO_UPDATE_INTERVAL_MINUTES 20
 

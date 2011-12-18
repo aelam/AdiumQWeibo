@@ -9,6 +9,44 @@
 #import "WeiboEngine.h"
 #import "JSON.h"
 
+
+typedef enum {
+    RequestTweetTypeOriginal       = 0x1,
+    RequestTweetTypeRetweet        = 0x2,
+    RequestTweetTypeReply          = 0x8,
+    RequestTweetTypeRetweetNull    = 0x10,
+    RequestTweetTypeMetioned       = 0x20,
+    RequestTweetTypeComment        = 0x40,
+} RequestTweetType;
+
+typedef enum {
+    ResponseTweetTypeOriginal       = 1,
+    ResponseTweetTypeRetweet        = 2,
+    ResponseTweetTypePrivateMessage = 3,
+    ResponseTweetTypeReply          = 4,
+    ResponseTweetTypeReplyNull      = 5,
+    ResponseTweetTypeMentioned      = 6,
+    ResponseTweetTypeComment        = 7,
+} ResponseTweetType;
+
+
+typedef enum {
+	AIQWeiboLinkReply = 0,
+	AIQWeiboLinkRetweet,
+	AIQWeiboLinkQuote,
+	AIQWeiboLinkFavorite,
+	AIQWeiboLinkStatus,
+	AIQWeiboLinkFriends,
+    AIQWeiboLinkFollowings,
+    AIQWeiboLinkTweetCount,
+	AIQWeiboLinkFollowers,
+	AIQWeiboLinkUserPage,
+	AIQWeiboLinkSearchHash,
+	AIQWeiboLinkGroup,
+	AIQWeiboLinkDestroyStatus,
+	AIQWeiboLinkDestroyDM
+} AIQWeiboLinkType;
+
 typedef enum {
     AdiumQWeiboRequestTypeUserInfo,
     AdiumQWeiboRequestTypeFavorite,
@@ -48,6 +86,9 @@ typedef BOOL(^PageableJSONRequestHandler)(NSDictionary *responseJSON, NSHTTPURLR
 
 // 获取用户信息
 + (void)fetchUserInfoWithUID:(NSString *)UID session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
+
+// 获取用户的推
++ (void)fetchStatusWithUID:(NSString *)UID session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
 
 
 
