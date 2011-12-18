@@ -170,7 +170,8 @@ static char ctrl[0x22];
 - (BOOL)scanRestOfNull:(NSNull **)o
 {
     if (*c == 'u' && *++c == 'l' && *++c == 'l' && c++) {
-        *o = [NSNull null];
+//        *o = [NSNull null];
+        *o = @"";
         return YES;
     }
     [self raise:enull format:@"Expected 'null'"];

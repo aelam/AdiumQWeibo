@@ -594,8 +594,17 @@
                     
 
                     for (NSDictionary *update in statuses) {
-                        NSAttributedString *text = [AdiumQWeiboEngine attributedTweetFromTweetDictionary:update];                        
-                        [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:text,KEY_VALUE,nil]];                        
+                        NSMutableAttributedString *string = [[[NSMutableAttributedString alloc] initWithString:@""] autorelease];
+                        NSAttributedString *text = [AdiumQWeiboEngine attributedTweetFromTweetDictionary:update]; 
+                        
+                        NSString *tweetID = [[update objectForKey:@"id"]description];
+                        
+                        NSAttributedString *suffix = [AdiumQWeiboEngine suffixActionAttributedStringWithTweetID:tweetID myID:self.UID];
+                        
+                        [string appendAttributedString:text];
+                        [string appendAttributedString:suffix];
+                        
+                        [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:string,KEY_VALUE,nil]];                        
                     }
 
                     [inContact setProfileArray:profileArray notify:NotifyNow];
