@@ -84,8 +84,13 @@
     NSString *originText = [json objectForKey:@"origtext"];
     NSAttributedString *string = [[[NSAttributedString alloc] initWithString:[originText stringByAppendingString:@"\n"]] autorelease];
     
+    
+    NSAttributedString *attributedString1 = [self linkifiedEmotionStringFromAttributedString:string];
+
+    
     // hyperlink topic
-    NSAttributedString *originText1 = [self linkifiedStringFromAttributedString:string forPrefixCharacter:@"#" forLinkType:AIQWeiboLinkSearchHash validCharacterSet:hashCharacters];
+    NSAttributedString *originText1 = [self linkifiedStringFromAttributedString:attributedString1 forPrefixCharacter:@"#" forLinkType:AIQWeiboLinkSearchHash validCharacterSet:hashCharacters];
+    
     // hyperlink username
     NSAttributedString *originText2 = [self linkifiedStringFromAttributedString:originText1 forPrefixCharacter:@"@" forLinkType:AIQWeiboLinkUserPage validCharacterSet:usernameCharacters];
 
@@ -98,7 +103,7 @@
 //            // hyperlink username
 //            NSAttributedString *sourceString2 = [self linkifiedStringFromAttributedString:sourceString1 forPrefixCharacter:@"@" forLinkType:AIQWeiboLinkUserPage validCharacterSet:usernameCharacters];
 
-            [attributedString appendAttributedString:originText2];
+            [attributedString appendAttributedString:attributedString];
             
             break;
         }
@@ -112,35 +117,17 @@
             
             NSAttributedString *sourceString = [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n",sourceText]] autorelease];
             
+            NSAttributedString *attributedString1 = [self linkifiedEmotionStringFromAttributedString:sourceString];
+
             // hyperlink topic
-            NSAttributedString *sourceString1 = [self linkifiedStringFromAttributedString:sourceString forPrefixCharacter:@"#" forLinkType:AIQWeiboLinkSearchHash validCharacterSet:hashCharacters];
+            NSAttributedString *sourceString1 = [self linkifiedStringFromAttributedString:attributedString1 forPrefixCharacter:@"#" forLinkType:AIQWeiboLinkSearchHash validCharacterSet:hashCharacters];
             // hyperlink username
             NSAttributedString *sourceString2 = [self linkifiedStringFromAttributedString:sourceString1 forPrefixCharacter:@"@" forLinkType:AIQWeiboLinkUserPage validCharacterSet:usernameCharacters];
-
-            NSAttributedString *imageString;
-            NSTextAttachment *ta = [[[NSTextAttachment alloc] init] autorelease];
-            NSTextAttachmentCell *cell = [[[NSTextAttachmentCell alloc] init] autorelease];
-            NSImage *image = nil;
-                
-            NSBundle *bundle = [NSBundle bundleForClass:[AdiumQWeiboEngine class]];
-
-            
-            NIF_INFO(@"------------  %@", [NSBundle allBundles]);
-            NIF_INFO(@"------------  %@", [bundle bundleIdentifier]);
-            NIF_INFO(@"------------  %@", [bundle infoDictionary]);    
-            
-            NSString *imagePath = [bundle pathForImageResource:@"1"];
-            image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
-            [cell setImage:image];
-            [ta setAttachmentCell:cell];
-            
-            imageString  = [NSAttributedString attributedStringWithAttachment:ta];
-            
             
             [attributedString appendAttributedString:originText2];
             [attributedString appendAttributedString:sourceString2];
             
-            [attributedString appendAttributedString:imageString];
+//            [attributedString appendAttributedString:imageString];
             
             break;
         }
@@ -167,9 +154,13 @@
             
             [attributedString appendAttributedString:string];
             [attributedString appendAttributedString:sourceString2];
+            
             break;
         }
     }
+    
+    NIF_TRACE(@"%@  ",attributedString);
+    
     return attributedString;
 }
 
@@ -237,6 +228,106 @@
 	[newString endEditing];
 	
 	return [newString autorelease];
+}
+
+// 
++ (NSAttributedString *)linkifiedEmotionStringFromAttributedString:(NSAttributedString *)inString {
+    
+    static NSCharacterSet *hashCharacters = nil;
+	if (!hashCharacters) {
+		NSMutableCharacterSet	*disallowedCharacters = [[NSCharacterSet punctuationCharacterSet] mutableCopy];
+		[disallowedCharacters removeCharactersInString:@"_"];
+		
+		hashCharacters = [[disallowedCharacters invertedSet] retain];
+		
+		[disallowedCharacters release];
+	}
+
+    
+    NSMutableAttributedString	*newString = [inString mutableCopy];
+	
+    NSString *prefixCharacter = @"/";
+    
+	NSScanner		*scanner = [NSScanner scannerWithString:[inString string]];
+	
+	[scanner setCharactersToBeSkipped:nil];
+	
+	[newString beginEditing];
+	
+	while(!scanner.isAtEnd) {
+		[scanner scanUpToString:prefixCharacter intoString:NULL];
+		
+		if(scanner.isAtEnd) {
+			break;
+		}
+		
+		NSUInteger	startLocation = scanner.scanLocation;
+		NSString	*linkText = nil;
+        
+		// Advance to the start of the string we want.
+		// Check to make sure we aren't exceeding the string bounds.
+		if(startLocation + 1 < scanner.string.length) {
+			scanner.scanLocation++;
+		} else {
+			break;
+		}
+		
+		// Grab any valid characters we can.
+		BOOL scannedCharacters = [scanner scanCharactersFromSet:hashCharacters intoString:&linkText];
+		
+		if(scannedCharacters) {
+            NSMutableCharacterSet *characterSet = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
+            [characterSet addCharactersInString:@":"];
+            [characterSet addCharactersInString:@"|"];
+            
+//            NSString *linkURL = nil;
+            NIF_INFO(@"linkText : %@",linkText);
+
+			if((scanner.scanLocation - linkText.length) == prefixCharacter.length || 
+			   [characterSet characterIsMember:[scanner.string characterAtIndex:(scanner.scanLocation - linkText.length - prefixCharacter.length - 1)]]) {
+//                linkURL = [self addressForLinkType:AIQWeiboLinkUserPage userID:nil statusID:nil context:[linkText stringByEncodingURLEscapes]];
+//                
+                NIF_INFO(@"linkText : %@",linkText);
+                
+                NSBundle *bundle = [NSBundle bundleForClass:[AdiumQWeiboEngine class]];
+                NSString *facePath = [bundle pathForResource:@"face" ofType:@"plist"];
+                NSDictionary *facePairs = [NSDictionary dictionaryWithContentsOfFile:facePath];
+                
+                unichar codeValue = (unichar) strtol([linkText UTF8String], NULL, 16);
+                NSString *unicodeStr = [NSString stringWithFormat:@"%C", linkText];
+                NSLog(@"Character with code \\u%@ is %C", linkText, codeValue);
+                
+//                NSString *unicodeStr = [NSString stringWithCString:[linkText UTF8String] encoding:NSUnicodeStringEncoding];
+                NIF_INFO(@"%@",unicodeStr);
+                NIF_INFO(@"%@",[facePairs allKeys]);
+
+                
+                NSString *imageName = [facePairs objectForKey:unicodeStr];
+                NIF_INFO(@"%@",imageName);
+                if(imageName){
+                    NSAttributedString *imageString;
+                    NSTextAttachment *ta = [[[NSTextAttachment alloc] init] autorelease];
+                    NSTextAttachmentCell *cell = [[[NSTextAttachmentCell alloc] init] autorelease];
+                    NSImage *image = nil;
+                    
+                    
+                    NSString *imagePath = [bundle pathForImageResource:imageName];
+                    image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
+                    [cell setImage:image];
+                    [ta setAttachmentCell:cell];
+                    
+                    imageString  = [NSAttributedString attributedStringWithAttachment:ta];
+                    
+                    [newString replaceCharactersInRange:NSMakeRange(startLocation + 1, linkText.length) withAttributedString:imageString];
+                }
+            } else {
+                scanner.scanLocation++;
+            }
+        }
+    }
+    [newString endEditing];
+
+    return [newString autorelease];
 }
 
 /**

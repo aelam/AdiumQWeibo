@@ -122,50 +122,15 @@
 		941B58C4149ED62700E75554 /* 97.gif in Resources */ = {isa = PBXBuildFile; fileRef = 941B585A149ED62700E75554 /* 97.gif */; };
 		941B58C5149ED62700E75554 /* 98.gif in Resources */ = {isa = PBXBuildFile; fileRef = 941B585B149ED62700E75554 /* 98.gif */; };
 		941B58C6149ED62700E75554 /* 99.gif in Resources */ = {isa = PBXBuildFile; fileRef = 941B585C149ED62700E75554 /* 99.gif */; };
-		941B58C7149ED62700E75554 /* emotions.js in Sources */ = {isa = PBXBuildFile; fileRef = 941B585D149ED62700E75554 /* emotions.js */; };
+		941B58C7149ED62700E75554 /* emotions.txt in Sources */ = {isa = PBXBuildFile; fileRef = 941B585D149ED62700E75554 /* emotions.txt */; };
 		941B5903149EE24200E75554 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5902149EE24200E75554 /* main.m */; };
 		941B5B94149EFFDB00E75554 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D4D6F7149DB19D00DADCC1 /* Cocoa.framework */; };
-		941B5B9A149EFFDB00E75554 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 941B5B98149EFFDB00E75554 /* InfoPlist.strings */; };
-		941B5B9C149EFFDB00E75554 /* UnitTest.h in Resources */ = {isa = PBXBuildFile; fileRef = 941B5B9B149EFFDB00E75554 /* UnitTest.h */; };
-		941B5B9E149EFFDB00E75554 /* UnitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5B9D149EFFDB00E75554 /* UnitTest.m */; };
 		941B5BAF149F00A400E75554 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 941B5BAD149F008800E75554 /* SenTestingKit.framework */; };
 		941B5BB5149F027C00E75554 /* AdiumQWeiboEngine+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D0321A149DE01300D84221 /* AdiumQWeiboEngine+Helper.m */; };
 		941B5BE4149F037500E75554 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */; };
 		941B5BE5149F037500E75554 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDEA5148CB6AB007D8EBE /* Adium.framework */; };
 		941B5BE6149F03A000E75554 /* NIFLog.h in Sources */ = {isa = PBXBuildFile; fileRef = 94AC0E1914948A5F006F0610 /* NIFLog.h */; };
-		941B5BE7149F047100E75554 /* AdiumQWeiboEngine+Helper.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BBF149F035D00E75554 /* AdiumQWeiboEngine+Helper.h */; };
-		941B5BE8149F047100E75554 /* NSData+QBase64.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BC1149F035D00E75554 /* NSData+QBase64.h */; };
-		941B5BE9149F047100E75554 /* NSData+QBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BC2149F035D00E75554 /* NSData+QBase64.m */; };
-		941B5BEA149F047100E75554 /* NSDictionary+Response.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BC3149F035D00E75554 /* NSDictionary+Response.h */; };
-		941B5BEB149F047100E75554 /* NSDictionary+Response.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BC4149F035D00E75554 /* NSDictionary+Response.m */; };
-		941B5BEC149F047100E75554 /* NSMutableURLRequest+Category.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BC5149F035D00E75554 /* NSMutableURLRequest+Category.h */; };
-		941B5BED149F047100E75554 /* NSMutableURLRequest+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BC6149F035D00E75554 /* NSMutableURLRequest+Category.m */; };
-		941B5BEE149F047100E75554 /* NSString+QEncoding.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BC7149F035D00E75554 /* NSString+QEncoding.h */; };
-		941B5BEF149F047100E75554 /* NSString+QEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BC8149F035D00E75554 /* NSString+QEncoding.m */; };
-		941B5BF0149F047100E75554 /* NSString+Readable.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BC9149F035D00E75554 /* NSString+Readable.h */; };
-		941B5BF1149F047100E75554 /* NSString+Readable.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BCA149F035D00E75554 /* NSString+Readable.m */; };
-		941B5BF2149F047100E75554 /* NSURL+QAdditions.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BCB149F035D00E75554 /* NSURL+QAdditions.h */; };
-		941B5BF3149F047100E75554 /* NSURL+QAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BCC149F035D00E75554 /* NSURL+QAdditions.m */; };
-		941B5BF4149F047100E75554 /* AdiumQWeiboEngine.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BCE149F035D00E75554 /* AdiumQWeiboEngine.h */; };
-		941B5BF5149F047100E75554 /* AdiumQWeiboEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BCF149F035D00E75554 /* AdiumQWeiboEngine.m */; };
-		941B5BF6149F047100E75554 /* OAuthURLRequest.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BD0149F035D00E75554 /* OAuthURLRequest.h */; };
-		941B5BF7149F047100E75554 /* OAuthURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BD1149F035D00E75554 /* OAuthURLRequest.m */; };
-		941B5BF8149F047100E75554 /* QOAuthSession.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BD2149F035D00E75554 /* QOAuthSession.h */; };
-		941B5BF9149F047100E75554 /* QOAuthSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BD3149F035D00E75554 /* QOAuthSession.m */; };
-		941B5BFA149F047100E75554 /* QWeibo.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BD4149F035D00E75554 /* QWeibo.h */; };
-		941B5BFB149F047100E75554 /* RSimpleConnection.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BD5149F035D00E75554 /* RSimpleConnection.h */; };
-		941B5BFC149F047100E75554 /* RSimpleConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BD6149F035D00E75554 /* RSimpleConnection.m */; };
-		941B5BFD149F047100E75554 /* WeiboEngine.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BD7149F035D00E75554 /* WeiboEngine.h */; };
-		941B5BFE149F047100E75554 /* WeiboEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BD8149F035D00E75554 /* WeiboEngine.m */; };
-		941B5BFF149F047100E75554 /* JSON.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BDA149F035D00E75554 /* JSON.h */; };
-		941B5C00149F047100E75554 /* NSData+SBJSON.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BDB149F035D00E75554 /* NSData+SBJSON.h */; };
-		941B5C01149F047100E75554 /* NSData+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BDC149F035D00E75554 /* NSData+SBJSON.m */; };
-		941B5C02149F047100E75554 /* NSObject+SBJSON.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BDD149F035D00E75554 /* NSObject+SBJSON.h */; };
-		941B5C03149F047100E75554 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BDE149F035D00E75554 /* NSObject+SBJSON.m */; };
-		941B5C04149F047100E75554 /* NSString+SBJSON.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BDF149F035D00E75554 /* NSString+SBJSON.h */; };
-		941B5C05149F047100E75554 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BE0149F035D00E75554 /* NSString+SBJSON.m */; };
-		941B5C06149F047100E75554 /* SBJSONScanner.h in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BE1149F035D00E75554 /* SBJSONScanner.h */; };
-		941B5C07149F047100E75554 /* SBJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5BE2149F035D00E75554 /* SBJSONScanner.m */; };
+		942B4824149F7BBC003ECA7E /* face.plist in Resources */ = {isa = PBXBuildFile; fileRef = 942B4823149F7BBC003ECA7E /* face.plist */; };
 		942FDE59148CACA7007D8EBE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 942FDE57148CACA7007D8EBE /* InfoPlist.strings */; };
 		942FDEA6148CB6AB007D8EBE /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDEA5148CB6AB007D8EBE /* Adium.framework */; };
 		942FDED4148CBA99007D8EBE /* AIQWeiboAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 942FDED3148CBA99007D8EBE /* AIQWeiboAccount.m */; };
@@ -325,53 +290,12 @@
 		941B585A149ED62700E75554 /* 97.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 97.gif; sourceTree = "<group>"; };
 		941B585B149ED62700E75554 /* 98.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 98.gif; sourceTree = "<group>"; };
 		941B585C149ED62700E75554 /* 99.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 99.gif; sourceTree = "<group>"; };
-		941B585D149ED62700E75554 /* emotions.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = emotions.js; sourceTree = "<group>"; };
+		941B585D149ED62700E75554 /* emotions.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = emotions.txt; sourceTree = "<group>"; };
 		941B5902149EE24200E75554 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		941B5B91149EFFDB00E75554 /* UnitTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		941B5B97149EFFDB00E75554 /* UnitTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UnitTest-Info.plist"; sourceTree = "<group>"; };
-		941B5B99149EFFDB00E75554 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		941B5B9B149EFFDB00E75554 /* UnitTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnitTest.h; sourceTree = "<group>"; };
-		941B5B9D149EFFDB00E75554 /* UnitTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnitTest.m; sourceTree = "<group>"; };
-		941B5B9F149EFFDB00E75554 /* UnitTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UnitTest-Prefix.pch"; sourceTree = "<group>"; };
 		941B5BAD149F008800E75554 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		941B5BB4149F027500E75554 /* AdiumQWeiboEngine+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AdiumQWeiboEngine+Helper.h"; sourceTree = "<group>"; };
-		941B5BBB149F035D00E75554 /* Adium.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Adium.framework; sourceTree = "<group>"; };
-		941B5BBC149F035D00E75554 /* AIUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AIUtilities.framework; sourceTree = "<group>"; };
-		941B5BBF149F035D00E75554 /* AdiumQWeiboEngine+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AdiumQWeiboEngine+Helper.h"; sourceTree = "<group>"; };
-		941B5BC0149F035D00E75554 /* AdiumQWeiboEngine+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AdiumQWeiboEngine+Helper.m"; sourceTree = "<group>"; };
-		941B5BC1149F035D00E75554 /* NSData+QBase64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+QBase64.h"; sourceTree = "<group>"; };
-		941B5BC2149F035D00E75554 /* NSData+QBase64.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+QBase64.m"; sourceTree = "<group>"; };
-		941B5BC3149F035D00E75554 /* NSDictionary+Response.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Response.h"; sourceTree = "<group>"; };
-		941B5BC4149F035D00E75554 /* NSDictionary+Response.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Response.m"; sourceTree = "<group>"; };
-		941B5BC5149F035D00E75554 /* NSMutableURLRequest+Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+Category.h"; sourceTree = "<group>"; };
-		941B5BC6149F035D00E75554 /* NSMutableURLRequest+Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+Category.m"; sourceTree = "<group>"; };
-		941B5BC7149F035D00E75554 /* NSString+QEncoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+QEncoding.h"; sourceTree = "<group>"; };
-		941B5BC8149F035D00E75554 /* NSString+QEncoding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+QEncoding.m"; sourceTree = "<group>"; };
-		941B5BC9149F035D00E75554 /* NSString+Readable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+Readable.h"; sourceTree = "<group>"; };
-		941B5BCA149F035D00E75554 /* NSString+Readable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+Readable.m"; sourceTree = "<group>"; };
-		941B5BCB149F035D00E75554 /* NSURL+QAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+QAdditions.h"; sourceTree = "<group>"; };
-		941B5BCC149F035D00E75554 /* NSURL+QAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+QAdditions.m"; sourceTree = "<group>"; };
-		941B5BCE149F035D00E75554 /* AdiumQWeiboEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdiumQWeiboEngine.h; sourceTree = "<group>"; };
-		941B5BCF149F035D00E75554 /* AdiumQWeiboEngine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdiumQWeiboEngine.m; sourceTree = "<group>"; };
-		941B5BD0149F035D00E75554 /* OAuthURLRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OAuthURLRequest.h; sourceTree = "<group>"; };
-		941B5BD1149F035D00E75554 /* OAuthURLRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OAuthURLRequest.m; sourceTree = "<group>"; };
-		941B5BD2149F035D00E75554 /* QOAuthSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QOAuthSession.h; sourceTree = "<group>"; };
-		941B5BD3149F035D00E75554 /* QOAuthSession.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QOAuthSession.m; sourceTree = "<group>"; };
-		941B5BD4149F035D00E75554 /* QWeibo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QWeibo.h; sourceTree = "<group>"; };
-		941B5BD5149F035D00E75554 /* RSimpleConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RSimpleConnection.h; sourceTree = "<group>"; };
-		941B5BD6149F035D00E75554 /* RSimpleConnection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RSimpleConnection.m; sourceTree = "<group>"; };
-		941B5BD7149F035D00E75554 /* WeiboEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeiboEngine.h; sourceTree = "<group>"; };
-		941B5BD8149F035D00E75554 /* WeiboEngine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeiboEngine.m; sourceTree = "<group>"; };
-		941B5BDA149F035D00E75554 /* JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
-		941B5BDB149F035D00E75554 /* NSData+SBJSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+SBJSON.h"; sourceTree = "<group>"; };
-		941B5BDC149F035D00E75554 /* NSData+SBJSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+SBJSON.m"; sourceTree = "<group>"; };
-		941B5BDD149F035D00E75554 /* NSObject+SBJSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
-		941B5BDE149F035D00E75554 /* NSObject+SBJSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
-		941B5BDF149F035D00E75554 /* NSString+SBJSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
-		941B5BE0149F035D00E75554 /* NSString+SBJSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBJSON.m"; sourceTree = "<group>"; };
-		941B5BE1149F035D00E75554 /* SBJSONScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBJSONScanner.h; sourceTree = "<group>"; };
-		941B5BE2149F035D00E75554 /* SBJSONScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBJSONScanner.m; sourceTree = "<group>"; };
-		941B5BE3149F035D00E75554 /* YAJL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = YAJL.framework; sourceTree = "<group>"; };
+		942B4823149F7BBC003ECA7E /* face.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = face.plist; sourceTree = "<group>"; };
 		942FDE4B148CACA7007D8EBE /* AdiumQWeibo.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdiumQWeibo.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		942FDE56148CACA7007D8EBE /* AdiumQWeibo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AdiumQWeibo-Info.plist"; sourceTree = "<group>"; };
 		942FDE58148CACA7007D8EBE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -607,114 +531,16 @@
 				941B585A149ED62700E75554 /* 97.gif */,
 				941B585B149ED62700E75554 /* 98.gif */,
 				941B585C149ED62700E75554 /* 99.gif */,
-				941B585D149ED62700E75554 /* emotions.js */,
+				942B4823149F7BBC003ECA7E /* face.plist */,
+				941B585D149ED62700E75554 /* emotions.txt */,
 			);
 			path = emotions;
-			sourceTree = "<group>";
-		};
-		941B5B95149EFFDB00E75554 /* UnitTest */ = {
-			isa = PBXGroup;
-			children = (
-				941B5B9B149EFFDB00E75554 /* UnitTest.h */,
-				941B5B9D149EFFDB00E75554 /* UnitTest.m */,
-				941B5B96149EFFDB00E75554 /* Supporting Files */,
-			);
-			path = UnitTest;
-			sourceTree = "<group>";
-		};
-		941B5B96149EFFDB00E75554 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				941B5B97149EFFDB00E75554 /* UnitTest-Info.plist */,
-				941B5B98149EFFDB00E75554 /* InfoPlist.strings */,
-				941B5B9F149EFFDB00E75554 /* UnitTest-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		941B5BBA149F035D00E75554 /* Linked Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				941B5BBB149F035D00E75554 /* Adium.framework */,
-				941B5BBC149F035D00E75554 /* AIUtilities.framework */,
-				941B5BBD149F035D00E75554 /* QWeibo OAuth */,
-				941B5BD9149F035D00E75554 /* SBJSON */,
-				941B5BE3149F035D00E75554 /* YAJL.framework */,
-			);
-			name = "Linked Frameworks";
-			path = "AdiumQWeibo/Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		941B5BBD149F035D00E75554 /* QWeibo OAuth */ = {
-			isa = PBXGroup;
-			children = (
-				941B5BBE149F035D00E75554 /* Cocoa Categories */,
-				941B5BCD149F035D00E75554 /* OAuth */,
-			);
-			path = "QWeibo OAuth";
-			sourceTree = "<group>";
-		};
-		941B5BBE149F035D00E75554 /* Cocoa Categories */ = {
-			isa = PBXGroup;
-			children = (
-				941B5BBF149F035D00E75554 /* AdiumQWeiboEngine+Helper.h */,
-				941B5BC0149F035D00E75554 /* AdiumQWeiboEngine+Helper.m */,
-				941B5BC1149F035D00E75554 /* NSData+QBase64.h */,
-				941B5BC2149F035D00E75554 /* NSData+QBase64.m */,
-				941B5BC3149F035D00E75554 /* NSDictionary+Response.h */,
-				941B5BC4149F035D00E75554 /* NSDictionary+Response.m */,
-				941B5BC5149F035D00E75554 /* NSMutableURLRequest+Category.h */,
-				941B5BC6149F035D00E75554 /* NSMutableURLRequest+Category.m */,
-				941B5BC7149F035D00E75554 /* NSString+QEncoding.h */,
-				941B5BC8149F035D00E75554 /* NSString+QEncoding.m */,
-				941B5BC9149F035D00E75554 /* NSString+Readable.h */,
-				941B5BCA149F035D00E75554 /* NSString+Readable.m */,
-				941B5BCB149F035D00E75554 /* NSURL+QAdditions.h */,
-				941B5BCC149F035D00E75554 /* NSURL+QAdditions.m */,
-			);
-			path = "Cocoa Categories";
-			sourceTree = "<group>";
-		};
-		941B5BCD149F035D00E75554 /* OAuth */ = {
-			isa = PBXGroup;
-			children = (
-				941B5BCE149F035D00E75554 /* AdiumQWeiboEngine.h */,
-				941B5BCF149F035D00E75554 /* AdiumQWeiboEngine.m */,
-				941B5BD0149F035D00E75554 /* OAuthURLRequest.h */,
-				941B5BD1149F035D00E75554 /* OAuthURLRequest.m */,
-				941B5BD2149F035D00E75554 /* QOAuthSession.h */,
-				941B5BD3149F035D00E75554 /* QOAuthSession.m */,
-				941B5BD4149F035D00E75554 /* QWeibo.h */,
-				941B5BD5149F035D00E75554 /* RSimpleConnection.h */,
-				941B5BD6149F035D00E75554 /* RSimpleConnection.m */,
-				941B5BD7149F035D00E75554 /* WeiboEngine.h */,
-				941B5BD8149F035D00E75554 /* WeiboEngine.m */,
-			);
-			path = OAuth;
-			sourceTree = "<group>";
-		};
-		941B5BD9149F035D00E75554 /* SBJSON */ = {
-			isa = PBXGroup;
-			children = (
-				941B5BDA149F035D00E75554 /* JSON.h */,
-				941B5BDB149F035D00E75554 /* NSData+SBJSON.h */,
-				941B5BDC149F035D00E75554 /* NSData+SBJSON.m */,
-				941B5BDD149F035D00E75554 /* NSObject+SBJSON.h */,
-				941B5BDE149F035D00E75554 /* NSObject+SBJSON.m */,
-				941B5BDF149F035D00E75554 /* NSString+SBJSON.h */,
-				941B5BE0149F035D00E75554 /* NSString+SBJSON.m */,
-				941B5BE1149F035D00E75554 /* SBJSONScanner.h */,
-				941B5BE2149F035D00E75554 /* SBJSONScanner.m */,
-			);
-			path = SBJSON;
 			sourceTree = "<group>";
 		};
 		942FDE40148CACA6007D8EBE = {
 			isa = PBXGroup;
 			children = (
-				941B5BBA149F035D00E75554 /* Linked Frameworks */,
 				942FDE54148CACA7007D8EBE /* AdiumQWeibo */,
-				941B5B95149EFFDB00E75554 /* UnitTest */,
 				942FDE4D148CACA7007D8EBE /* Frameworks */,
 				942FDE4C148CACA7007D8EBE /* Products */,
 			);
@@ -884,8 +710,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				941B5B9A149EFFDB00E75554 /* InfoPlist.strings in Resources */,
-				941B5B9C149EFFDB00E75554 /* UnitTest.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1002,6 +826,7 @@
 				941B58C4149ED62700E75554 /* 97.gif in Resources */,
 				941B58C5149ED62700E75554 /* 98.gif in Resources */,
 				941B58C6149ED62700E75554 /* 99.gif in Resources */,
+				942B4824149F7BBC003ECA7E /* face.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1042,42 +867,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				941B5BE7149F047100E75554 /* AdiumQWeiboEngine+Helper.h in Sources */,
 				941B5BB5149F027C00E75554 /* AdiumQWeiboEngine+Helper.m in Sources */,
-				941B5BE8149F047100E75554 /* NSData+QBase64.h in Sources */,
-				941B5BE9149F047100E75554 /* NSData+QBase64.m in Sources */,
-				941B5BEA149F047100E75554 /* NSDictionary+Response.h in Sources */,
-				941B5BEB149F047100E75554 /* NSDictionary+Response.m in Sources */,
-				941B5BEC149F047100E75554 /* NSMutableURLRequest+Category.h in Sources */,
-				941B5BED149F047100E75554 /* NSMutableURLRequest+Category.m in Sources */,
-				941B5BEE149F047100E75554 /* NSString+QEncoding.h in Sources */,
-				941B5BEF149F047100E75554 /* NSString+QEncoding.m in Sources */,
-				941B5BF0149F047100E75554 /* NSString+Readable.h in Sources */,
-				941B5BF1149F047100E75554 /* NSString+Readable.m in Sources */,
-				941B5BF2149F047100E75554 /* NSURL+QAdditions.h in Sources */,
-				941B5BF3149F047100E75554 /* NSURL+QAdditions.m in Sources */,
-				941B5BF4149F047100E75554 /* AdiumQWeiboEngine.h in Sources */,
-				941B5BF5149F047100E75554 /* AdiumQWeiboEngine.m in Sources */,
-				941B5BF6149F047100E75554 /* OAuthURLRequest.h in Sources */,
-				941B5BF7149F047100E75554 /* OAuthURLRequest.m in Sources */,
-				941B5BF8149F047100E75554 /* QOAuthSession.h in Sources */,
-				941B5BF9149F047100E75554 /* QOAuthSession.m in Sources */,
-				941B5BFA149F047100E75554 /* QWeibo.h in Sources */,
-				941B5BFB149F047100E75554 /* RSimpleConnection.h in Sources */,
-				941B5BFC149F047100E75554 /* RSimpleConnection.m in Sources */,
-				941B5BFD149F047100E75554 /* WeiboEngine.h in Sources */,
-				941B5BFE149F047100E75554 /* WeiboEngine.m in Sources */,
-				941B5BFF149F047100E75554 /* JSON.h in Sources */,
-				941B5C00149F047100E75554 /* NSData+SBJSON.h in Sources */,
-				941B5C01149F047100E75554 /* NSData+SBJSON.m in Sources */,
-				941B5C02149F047100E75554 /* NSObject+SBJSON.h in Sources */,
-				941B5C03149F047100E75554 /* NSObject+SBJSON.m in Sources */,
-				941B5C04149F047100E75554 /* NSString+SBJSON.h in Sources */,
-				941B5C05149F047100E75554 /* NSString+SBJSON.m in Sources */,
-				941B5C06149F047100E75554 /* SBJSONScanner.h in Sources */,
-				941B5C07149F047100E75554 /* SBJSONScanner.m in Sources */,
 				941B5BE6149F03A000E75554 /* NIFLog.h in Sources */,
-				941B5B9E149EFFDB00E75554 /* UnitTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1106,7 +897,7 @@
 				94DA7748149910EF0057A291 /* NSData+SBJSON.m in Sources */,
 				94D4D68A149CFBEF00DADCC1 /* NSString+Readable.m in Sources */,
 				94D0321B149DE01300D84221 /* AdiumQWeiboEngine+Helper.m in Sources */,
-				941B58C7149ED62700E75554 /* emotions.js in Sources */,
+				941B58C7149ED62700E75554 /* emotions.txt in Sources */,
 				941B5903149EE24200E75554 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1122,14 +913,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		941B5B98149EFFDB00E75554 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				941B5B99149EFFDB00E75554 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		942FDE57148CACA7007D8EBE /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1286,6 +1069,7 @@
 				941B5BA2149EFFDB00E75554 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		942FDE45148CACA6007D8EBE /* Build configuration list for PBXProject "AdiumQWeibo" */ = {
 			isa = XCConfigurationList;

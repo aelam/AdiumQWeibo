@@ -20,6 +20,7 @@
     [[NSFileManager defaultManager] removeItemAtPath:logPath error:nil];    
     freopen([logPath cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr);
     
+    
     [[AIContactObserverManager sharedManager] registerListObjectObserver:self];
 	[AIQWeiboService registerService];        
 }
