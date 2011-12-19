@@ -67,7 +67,7 @@
 	static NSCharacterSet *hashCharacters = nil;
 	
 	if (!usernameCharacters) {
-		usernameCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_"] retain];
+		usernameCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-"] retain];
 	}
 	
 	if (!hashCharacters) {
@@ -117,9 +117,31 @@
             // hyperlink username
             NSAttributedString *sourceString2 = [self linkifiedStringFromAttributedString:sourceString1 forPrefixCharacter:@"@" forLinkType:AIQWeiboLinkUserPage validCharacterSet:usernameCharacters];
 
+            NSAttributedString *imageString;
+            NSTextAttachment *ta = [[[NSTextAttachment alloc] init] autorelease];
+            NSTextAttachmentCell *cell = [[[NSTextAttachmentCell alloc] init] autorelease];
+            NSImage *image = nil;
+                
+            NSBundle *bundle = [NSBundle bundleForClass:[AdiumQWeiboEngine class]];
+
+            
+            NIF_INFO(@"------------  %@", [NSBundle allBundles]);
+            NIF_INFO(@"------------  %@", [bundle bundleIdentifier]);
+            NIF_INFO(@"------------  %@", [bundle infoDictionary]);    
+            
+            NSString *imagePath = [bundle pathForImageResource:@"1"];
+            image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
+            [cell setImage:image];
+            [ta setAttachmentCell:cell];
+            
+            imageString  = [NSAttributedString attributedStringWithAttachment:ta];
+            
             
             [attributedString appendAttributedString:originText2];
             [attributedString appendAttributedString:sourceString2];
+            
+            [attributedString appendAttributedString:imageString];
+            
             break;
         }
         case ResponseTweetTypePrivateMessage:
@@ -186,8 +208,9 @@
 		BOOL scannedCharacters = [scanner scanCharactersFromSet:validValues intoString:&linkText];
 		
 		if(scannedCharacters) {
-            NSCharacterSet *characterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-            
+            NSMutableCharacterSet *characterSet = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
+            [characterSet addCharactersInString:@":"];
+            [characterSet addCharactersInString:@"|"];
 			if((scanner.scanLocation - linkText.length) == prefixCharacter.length || 
 			   [characterSet characterIsMember:[scanner.string characterAtIndex:(scanner.scanLocation - linkText.length - prefixCharacter.length - 1)]]) {
 				

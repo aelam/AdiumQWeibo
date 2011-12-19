@@ -21,7 +21,7 @@
     freopen([logPath cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr);
     
     [[AIContactObserverManager sharedManager] registerListObjectObserver:self];
-	[AIQWeiboService registerService];    
+	[AIQWeiboService registerService];        
 }
 
 - (NSString *)pluginAuthor {
