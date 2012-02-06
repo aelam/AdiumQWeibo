@@ -7,9 +7,10 @@
 //
 
 #import "AdiumQWeiboEngine+Helper.h"
-#import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIStringAdditions.h>
+//#import <AIUtilities/AIStringAdditions.h>
+//#import <AIUtilities/AIAttributedStringAdditions.h>
+//#import <AIUtilities/AIStringAdditions.h>
+#import "RegexKitLite.h"
 
 @implementation AdiumQWeiboEngine (Helper)
 
@@ -60,7 +61,34 @@
 	return address;
 }
 
++ (NSAttributedString *)attributedTweetFromTweetDictionary:(NSDictionary *)json {
+    static NSString *usernameCharacters = nil;
+    static NSString *topicCharacters = nil;
+    
+    if (usernameCharacters == nil) {
+        usernameCharacters = [@"@\\w\\-]{2,30}" retain];
+    }
+//    - (NSString *)RKL_METHOD_PREPEND(stringByReplacingOccurrencesOfRegex):(NSString *)regex usingBlock:(NSString *(^)(NSInteger captureCount, NSString * const capturedStrings[captureCount], const NSRange capturedRanges[captureCount], volatile BOOL * const stop))block;
+    
+//    NSString *originText = [json objectForKey:@"origtext"];
+    NSString *originText = @"@hello eeeedcdcd  @lunwang-kkk dcdcaaaasdcd @@@ddddjjjkj";
+    
+    NIF_INFO(@"usernameCharacters ; %@", usernameCharacters);    
+    NIF_INFO(@"origtext ：%@", originText);
+    
+    NSString *wrappedNameText = [originText stringByReplacingOccurrencesOfRegex:usernameCharacters usingBlock:^NSString *(NSInteger captureCount, NSString *const *capturedStrings, const NSRange *capturedRanges, volatile BOOL *const stop) {
+        for (int i = 0; i < captureCount; i++) {
+            NIF_INFO(@"-- %@", capturedStrings[i]);
+        }
+        return @"return";
+    }];
 
+    NIF_INFO(@"wrappedNameText : %@", wrappedNameText);
+    return [NSAttributedString stringWithString:@"test"];
+}
+
+
+/*
 + (NSAttributedString *)attributedTweetFromTweetDictionary:(NSDictionary *)json {
     
     static NSCharacterSet *usernameCharacters = nil;
@@ -163,6 +191,7 @@
     
     return attributedString;
 }
+ */
 
 +(NSAttributedString *)linkifiedStringFromAttributedString:(NSAttributedString *)inString
 										forPrefixCharacter:(NSString *)prefixCharacter

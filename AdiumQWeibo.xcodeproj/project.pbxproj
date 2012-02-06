@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		940C0F7E14E008EE00DF9D5E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D4D6F7149DB19D00DADCC1 /* Cocoa.framework */; };
+		940C0F8414E008EE00DF9D5E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 940C0F8214E008EE00DF9D5E /* InfoPlist.strings */; };
+		940C0F8714E008EE00DF9D5E /* UnitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 940C0F8614E008EE00DF9D5E /* UnitTest.m */; };
+		940C0FCF14E00A7100DF9D5E /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 941B5BAD149F008800E75554 /* SenTestingKit.framework */; };
+		940C107C14E01E3000DF9D5E /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C2400714DF9FCF00161FAD /* RegexKitLite.m */; };
+		940C108014E03AAC00DF9D5E /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 940C107F14E03AAC00DF9D5E /* libicucore.dylib */; };
+		940C108114E03AED00DF9D5E /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 940C107F14E03AAC00DF9D5E /* libicucore.dylib */; };
 		94187A891493AD48000F4AD1 /* AIQWeiboAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 94187A881493AD48000F4AD1 /* AIQWeiboAccountView.nib */; };
 		94187AE61493BF7B000F4AD1 /* NSData+QBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AD31493BF7B000F4AD1 /* NSData+QBase64.m */; };
 		94187AE71493BF7B000F4AD1 /* NSDictionary+Response.m in Sources */ = {isa = PBXBuildFile; fileRef = 94187AD51493BF7B000F4AD1 /* NSDictionary+Response.m */; };
@@ -124,12 +131,6 @@
 		941B58C6149ED62700E75554 /* 99.gif in Resources */ = {isa = PBXBuildFile; fileRef = 941B585C149ED62700E75554 /* 99.gif */; };
 		941B58C7149ED62700E75554 /* emotions.txt in Sources */ = {isa = PBXBuildFile; fileRef = 941B585D149ED62700E75554 /* emotions.txt */; };
 		941B5903149EE24200E75554 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 941B5902149EE24200E75554 /* main.m */; };
-		941B5B94149EFFDB00E75554 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D4D6F7149DB19D00DADCC1 /* Cocoa.framework */; };
-		941B5BAF149F00A400E75554 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 941B5BAD149F008800E75554 /* SenTestingKit.framework */; };
-		941B5BB5149F027C00E75554 /* AdiumQWeiboEngine+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D0321A149DE01300D84221 /* AdiumQWeiboEngine+Helper.m */; };
-		941B5BE4149F037500E75554 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */; };
-		941B5BE5149F037500E75554 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDEA5148CB6AB007D8EBE /* Adium.framework */; };
-		941B5BE6149F03A000E75554 /* NIFLog.h in Sources */ = {isa = PBXBuildFile; fileRef = 94AC0E1914948A5F006F0610 /* NIFLog.h */; };
 		942B4824149F7BBC003ECA7E /* face.plist in Resources */ = {isa = PBXBuildFile; fileRef = 942B4823149F7BBC003ECA7E /* face.plist */; };
 		942FDE59148CACA7007D8EBE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 942FDE57148CACA7007D8EBE /* InfoPlist.strings */; };
 		942FDEA6148CB6AB007D8EBE /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDEA5148CB6AB007D8EBE /* Adium.framework */; };
@@ -140,7 +141,6 @@
 		942FDF0B148CCC43007D8EBE /* qweibo-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF09148CCC43007D8EBE /* qweibo-small.png */; };
 		942FDF0D148CCC8E007D8EBE /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */; };
 		94C2401114DF9FCF00161FAD /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C2400714DF9FCF00161FAD /* RegexKitLite.m */; };
-		94C2403514DFB6EA00161FAD /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C2403414DFB6E900161FAD /* libicucore.dylib */; };
 		94C7FD91149788400000139D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD90149788400000139D /* AppKit.framework */; };
 		94C7FD93149788400000139D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD92149788400000139D /* Cocoa.framework */; };
 		94C7FD95149788400000139D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD94149788400000139D /* CoreData.framework */; };
@@ -157,7 +157,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		941B5BA3149EFFE500E75554 /* PBXContainerItemProxy */ = {
+		940C0FD014E00A8E00DF9D5E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 942FDE42148CACA6007D8EBE /* Project object */;
 			proxyType = 1;
@@ -167,6 +167,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		940C0F7B14E008ED00DF9D5E /* UnitTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		940C0F7C14E008EE00DF9D5E /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		940C0F8114E008EE00DF9D5E /* UnitTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UnitTest-Info.plist"; sourceTree = "<group>"; };
+		940C0F8314E008EE00DF9D5E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		940C0F8514E008EE00DF9D5E /* UnitTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnitTest.h; sourceTree = "<group>"; };
+		940C0F8614E008EE00DF9D5E /* UnitTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnitTest.m; sourceTree = "<group>"; };
+		940C0F8814E008EE00DF9D5E /* UnitTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UnitTest-Prefix.pch"; sourceTree = "<group>"; };
+		940C107F14E03AAC00DF9D5E /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = SDKs/MacOSX10.7.sdk/usr/lib/libicucore.dylib; sourceTree = DEVELOPER_DIR; };
 		94187A881493AD48000F4AD1 /* AIQWeiboAccountView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = AIQWeiboAccountView.nib; sourceTree = "<group>"; };
 		94187AD21493BF7B000F4AD1 /* NSData+QBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+QBase64.h"; sourceTree = "<group>"; };
 		94187AD31493BF7B000F4AD1 /* NSData+QBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+QBase64.m"; sourceTree = "<group>"; };
@@ -294,7 +302,6 @@
 		941B585C149ED62700E75554 /* 99.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 99.gif; sourceTree = "<group>"; };
 		941B585D149ED62700E75554 /* emotions.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = emotions.txt; sourceTree = "<group>"; };
 		941B5902149EE24200E75554 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		941B5B91149EFFDB00E75554 /* UnitTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		941B5BAD149F008800E75554 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		941B5BB4149F027500E75554 /* AdiumQWeiboEngine+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AdiumQWeiboEngine+Helper.h"; sourceTree = "<group>"; };
 		942B4823149F7BBC003ECA7E /* face.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = face.plist; sourceTree = "<group>"; };
@@ -315,7 +322,6 @@
 		94AC0E1914948A5F006F0610 /* NIFLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIFLog.h; sourceTree = "<group>"; };
 		94C2400514DF9FCF00161FAD /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		94C2400714DF9FCF00161FAD /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
-		94C2403414DFB6E900161FAD /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		94C7FD90149788400000139D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		94C7FD92149788400000139D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		94C7FD94149788400000139D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -343,14 +349,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		941B5B8D149EFFDB00E75554 /* Frameworks */ = {
+		940C0F7714E008ED00DF9D5E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				941B5B94149EFFDB00E75554 /* Cocoa.framework in Frameworks */,
-				941B5BAF149F00A400E75554 /* SenTestingKit.framework in Frameworks */,
-				941B5BE4149F037500E75554 /* AIUtilities.framework in Frameworks */,
-				941B5BE5149F037500E75554 /* Adium.framework in Frameworks */,
+				940C108114E03AED00DF9D5E /* libicucore.dylib in Frameworks */,
+				940C0FCF14E00A7100DF9D5E /* SenTestingKit.framework in Frameworks */,
+				940C0F7E14E008EE00DF9D5E /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,7 +363,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				94C2403514DFB6EA00161FAD /* libicucore.dylib in Frameworks */,
+				940C108014E03AAC00DF9D5E /* libicucore.dylib in Frameworks */,
 				942FDEA6148CB6AB007D8EBE /* Adium.framework in Frameworks */,
 				942FDF0D148CCC8E007D8EBE /* AIUtilities.framework in Frameworks */,
 				94C7FD91149788400000139D /* AppKit.framework in Frameworks */,
@@ -371,6 +376,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		940C0F7F14E008EE00DF9D5E /* UnitTest */ = {
+			isa = PBXGroup;
+			children = (
+				940C0F8514E008EE00DF9D5E /* UnitTest.h */,
+				940C0F8614E008EE00DF9D5E /* UnitTest.m */,
+				940C0F8014E008EE00DF9D5E /* Supporting Files */,
+			);
+			path = UnitTest;
+			sourceTree = "<group>";
+		};
+		940C0F8014E008EE00DF9D5E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				940C0F8114E008EE00DF9D5E /* UnitTest-Info.plist */,
+				940C0F8214E008EE00DF9D5E /* InfoPlist.strings */,
+				940C0F8814E008EE00DF9D5E /* UnitTest-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		94187AD01493BF7B000F4AD1 /* QWeibo OAuth */ = {
 			isa = PBXGroup;
 			children = (
@@ -547,6 +572,7 @@
 			isa = PBXGroup;
 			children = (
 				942FDE54148CACA7007D8EBE /* AdiumQWeibo */,
+				940C0F7F14E008EE00DF9D5E /* UnitTest */,
 				942FDE4D148CACA7007D8EBE /* Frameworks */,
 				942FDE4C148CACA7007D8EBE /* Products */,
 			);
@@ -556,7 +582,7 @@
 			isa = PBXGroup;
 			children = (
 				942FDE4B148CACA7007D8EBE /* AdiumQWeibo.AdiumPlugin */,
-				941B5B91149EFFDB00E75554 /* UnitTest.octest */,
+				940C0F7B14E008ED00DF9D5E /* UnitTest.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -566,6 +592,7 @@
 			children = (
 				942FDEA4148CB69C007D8EBE /* Linked Frameworks */,
 				94D4D6F7149DB19D00DADCC1 /* Cocoa.framework */,
+				940C0F7C14E008EE00DF9D5E /* SenTestingKit.framework */,
 				942FDE50148CACA7007D8EBE /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -620,7 +647,7 @@
 		942FDEA4148CB69C007D8EBE /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				94C2403414DFB6E900161FAD /* libicucore.dylib */,
+				940C107F14E03AAC00DF9D5E /* libicucore.dylib */,
 				94C23FFA14DF9FCF00161FAD /* RegexKitLite-4.0 */,
 				941B5BAD149F008800E75554 /* SenTestingKit.framework */,
 				94DA773B14990D920057A291 /* SBJSON */,
@@ -659,23 +686,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		941B5B90149EFFDB00E75554 /* UnitTest */ = {
+		940C0F7A14E008ED00DF9D5E /* UnitTest */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 941B5BA0149EFFDB00E75554 /* Build configuration list for PBXNativeTarget "UnitTest" */;
+			buildConfigurationList = 940C0F8914E008EE00DF9D5E /* Build configuration list for PBXNativeTarget "UnitTest" */;
 			buildPhases = (
-				941B5B8C149EFFDB00E75554 /* Sources */,
-				941B5B8D149EFFDB00E75554 /* Frameworks */,
-				941B5B8E149EFFDB00E75554 /* Resources */,
-				941B5B8F149EFFDB00E75554 /* ShellScript */,
+				940C0F7614E008ED00DF9D5E /* Sources */,
+				940C0F7714E008ED00DF9D5E /* Frameworks */,
+				940C0F7814E008ED00DF9D5E /* Resources */,
+				940C0F7914E008ED00DF9D5E /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				941B5BA4149EFFE500E75554 /* PBXTargetDependency */,
+				940C0FD114E00A8E00DF9D5E /* PBXTargetDependency */,
 			);
 			name = UnitTest;
 			productName = UnitTest;
-			productReference = 941B5B91149EFFDB00E75554 /* UnitTest.octest */;
+			productReference = 940C0F7B14E008ED00DF9D5E /* UnitTest.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
 		942FDE4A148CACA7007D8EBE /* AdiumQWeibo */ = {
@@ -717,16 +744,17 @@
 			projectRoot = "";
 			targets = (
 				942FDE4A148CACA7007D8EBE /* AdiumQWeibo */,
-				941B5B90149EFFDB00E75554 /* UnitTest */,
+				940C0F7A14E008ED00DF9D5E /* UnitTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		941B5B8E149EFFDB00E75554 /* Resources */ = {
+		940C0F7814E008ED00DF9D5E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				940C0F8414E008EE00DF9D5E /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -850,7 +878,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		941B5B8F149EFFDB00E75554 /* ShellScript */ = {
+		940C0F7914E008ED00DF9D5E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -861,7 +889,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+			shellScript = "# Run the unit tests in this test bundle.\necho \"why not execute\"\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
 		94E8495F1494D1FF00B3D8F4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -880,12 +908,12 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		941B5B8C149EFFDB00E75554 /* Sources */ = {
+		940C0F7614E008ED00DF9D5E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				941B5BB5149F027C00E75554 /* AdiumQWeiboEngine+Helper.m in Sources */,
-				941B5BE6149F03A000E75554 /* NIFLog.h in Sources */,
+				940C107C14E01E3000DF9D5E /* RegexKitLite.m in Sources */,
+				940C0F8714E008EE00DF9D5E /* UnitTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -923,14 +951,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		941B5BA4149EFFE500E75554 /* PBXTargetDependency */ = {
+		940C0FD114E00A8E00DF9D5E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 942FDE4A148CACA7007D8EBE /* AdiumQWeibo */;
-			targetProxy = 941B5BA3149EFFE500E75554 /* PBXContainerItemProxy */;
+			targetProxy = 940C0FD014E00A8E00DF9D5E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		940C0F8214E008EE00DF9D5E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				940C0F8314E008EE00DF9D5E /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		942FDE57148CACA7007D8EBE /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -942,16 +978,11 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		941B5BA1149EFFDB00E75554 /* Debug */ = {
+		940C0F8A14E008EE00DF9D5E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-					/Developer/Library/Frameworks,
-					"\"$(SRCROOT)/AdiumQWeibo/Linked Frameworks\"",
-				);
-				GCC_ENABLE_OBJC_GC = supported;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "UnitTest/UnitTest-Prefix.pch";
 				INFOPLIST_FILE = "UnitTest/UnitTest-Info.plist";
@@ -962,15 +993,10 @@
 			};
 			name = Debug;
 		};
-		941B5BA2149EFFDB00E75554 /* Release */ = {
+		940C0F8B14E008EE00DF9D5E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-					/Developer/Library/Frameworks,
-					"\"$(SRCROOT)/AdiumQWeibo/Linked Frameworks\"",
-				);
-				GCC_ENABLE_OBJC_GC = supported;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "UnitTest/UnitTest-Prefix.pch";
 				INFOPLIST_FILE = "UnitTest/UnitTest-Info.plist";
@@ -1052,6 +1078,10 @@
 				GCC_PREFIX_HEADER = "AdiumQWeibo/AdiumQWeibo-Prefix.pch";
 				INFOPLIST_FILE = "AdiumQWeibo/AdiumQWeibo-Info.plist";
 				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_DIR)/SDKs/MacOSX10.7.sdk/usr/lib\"",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -1071,6 +1101,10 @@
 				GCC_PREFIX_HEADER = "AdiumQWeibo/AdiumQWeibo-Prefix.pch";
 				INFOPLIST_FILE = "AdiumQWeibo/AdiumQWeibo-Info.plist";
 				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_DIR)/SDKs/MacOSX10.7.sdk/usr/lib\"",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -1080,14 +1114,13 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		941B5BA0149EFFDB00E75554 /* Build configuration list for PBXNativeTarget "UnitTest" */ = {
+		940C0F8914E008EE00DF9D5E /* Build configuration list for PBXNativeTarget "UnitTest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				941B5BA1149EFFDB00E75554 /* Debug */,
-				941B5BA2149EFFDB00E75554 /* Release */,
+				940C0F8A14E008EE00DF9D5E /* Debug */,
+				940C0F8B14E008EE00DF9D5E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
 		942FDE45148CACA6007D8EBE /* Build configuration list for PBXProject "AdiumQWeibo" */ = {
 			isa = XCConfigurationList;
