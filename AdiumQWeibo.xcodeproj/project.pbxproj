@@ -139,6 +139,8 @@
 		942FDF0A148CCC43007D8EBE /* qweibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF08148CCC43007D8EBE /* qweibo.png */; };
 		942FDF0B148CCC43007D8EBE /* qweibo-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF09148CCC43007D8EBE /* qweibo-small.png */; };
 		942FDF0D148CCC8E007D8EBE /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */; };
+		94C2401114DF9FCF00161FAD /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C2400714DF9FCF00161FAD /* RegexKitLite.m */; };
+		94C2403514DFB6EA00161FAD /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C2403414DFB6E900161FAD /* libicucore.dylib */; };
 		94C7FD91149788400000139D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD90149788400000139D /* AppKit.framework */; };
 		94C7FD93149788400000139D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD92149788400000139D /* Cocoa.framework */; };
 		94C7FD95149788400000139D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD94149788400000139D /* CoreData.framework */; };
@@ -311,6 +313,10 @@
 		942FDF09148CCC43007D8EBE /* qweibo-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qweibo-small.png"; sourceTree = "<group>"; };
 		942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AIUtilities.framework; sourceTree = "<group>"; };
 		94AC0E1914948A5F006F0610 /* NIFLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIFLog.h; sourceTree = "<group>"; };
+		94C2400514DF9FCF00161FAD /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		94C2400714DF9FCF00161FAD /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		94C2403214DFB68A00161FAD /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		94C2403414DFB6E900161FAD /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		94C7FD90149788400000139D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		94C7FD92149788400000139D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		94C7FD94149788400000139D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -353,6 +359,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94C2403514DFB6EA00161FAD /* libicucore.dylib in Frameworks */,
 				942FDEA6148CB6AB007D8EBE /* Adium.framework in Frameworks */,
 				942FDF0D148CCC8E007D8EBE /* AIUtilities.framework in Frameworks */,
 				94C7FD91149788400000139D /* AppKit.framework in Frameworks */,
@@ -540,6 +547,7 @@
 		942FDE40148CACA6007D8EBE = {
 			isa = PBXGroup;
 			children = (
+				94C2403414DFB6E900161FAD /* libicucore.dylib */,
 				942FDE54148CACA7007D8EBE /* AdiumQWeibo */,
 				942FDE4D148CACA7007D8EBE /* Frameworks */,
 				942FDE4C148CACA7007D8EBE /* Products */,
@@ -614,6 +622,8 @@
 		942FDEA4148CB69C007D8EBE /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				94C2403214DFB68A00161FAD /* libiconv.dylib */,
+				94C23FFA14DF9FCF00161FAD /* RegexKitLite-4.0 */,
 				941B5BAD149F008800E75554 /* SenTestingKit.framework */,
 				94DA773B14990D920057A291 /* SBJSON */,
 				942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */,
@@ -621,6 +631,15 @@
 			);
 			name = "Linked Frameworks";
 			path = "AdiumQWeibo/Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		94C23FFA14DF9FCF00161FAD /* RegexKitLite-4.0 */ = {
+			isa = PBXGroup;
+			children = (
+				94C2400514DF9FCF00161FAD /* RegexKitLite.h */,
+				94C2400714DF9FCF00161FAD /* RegexKitLite.m */,
+			);
+			path = "RegexKitLite-4.0";
 			sourceTree = "<group>";
 		};
 		94DA773B14990D920057A291 /* SBJSON */ = {
@@ -899,6 +918,7 @@
 				94D0321B149DE01300D84221 /* AdiumQWeiboEngine+Helper.m in Sources */,
 				941B58C7149ED62700E75554 /* emotions.txt in Sources */,
 				941B5903149EE24200E75554 /* main.m in Sources */,
+				94C2401114DF9FCF00161FAD /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -587,7 +587,9 @@
                                     nil];
             [AdiumQWeiboEngine fetchDataWithAPIPath:path params:params session:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
                 if (!error) {
-
+                    
+                    NIF_INFO(@"-- %@", responseJSON);
+                    
                     NSMutableArray *profileArray = [[[inContact profileArray] mutableCopy] autorelease];
                     
                     NSArray *statuses = [responseJSON valueForKeyPath:@"data.info"];                    
