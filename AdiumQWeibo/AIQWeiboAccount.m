@@ -601,10 +601,10 @@
                         
                         NSString *tweetID = [[update objectForKey:@"id"]description];
                         
-                        NSAttributedString *suffix = [AdiumQWeiboEngine suffixActionAttributedStringWithTweetID:tweetID myID:self.UID];
+//                        NSAttributedString *suffix = [AdiumQWeiboEngine suffixActionAttributedStringWithTweetID:tweetID myID:self.UID];
                         
                         [string appendAttributedString:text];
-                        [string appendAttributedString:suffix];
+//                        [string appendAttributedString:suffix];
                         
                         [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:string,KEY_VALUE,nil]];                        
                     }
