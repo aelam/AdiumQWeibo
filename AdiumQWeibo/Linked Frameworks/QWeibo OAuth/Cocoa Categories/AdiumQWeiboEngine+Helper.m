@@ -66,11 +66,14 @@
     static NSString *topicCharacters = nil;
     
     if (usernameCharacters == nil) {
-        usernameCharacters = [@"@\\w\\-]{2,30}" retain];
+        usernameCharacters = [@"(?<=@)[\\w-]{2,40}" retain];
     }
-//    - (NSString *)RKL_METHOD_PREPEND(stringByReplacingOccurrencesOfRegex):(NSString *)regex usingBlock:(NSString *(^)(NSInteger captureCount, NSString * const capturedStrings[captureCount], const NSRange capturedRanges[captureCount], volatile BOOL * const stop))block;
     
-//    NSString *originText = [json objectForKey:@"origtext"];
+    if (topicCharacters == nil) {
+        topicCharacters = [@"#([^\\#|.]+)#" retain];
+    }
+
+    
     NSString *originText = @"@hello eeeedcdcd  @lunwang-kkk dcdcaaaasdcd @@@ddddjjjkj";
     
     NIF_INFO(@"usernameCharacters ; %@", usernameCharacters);    
@@ -86,6 +89,8 @@
     NIF_INFO(@"wrappedNameText : %@", wrappedNameText);
     return [NSAttributedString stringWithString:@"test"];
 }
+
+
 
 
 /*

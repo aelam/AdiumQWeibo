@@ -8,6 +8,7 @@
 
 #import "UnitTest.h"
 #import "RegexKitLite.h"
+#import "NSString+TweetContent.h"
 
 @implementation UnitTest
 
@@ -33,7 +34,6 @@
 
 - (void)_testParseUsername {
     static NSString *usernameCharacters = nil;
-//    static NSString *topicCharacters = nil;
     
     if (usernameCharacters == nil) {
         usernameCharacters = [@"(?<=@)[\\w-]{2,40}" retain];
@@ -55,7 +55,7 @@
     [SenTestLog testLogWithFormat:@"originText2 : %@\n",t1];    
 }
 
-- (void)testEmotions {
+- (void)_testEmotions {
     NSString *originText = @"/坏笑fsdfsdf/撇嘴hi hello";    
     [SenTestLog testLogWithFormat:@"originText : %@\n",originText];
     
@@ -68,15 +68,16 @@
     
     // /坏笑|/撇嘴
     NSString* r = [originText stringByReplacingOccurrencesOfRegex:regex usingBlock:^NSString *(NSInteger captureCount, NSString *const *capturedStrings, const NSRange *capturedRanges, volatile BOOL *const stop) {
+        NSString *iconName = @"";
         for(int i = 0; i < captureCount;i++) {
             [SenTestLog testLogWithFormat:@"originText2 : %@\n",capturedStrings[i]];  
             NSString *temp = [capturedStrings[i] stringByReplacingOccurrencesOfString:@"/" withString:@""];
             
             [SenTestLog testLogWithFormat:@"facePairs-k: %@\n",temp]; 
-            [SenTestLog testLogWithFormat:@"facePairs2 : %@\n",[facePairs objectForKey:temp]];                
-            
+            [SenTestLog testLogWithFormat:@"facePairs2 : %@\n",[facePairs objectForKey:temp]];    
+            iconName = [facePairs objectForKey:temp];
         }
-        return @"[--]";
+        return iconName;
     }];
     
     [SenTestLog testLogWithFormat:@"originText3 : %@\n",r];                
@@ -85,6 +86,29 @@
 //    [SenTestLog testLogWithFormat:@"originText2 : %@\n",t1];    
 }
 
+- (void)testUsername2 {
+    NSString *originText = @"@hello eeeedcdcd  @lunwang-kkk dcdcaaaasdcd @@@ddddjjjkj";    
+    NSArray *names = [NSString scanStringForUsernames:originText];
+    [SenTestLog testLogWithFormat:@"originText-k: %@\n",originText]; 
+    [SenTestLog testLogWithFormat:@"names-k: %@\n",names]; 
+}
+
+- (void)testTopic2 {
+    NSString *originText = @"##dsfsdf# fdsfdsfds #dfdsfsdfds# fdfdfdfd";    
+    [SenTestLog testLogWithFormat:@"originText : %@\n",originText];
+
+    NSArray *topics = [NSString scanStringForHashtags:originText];
+    [SenTestLog testLogWithFormat:@"topics : %@\n",topics];    
+}
+
+- (void)testLinks {
+    NSString *originText = @"http://fsfdsf.fff http://www.fdfd.com @rererew #rere http://t.tt.cc";    
+    [SenTestLog testLogWithFormat:@"originText : %@\n",originText];
+    
+    NSArray *links = [NSString scanStringForLinks:originText];
+    [SenTestLog testLogWithFormat:@"links : %@\n",links];    
+
+}
 
 
 @end

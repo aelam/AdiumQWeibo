@@ -140,6 +140,8 @@
 		942FDF0A148CCC43007D8EBE /* qweibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF08148CCC43007D8EBE /* qweibo.png */; };
 		942FDF0B148CCC43007D8EBE /* qweibo-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF09148CCC43007D8EBE /* qweibo-small.png */; };
 		942FDF0D148CCC8E007D8EBE /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */; };
+		9461C33414E12F7100A5E3FF /* NSString+TweetContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 9461C33314E12F7100A5E3FF /* NSString+TweetContent.m */; };
+		9461C33514E12F7100A5E3FF /* NSString+TweetContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 9461C33314E12F7100A5E3FF /* NSString+TweetContent.m */; };
 		94C2401114DF9FCF00161FAD /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C2400714DF9FCF00161FAD /* RegexKitLite.m */; };
 		94C7FD91149788400000139D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD90149788400000139D /* AppKit.framework */; };
 		94C7FD93149788400000139D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD92149788400000139D /* Cocoa.framework */; };
@@ -319,6 +321,8 @@
 		942FDF08148CCC43007D8EBE /* qweibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qweibo.png; sourceTree = "<group>"; };
 		942FDF09148CCC43007D8EBE /* qweibo-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qweibo-small.png"; sourceTree = "<group>"; };
 		942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AIUtilities.framework; sourceTree = "<group>"; };
+		9461C33214E12F7100A5E3FF /* NSString+TweetContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TweetContent.h"; sourceTree = "<group>"; };
+		9461C33314E12F7100A5E3FF /* NSString+TweetContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TweetContent.m"; sourceTree = "<group>"; };
 		94AC0E1914948A5F006F0610 /* NIFLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIFLog.h; sourceTree = "<group>"; };
 		94C2400514DF9FCF00161FAD /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		94C2400714DF9FCF00161FAD /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
@@ -612,6 +616,7 @@
 		942FDE54148CACA7007D8EBE /* AdiumQWeibo */ = {
 			isa = PBXGroup;
 			children = (
+				9461C33114E12F4800A5E3FF /* Categories */,
 				94187AD01493BF7B000F4AD1 /* QWeibo OAuth */,
 				942FDE55148CACA7007D8EBE /* Supporting Files */,
 				94D39FC8148FB97000D1A141 /* AIQWeiboPlugin.h */,
@@ -656,6 +661,16 @@
 			);
 			name = "Linked Frameworks";
 			path = "AdiumQWeibo/Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		9461C33114E12F4800A5E3FF /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				9461C33214E12F7100A5E3FF /* NSString+TweetContent.h */,
+				9461C33314E12F7100A5E3FF /* NSString+TweetContent.m */,
+			);
+			name = Categories;
+			path = src/Categories;
 			sourceTree = "<group>";
 		};
 		94C23FFA14DF9FCF00161FAD /* RegexKitLite-4.0 */ = {
@@ -914,6 +929,7 @@
 			files = (
 				940C107C14E01E3000DF9D5E /* RegexKitLite.m in Sources */,
 				940C0F8714E008EE00DF9D5E /* UnitTest.m in Sources */,
+				9461C33514E12F7100A5E3FF /* NSString+TweetContent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -945,6 +961,7 @@
 				941B58C7149ED62700E75554 /* emotions.txt in Sources */,
 				941B5903149EE24200E75554 /* main.m in Sources */,
 				94C2401114DF9FCF00161FAD /* RegexKitLite.m in Sources */,
+				9461C33414E12F7100A5E3FF /* NSString+TweetContent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1121,6 +1138,7 @@
 				940C0F8B14E008EE00DF9D5E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		942FDE45148CACA6007D8EBE /* Build configuration list for PBXProject "AdiumQWeibo" */ = {
 			isa = XCConfigurationList;
