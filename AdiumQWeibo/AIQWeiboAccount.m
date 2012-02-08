@@ -588,25 +588,20 @@
             [AdiumQWeiboEngine fetchDataWithAPIPath:path params:params session:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
                 if (!error) {
                     
-                    NIF_INFO(@"-- %@", responseJSON);
+//                    NIF_INFO(@"-- %@", responseJSON);
                     
                     NSMutableArray *profileArray = [[[inContact profileArray] mutableCopy] autorelease];
                     
-                    NSArray *statuses = [responseJSON valueForKeyPath:@"data.info"];                    
+                    // username - nickname pairs for replacing the username in tweets
+//                    NSDictionary *nicknamePairs = [responseJSON valueForKeyPath:@"data.user"];
+//                    NSArray *statuses = [responseJSON valueForKeyPath:@"data.info"];                    
                     
+                    
+                    NSArray *attributedTweets = [AdiumQWeiboEngine attributedTweetsFromTweetDictionary:responseJSON];
 
-                    for (NSDictionary *update in statuses) {
-                        NSMutableAttributedString *string = [[[NSMutableAttributedString alloc] initWithString:@""] autorelease];
-                        NSAttributedString *text = [AdiumQWeiboEngine attributedTweetFromTweetDictionary:update]; 
+                    for (NSDictionary *attributedTweet in attributedTweets) {
                         
-                        NSString *tweetID = [[update objectForKey:@"id"]description];
-                        
-//                        NSAttributedString *suffix = [AdiumQWeiboEngine suffixActionAttributedStringWithTweetID:tweetID myID:self.UID];
-                        
-                        [string appendAttributedString:text];
-//                        [string appendAttributedString:suffix];
-                        
-                        [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:string,KEY_VALUE,nil]];                        
+                        [profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:attributedTweet,KEY_VALUE,nil]];                        
                     }
 
                     [inContact setProfileArray:profileArray notify:NotifyNow];

@@ -12,6 +12,14 @@
 //#import <AIUtilities/AIStringAdditions.h>
 #import "RegexKitLite.h"
 
+@interface AdiumQWeiboEngine (Private)
+
++ (void)_attributeTopicsForAttributedString:(NSMutableAttributedString *)halfAttributedTweet;
++ (void)_attributeEmotionsForAttributedString:(NSMutableAttributedString *)halfAttributedTweet;
++ (void)_attributeUsernamesForAttributedString:(NSMutableAttributedString *)halfAttributedTweet replacingNicknames:(NSDictionary *)pairs;
+
+@end
+
 @implementation AdiumQWeiboEngine (Helper)
 
 /*!
@@ -61,303 +69,121 @@
 	return address;
 }
 
-+ (NSAttributedString *)attributedTweetFromTweetDictionary:(NSDictionary *)json {
-    static NSString *usernameCharacters = nil;
-    static NSString *topicCharacters = nil;
++ (NSArray *)attributedTweetsFromTweetDictionary:(NSDictionary *)json {
+    NSMutableArray *attributedTweets = [NSMutableArray array];
     
-    if (usernameCharacters == nil) {
-        usernameCharacters = [@"@\\w\\-]{2,30}" retain];
+    NSDictionary *nicknamePairs = [json valueForKeyPath:@"data.user"];
+    NSArray *statuses = [json valueForKeyPath:@"data.info"];                    
+    
+    for (NSDictionary *status in statuses) {
+        NSString *plainTweet = [status objectForKey:@"origtext"];
+        NSMutableAttributedString *halfAttributedTweet = [[[NSMutableAttributedString alloc] initWithString:plainTweet] autorelease];
+        [self _attributeUsernamesForAttributedString:halfAttributedTweet replacingNicknames:nicknamePairs];
+        [self _attributeEmotionsForAttributedString:halfAttributedTweet];
+        [self _attributeTopicsForAttributedString:halfAttributedTweet];
+        [attributedTweets addObject:halfAttributedTweet];
+        [halfAttributedTweet release];
     }
-//    - (NSString *)RKL_METHOD_PREPEND(stringByReplacingOccurrencesOfRegex):(NSString *)regex usingBlock:(NSString *(^)(NSInteger captureCount, NSString * const capturedStrings[captureCount], const NSRange capturedRanges[captureCount], volatile BOOL * const stop))block;
+    return attributedTweets;
+}
+
++ (void)_attributeTopicsForAttributedString:(NSMutableAttributedString *)halfAttributedTweet {
+    static NSString *topicsCharacters = nil;
     
-//    NSString *originText = [json objectForKey:@"origtext"];
-    NSString *originText = @"@hello eeeedcdcd  @lunwang-kkk dcdcaaaasdcd @@@ddddjjjkj";
+    if (topicsCharacters == nil) {
+        topicsCharacters = [@"#([^\\#|.]+)#" retain];
+    }
     
-    NIF_INFO(@"usernameCharacters ; %@", usernameCharacters);    
-    NIF_INFO(@"origtext ：%@", originText);
-    
-    NSString *wrappedNameText = [originText stringByReplacingOccurrencesOfRegex:usernameCharacters usingBlock:^NSString *(NSInteger captureCount, NSString *const *capturedStrings, const NSRange *capturedRanges, volatile BOOL *const stop) {
+    [[halfAttributedTweet string] enumerateStringsMatchedByRegex:topicsCharacters usingBlock:^(NSInteger captureCount, NSString *const *capturedStrings, const NSRange *capturedRanges, volatile BOOL *const stop) {
         for (int i = 0; i < captureCount; i++) {
-            NIF_INFO(@"-- %@", capturedStrings[i]);
-        }
-        return @"return";
-    }];
-
-    NIF_INFO(@"wrappedNameText : %@", wrappedNameText);
-    return [NSAttributedString stringWithString:@"test"];
-}
-
-
-/*
-+ (NSAttributedString *)attributedTweetFromTweetDictionary:(NSDictionary *)json {
-    
-    static NSCharacterSet *usernameCharacters = nil;
-	static NSCharacterSet *hashCharacters = nil;
-	
-	if (!usernameCharacters) {
-		usernameCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-"] retain];
-	}
-	
-	if (!hashCharacters) {
-		NSMutableCharacterSet	*disallowedCharacters = [[NSCharacterSet punctuationCharacterSet] mutableCopy];
-//		[disallowedCharacters formUnionWithCharacterSet:[NSCharacterSet whitespaceCharacterSet]];
-		[disallowedCharacters removeCharactersInString:@"_"];
-		
-		hashCharacters = [[disallowedCharacters invertedSet] retain];
-		
-		[disallowedCharacters release];
-	}
-
-    NSInteger type = [[json objectForKey:@"type"] intValue];
-    NSString *originText = [json objectForKey:@"origtext"];
-    NSAttributedString *string = [[[NSAttributedString alloc] initWithString:[originText stringByAppendingString:@"\n"]] autorelease];
-    
-    
-    NSAttributedString *attributedString1 = [self linkifiedEmotionStringFromAttributedString:string];
-
-    
-    // hyperlink topic
-    NSAttributedString *originText1 = [self linkifiedStringFromAttributedString:attributedString1 forPrefixCharacter:@"#" forLinkType:AIQWeiboLinkSearchHash validCharacterSet:hashCharacters];
-    
-    // hyperlink username
-    NSAttributedString *originText2 = [self linkifiedStringFromAttributedString:originText1 forPrefixCharacter:@"@" forLinkType:AIQWeiboLinkUserPage validCharacterSet:usernameCharacters];
-
-    NSMutableAttributedString *attributedString = [[[NSMutableAttributedString alloc] init] autorelease];
-    switch (type) {
-        case ResponseTweetTypeOriginal:{
-
-//            // hyperlink topic
-//            NSAttributedString *sourceString1 = [self linkifiedStringFromAttributedString:originText2 forPrefixCharacter:@"#" forLinkType:AIQWeiboLinkSearchHash validCharacterSet:hashCharacters];
-//            // hyperlink username
-//            NSAttributedString *sourceString2 = [self linkifiedStringFromAttributedString:sourceString1 forPrefixCharacter:@"@" forLinkType:AIQWeiboLinkUserPage validCharacterSet:usernameCharacters];
-
-            [attributedString appendAttributedString:attributedString];
-            
-            break;
-        }
-        case ResponseTweetTypeRetweet:{
-            NSDictionary *source = [json objectForKey:@"source"];
-            NSString *authorUID = [source objectForKey:@"name"];
-            NSString *authorNick = [source objectForKey:@"nick"];
-            
-//            NSString *sourceText = @"@lunwang #open it# @wanglun";
-            NSString *sourceText = [source objectForKey:@"origtext"];
-            
-            NSAttributedString *sourceString = [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n",sourceText]] autorelease];
-            
-            NSAttributedString *attributedString1 = [self linkifiedEmotionStringFromAttributedString:sourceString];
-
-            // hyperlink topic
-            NSAttributedString *sourceString1 = [self linkifiedStringFromAttributedString:attributedString1 forPrefixCharacter:@"#" forLinkType:AIQWeiboLinkSearchHash validCharacterSet:hashCharacters];
-            // hyperlink username
-            NSAttributedString *sourceString2 = [self linkifiedStringFromAttributedString:sourceString1 forPrefixCharacter:@"@" forLinkType:AIQWeiboLinkUserPage validCharacterSet:usernameCharacters];
-            
-            [attributedString appendAttributedString:originText2];
-            [attributedString appendAttributedString:sourceString2];
-            
-//            [attributedString appendAttributedString:imageString];
-            
-            break;
-        }
-        case ResponseTweetTypePrivateMessage:
-            //            break;
-        case ResponseTweetTypeReply:
-            //            break;
-        case ResponseTweetTypeReplyNull:
-            //            break;
-        case ResponseTweetTypeMentioned:
-            //            break;
-        case ResponseTweetTypeComment:
-            //            break;
-        default:{
-            NSDictionary *source = [json objectForKey:@"source"];
-            NSString *sourceText = [source objectForKey:@"origtext"];
-            NSAttributedString *string = [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n",originText]] autorelease];
-            NSAttributedString *sourceString = [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n",sourceText]] autorelease];
-            
-            // hyperlink topic
-            NSAttributedString *sourceString1 = [self linkifiedStringFromAttributedString:sourceString forPrefixCharacter:@"#" forLinkType:AIQWeiboLinkSearchHash validCharacterSet:hashCharacters];
-            // hyperlink username
-            NSAttributedString *sourceString2 = [self linkifiedStringFromAttributedString:sourceString1 forPrefixCharacter:@"@" forLinkType:AIQWeiboLinkUserPage validCharacterSet:usernameCharacters];
-            
-            [attributedString appendAttributedString:string];
-            [attributedString appendAttributedString:sourceString2];
-            
-            break;
-        }
-    }
-    
-    NIF_TRACE(@"%@  ",attributedString);
-    
-    return attributedString;
-}
- */
-
-+(NSAttributedString *)linkifiedStringFromAttributedString:(NSAttributedString *)inString
-										forPrefixCharacter:(NSString *)prefixCharacter
-											   forLinkType:(AIQWeiboLinkType)linkType
-										 validCharacterSet:(NSCharacterSet *)validValues
-{
-	NSMutableAttributedString	*newString = [inString mutableCopy];
-	
-	NSScanner		*scanner = [NSScanner scannerWithString:[inString string]];
-	
-	[scanner setCharactersToBeSkipped:nil];
-	
-	[newString beginEditing];
-	
-	while(!scanner.isAtEnd) {
-		[scanner scanUpToString:prefixCharacter intoString:NULL];
-		
-		if(scanner.isAtEnd) {
-			break;
-		}
-		
-		NSUInteger	startLocation = scanner.scanLocation;
-		NSString	*linkText = nil;
-        
-		// Advance to the start of the string we want.
-		// Check to make sure we aren't exceeding the string bounds.
-		if(startLocation + 1 < scanner.string.length) {
-			scanner.scanLocation++;
-		} else {
-			break;
-		}
-		
-		// Grab any valid characters we can.
-		BOOL scannedCharacters = [scanner scanCharactersFromSet:validValues intoString:&linkText];
-		
-		if(scannedCharacters) {
-            NSMutableCharacterSet *characterSet = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
-            [characterSet addCharactersInString:@":"];
-            [characterSet addCharactersInString:@"|"];
-			if((scanner.scanLocation - linkText.length) == prefixCharacter.length || 
-			   [characterSet characterIsMember:[scanner.string characterAtIndex:(scanner.scanLocation - linkText.length - prefixCharacter.length - 1)]]) {
-				
-				NSString *linkURL = nil;
-				if(linkType == AIQWeiboLinkUserPage) {
-					linkURL = [self addressForLinkType:linkType userID:[linkText stringByEncodingURLEscapes] statusID:nil context:nil];
-				} else if (linkType == AIQWeiboLinkSearchHash) {
-					linkURL = [self addressForLinkType:linkType userID:nil statusID:nil context:[linkText stringByEncodingURLEscapes]];
-				} else if (linkType == AIQWeiboLinkGroup) {
-					linkURL = [self addressForLinkType:linkType userID:nil statusID:nil context:[linkText stringByEncodingURLEscapes]];
-				}
-				
-				if(linkURL) {
-					[newString addAttribute:NSLinkAttributeName
-									  value:linkURL
-									  range:NSMakeRange(startLocation + 1, linkText.length)];
-				}
-			}
-		} else {
-			scanner.scanLocation++;
-		}
-	}
-	
-	[newString endEditing];
-	
-	return [newString autorelease];
-}
-
-// 
-+ (NSAttributedString *)linkifiedEmotionStringFromAttributedString:(NSAttributedString *)inString {
-    
-    static NSCharacterSet *hashCharacters = nil;
-	if (!hashCharacters) {
-		NSMutableCharacterSet	*disallowedCharacters = [[NSCharacterSet punctuationCharacterSet] mutableCopy];
-		[disallowedCharacters removeCharactersInString:@"_"];
-		
-		hashCharacters = [[disallowedCharacters invertedSet] retain];
-		
-		[disallowedCharacters release];
-	}
-
-    
-    NSMutableAttributedString	*newString = [inString mutableCopy];
-	
-    NSString *prefixCharacter = @"/";
-    
-	NSScanner		*scanner = [NSScanner scannerWithString:[inString string]];
-	
-	[scanner setCharactersToBeSkipped:nil];
-	
-	[newString beginEditing];
-	
-	while(!scanner.isAtEnd) {
-		[scanner scanUpToString:prefixCharacter intoString:NULL];
-		
-		if(scanner.isAtEnd) {
-			break;
-		}
-		
-		NSUInteger	startLocation = scanner.scanLocation;
-		NSString	*linkText = nil;
-        
-		// Advance to the start of the string we want.
-		// Check to make sure we aren't exceeding the string bounds.
-		if(startLocation + 1 < scanner.string.length) {
-			scanner.scanLocation++;
-		} else {
-			break;
-		}
-		
-		// Grab any valid characters we can.
-		BOOL scannedCharacters = [scanner scanCharactersFromSet:hashCharacters intoString:&linkText];
-		
-		if(scannedCharacters) {
-            NSMutableCharacterSet *characterSet = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
-            [characterSet addCharactersInString:@":"];
-            [characterSet addCharactersInString:@"|"];
-            
-//            NSString *linkURL = nil;
-            NIF_INFO(@"linkText : %@",linkText);
-
-			if((scanner.scanLocation - linkText.length) == prefixCharacter.length || 
-			   [characterSet characterIsMember:[scanner.string characterAtIndex:(scanner.scanLocation - linkText.length - prefixCharacter.length - 1)]]) {
-//                linkURL = [self addressForLinkType:AIQWeiboLinkUserPage userID:nil statusID:nil context:[linkText stringByEncodingURLEscapes]];
-//                
-                NIF_INFO(@"linkText : %@",linkText);
+            if( capturedRanges[i].location != NSNotFound) {
+                NSDictionary *linkAttr = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                          [NSCursor pointingHandCursor], NSCursorAttributeName,
+                                          [NSColor blueColor], NSForegroundColorAttributeName,
+//                                          [NSFont boldSystemFontOfSize:14.0], NSFontAttributeName,
+                                          [NSString stringWithFormat:@"http://t.qq.com/k/%@",capturedStrings[i]],NSLinkAttributeName,
+                                          nil];
                 
-                NSBundle *bundle = [NSBundle bundleForClass:[AdiumQWeiboEngine class]];
-                NSString *facePath = [bundle pathForResource:@"face" ofType:@"plist"];
-                NSDictionary *facePairs = [NSDictionary dictionaryWithContentsOfFile:facePath];
-                
-                unichar codeValue = (unichar) strtol([linkText UTF8String], NULL, 16);
-                NSString *unicodeStr = [NSString stringWithFormat:@"%C", linkText];
-                NSLog(@"Character with code \\u%@ is %C", linkText, codeValue);
-                
-//                NSString *unicodeStr = [NSString stringWithCString:[linkText UTF8String] encoding:NSUnicodeStringEncoding];
-                NIF_INFO(@"%@",unicodeStr);
-                NIF_INFO(@"%@",[facePairs allKeys]);
-
-                
-                NSString *imageName = [facePairs objectForKey:unicodeStr];
-                NIF_INFO(@"%@",imageName);
-                if(imageName){
-                    NSAttributedString *imageString;
-                    NSTextAttachment *ta = [[[NSTextAttachment alloc] init] autorelease];
-                    NSTextAttachmentCell *cell = [[[NSTextAttachmentCell alloc] init] autorelease];
-                    NSImage *image = nil;
-                    
-                    
-                    NSString *imagePath = [bundle pathForImageResource:imageName];
-                    image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
-                    [cell setImage:image];
-                    [ta setAttachmentCell:cell];
-                    
-                    imageString  = [NSAttributedString attributedStringWithAttachment:ta];
-                    
-                    [newString replaceCharactersInRange:NSMakeRange(startLocation + 1, linkText.length) withAttributedString:imageString];
-                }
-            } else {
-                scanner.scanLocation++;
+                [halfAttributedTweet addAttributes:linkAttr range:capturedRanges[i]];
+                [linkAttr release];
             }
         }
-    }
-    [newString endEditing];
-
-    return [newString autorelease];
+    }];
 }
+
++ (void)_attributeUsernamesForAttributedString:(NSMutableAttributedString *)halfAttributedTweet replacingNicknames:(NSDictionary *)pairs{
+    static NSString *usernameCharacters = nil;
+    
+    if (usernameCharacters == nil) {
+        usernameCharacters = [@"(?<=@)[a-zA-Z0-9\\-_]+" retain];
+    }
+    
+    __block NSUInteger replaceOffset = 0;
+
+    [[halfAttributedTweet string] enumerateStringsMatchedByRegex:usernameCharacters usingBlock:^(NSInteger captureCount, NSString *const *capturedStrings, const NSRange *capturedRanges, volatile BOOL *const stop) {
+        for (int i = 0; i < captureCount; i++) {
+            if( capturedRanges[i].location != NSNotFound) {
+                        
+                NSString *name = capturedStrings[i];
+                NSDictionary *linkAttr = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                          [NSCursor pointingHandCursor], NSCursorAttributeName,
+                                          [NSColor blueColor], NSForegroundColorAttributeName,
+                                          [NSString stringWithFormat:@"http://t.qq.com/%@",name],NSLinkAttributeName,
+                                          nil];
+                NSString *nickname = [pairs objectForKey:name]?[pairs objectForKey:name]:name;
+                NSAttributedString *nickAttributedString = [[NSAttributedString alloc] initWithString:nickname attributes:linkAttr];
+                
+                [halfAttributedTweet replaceCharactersInRange:NSMakeRange(capturedRanges[i].location + replaceOffset, capturedRanges[i].length) withAttributedString:nickAttributedString];
+                [linkAttr release];                
+                replaceOffset += nickAttributedString.length - capturedStrings[i].length;
+
+            }
+        }        
+    }];    
+}
+
+
++ (void)_attributeEmotionsForAttributedString:(NSMutableAttributedString *)halfAttributedTweet {
+    
+    NSBundle *bundle = [NSBundle bundleForClass:[AdiumQWeiboEngine class]];
+    NSString *facePath = [bundle pathForResource:@"face" ofType:@"plist"];
+    NSDictionary *facePairs = [NSDictionary dictionaryWithContentsOfFile:facePath];
+
+//    NSString *facePath = @"/Users/ryan/Documents/AdiumQWeibo/AdiumQWeibo/Resources/emotions/face.plist";
+//    NSDictionary *facePairs = [NSDictionary dictionaryWithContentsOfFile:facePath];
+    
+//    NSString *faceRoot = @"/Users/ryan/Documents/AdiumQWeibo/AdiumQWeibo/Resources/emotions/";
+    
+    NSString *temp1 = [[facePairs allKeys] componentsJoinedByString:@"|/"];    
+    NSString *regex = [NSString stringWithFormat:@"/%@",temp1];
+    
+    __block NSUInteger replaceOffset = 0;
+    [[halfAttributedTweet string] enumerateStringsMatchedByRegex:regex usingBlock:^(NSInteger captureCount, NSString *const *capturedStrings, const NSRange *capturedRanges, volatile BOOL *const stop) {
+        for (int i = 0; i < captureCount; i++) {
+            NSString *temp = [capturedStrings[i] stringByReplacingOccurrencesOfString:@"/" withString:@""];
+            NSString *realFaceName = [facePairs objectForKey:temp];
+            
+            NSAttributedString *imageString;
+            NSTextAttachment *ta = [[[NSTextAttachment alloc] init] autorelease];
+            NSTextAttachmentCell *cell = [[[NSTextAttachmentCell alloc] init] autorelease];
+            NSImage *image = nil;
+            
+            
+//            NSString *imagePath = [NSString stringWithFormat:@"%@/%@.gif",faceRoot,realFaceName];
+            image = [bundle imageForResource:[NSString stringWithFormat:@"%@.gif",realFaceName]];
+//            image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
+            [cell setImage:image];
+            [ta setAttachmentCell:cell];
+            
+            imageString  = [NSAttributedString attributedStringWithAttachment:ta];
+            
+            [halfAttributedTweet replaceCharactersInRange:NSMakeRange(capturedRanges[i].location + replaceOffset, capturedRanges[i].length) withAttributedString:imageString];
+            
+            replaceOffset += imageString.length - capturedStrings[i].length;
+        }
+    }];
+}
+
 
 /**
  *   (RT, ¶, @, ☆, #)
