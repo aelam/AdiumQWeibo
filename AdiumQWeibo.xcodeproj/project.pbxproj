@@ -923,7 +923,6 @@
 			files = (
 				940C107C14E01E3000DF9D5E /* RegexKitLite.m in Sources */,
 				940C0F8714E008EE00DF9D5E /* UnitTest.m in Sources */,
-				9461C33514E12F7100A5E3FF /* NSString+TweetContent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

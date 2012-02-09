@@ -113,6 +113,7 @@
 
 + (void)_attributeUsernamesForAttributedString:(NSMutableAttributedString *)halfAttributedTweet replacingNicknames:(NSDictionary *)pairs{
     static NSString *usernameCharacters = nil;
+
     
     if (usernameCharacters == nil) {
         usernameCharacters = [@"(?<=@)[a-zA-Z0-9\\-_]+" retain];
