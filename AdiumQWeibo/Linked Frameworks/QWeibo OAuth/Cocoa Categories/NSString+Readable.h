@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NSString * EmptyString(NSString *string);
+
 @interface NSString (Readable)
 
 - (NSString *)readableTimestamp:(double)timestamp;

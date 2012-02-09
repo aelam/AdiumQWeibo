@@ -438,6 +438,28 @@
 	return [[inAttributedString attributedStringByConvertingLinksToURLStrings] string];
 }
 
+- (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage {
+    
+    NIF_INFO(@"sending message out....");
+    NIF_INFO(@"%@",inContentMessage);
+    NIF_INFO(@"%@",inContentMessage.encodedMessage);
+    inContentMessage.displayContent = NO;
+    NIF_INFO(@"inContentMessage.destination.UID : %@",inContentMessage.destination.UID);
+    
+    NSString *destinationID = inContentMessage.destination.UID;
+    NSString *encodedMessage = inContentMessage.encodedMessage;
+    if (destinationID && destinationID.length && encodedMessage && [encodedMessage length]) {
+        [AdiumQWeiboEngine sendPrivateMessageWithSession:self.session message:encodedMessage toUser:destinationID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+            NIF_INFO(@"%@", responseJSON);
+//            inContentMessage.displayContent = YES;
+            [adium.contentController receiveContentObject:inContentMessage];
+
+        }];
+    }
+    
+    return YES;
+}
+
 /////////////////////
 /////////////////////
 /*!
@@ -455,7 +477,7 @@
     [AdiumQWeiboEngine fetchUserInfoWithUID:inContact.UID session:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         if (!error) {
             NSDictionary *thisUserInfo = [responseJSON objectForKey:@"data"];
-            NIF_TRACE(@"-------------------------- %@", thisUserInfo);
+//            NIF_TRACE(@"-------------------------- %@", thisUserInfo);
 
             if (thisUserInfo && [thisUserInfo count]) {
 

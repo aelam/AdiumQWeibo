@@ -16,7 +16,7 @@
 
 #define VERIFY_URL          @"http://open.t.qq.com/cgi-bin/authorize"
 
-#define QWEIBO_URL_SCHEMA   @"yahoo"
+#define QWEIBO_URL_SCHEME   @"yahoo"
 
 @interface WeiboEngine (Private)
 
@@ -33,7 +33,7 @@
 
 
 - (BOOL)handleOpenURL:(NSURL *)url {
-    if ([[[url scheme] uppercaseString] isEqualToString:[QWEIBO_URL_SCHEMA uppercaseString]]) {
+    if ([[[url scheme] uppercaseString] isEqualToString:[QWEIBO_URL_SCHEME uppercaseString]]) {
 
         [self getAccessTokenWithHandledURL:[url query]];
         return YES;
@@ -102,12 +102,12 @@
          
 - (void)authorizeWithBlock:(void(^)(NSString *,BOOL))resultBlock {
     [self.session logOut];
-    OAuthURLRequest *request = [OAuthURLRequest requestWithURL:REQUEST_TOKEN_URL callBackURL:[NSString stringWithFormat:@"%@://qq.com",QWEIBO_URL_SCHEMA] parameters:nil HTTPMethod:@"GET" session:self.session];
+    OAuthURLRequest *request = [OAuthURLRequest requestWithURL:REQUEST_TOKEN_URL callBackURL:[NSString stringWithFormat:@"%@://qq.com",QWEIBO_URL_SCHEME] parameters:nil HTTPMethod:@"GET" session:self.session];
     
     [RSimpleConnection sendAsynchronousRequest:request queue:_operationQueue completionHandler:^(NSData *data,NSURLResponse *response, NSError *error) {
         if (data) {
             NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"---- %@",responseString);
+//            NSLog(@"---- %@",responseString);
             
             NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:responseString];
             self.session.tokenKey = [pairs objectForKey:@"oauth_token"];
@@ -146,7 +146,6 @@
     [RSimpleConnection sendAsynchronousRequest:request queue:_operationQueue completionHandler:^(NSData *data,NSURLResponse *response,  NSError *error) {
         if (data && !error) {
             NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"---- %@",responseString);
             
             NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:responseString];
             self.session.tokenKey = [pairs objectForKey:@"oauth_token"];
@@ -154,11 +153,6 @@
             self.session.username = [pairs objectForKey:@"name"];
             self.session.isValid = YES;
             
-
-            NSLog(@"---- %@",self.session.tokenKey);
-            NSLog(@"---- %@",self.session.tokenSecret);
-            NSLog(@"---- %@",self.session.username);
-
             accessTokenHandler(responseString,YES);
             
             [responseString release];

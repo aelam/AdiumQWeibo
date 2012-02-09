@@ -30,8 +30,10 @@
 #define OAuthTokenSecretKey     @"oauth_token_secret"
 #define HMACSHA1SignatureType   @"HMAC-SHA1"
 
-#define AppKey			@"14a6b38d5ffe47c7a9acd86902660cdd"
-#define AppSecret		@"3016f15bfcf6990f4fb71b4a368d950f"
+//#define AppKey		@"801095379"
+//#define AppSecret		@"521fac7d698fe6eff6ce7efde15db9c8"
+#define AppKey          @"14a6b38d5ffe47c7a9acd86902660cdd"
+#define AppSecret       @"3016f15bfcf6990f4fb71b4a368d950f"
 #define AppTokenKey		@"tokenKey"
 #define AppTokenSecret	@"tokenSecret"
 #define USER_NAME       @"USER_NAME"

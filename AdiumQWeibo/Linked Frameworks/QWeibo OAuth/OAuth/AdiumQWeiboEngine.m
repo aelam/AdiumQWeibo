@@ -12,6 +12,12 @@
 static NSString *const APIDomain = @"http://open.t.qq.com/api";
 static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
 
+@interface AdiumQWeiboEngine(Private)
+
++ (void)_requestDataWithAPIPath:(NSString *)path params:(NSDictionary *)params session:(QOAuthSession *)aSession requestMethod:(RequestMethod)method resultHandler:(JSONRequestHandler)handler;
+
+@end
+
 @implementation AdiumQWeiboEngine
 
 + (void)fetchMyInfoWithSession:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler {
@@ -49,7 +55,14 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
     [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         handler(responseJSON,urlResponse,error);
 
-        NSInteger hasNext = [[responseJSON valueForKeyPath:@"data.hasnext"] intValue];
+        NSInteger hasNext = -1;
+        id data = [responseJSON objectForKey:@"data"];
+        if (data && [data respondsToSelector:@selector(objectForKey:)]) {
+            id hasnext_ = [data objectForKey:@"hasnext"];
+            if (hasnext_) {
+                hasNext = [hasnext_ intValue];
+            }
+        }
 
         if (!error && hasNext == 0) {
             [self fetchFollowersListWithSession:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
@@ -69,8 +82,15 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
     [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         handler(responseJSON,urlResponse,error);
 
-        NSInteger hasNext = [[responseJSON valueForKeyPath:@"data.hasnext"] intValue];
-        
+        NSInteger hasNext = -1;
+        id data = [responseJSON objectForKey:@"data"];
+        if (data && [data respondsToSelector:@selector(objectForKey:)]) {
+            id hasnext_ = [data objectForKey:@"hasnext"];
+            if (hasnext_) {
+                hasNext = [hasnext_ intValue];
+            }
+        }
+      
         if (!error && hasNext == 0) {
             NSInteger page_ = page + 1;
             [self fetchFollowingListFromPage:page_ session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
@@ -107,15 +127,50 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
     }];
 }
 
+
+/*!
+ * @brief Send Message to some user
+ * 
+ *
+ */
+
++ (void)sendPrivateMessageWithSession:(QOAuthSession *)aSession message:(NSString *)message toUser:(NSString *)username resultHandler:(JSONRequestHandler)handler{
+    NSString *path = @"private/add";
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"json",@"format",
+                                message,@"content",
+                                username,@"name",
+                                @"127.0.0.1",@"clientip",
+                                @"",@"jing",
+                                @"",@"wei",nil
+                            ];
+    [self postDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);            
+    }];
+
+}
+
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
 // Start Point                                                          //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 + (void)fetchDataWithAPIPath:(NSString *)path params:(NSDictionary *)params session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler {
+    [self _requestDataWithAPIPath:path params:params session:aSession requestMethod:RequestMethodGET resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);            
+    }];
+
+}
+
++ (void)postDataWithAPIPath:(NSString *)path params:(NSDictionary *)params session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler {
+    [self _requestDataWithAPIPath:path params:params session:aSession requestMethod:RequestMethodPOST resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);            
+    }];
+}
+
++ (void)_requestDataWithAPIPath:(NSString *)path params:(NSDictionary *)params session:(QOAuthSession *)aSession requestMethod:(RequestMethod)method resultHandler:(JSONRequestHandler)handler {
     NSString *url = [APIDomain stringByAppendingFormat:@"/%@",path];
     
-    AdiumQWeiboEngine *engine = [[[AdiumQWeiboEngine alloc] initWithURL:[NSURL URLWithString:url] parameters:params requestMethod:RequestMethodGET]autorelease];
+    AdiumQWeiboEngine *engine = [[[AdiumQWeiboEngine alloc] initWithURL:[NSURL URLWithString:url] parameters:params requestMethod:method]autorelease];
     engine.session = aSession;
     
     [engine performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
@@ -146,11 +201,12 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
             @finally {
                 
             }
-                    
+            
         } else {
             handler(nil,urlResponse,error);            
         }        
     }];
+
 }
 
 @end

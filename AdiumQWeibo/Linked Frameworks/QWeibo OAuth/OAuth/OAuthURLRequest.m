@@ -132,6 +132,9 @@
             [request setTimeoutInterval:20.0f];
             [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
             [request setHTTPBody:[queries dataUsingEncoding:NSUTF8StringEncoding]];
+            NIF_INFO(@"post request : %@", request);
+            NIF_INFO(@"post request : %@", [request URL]);
+            
         } else {
             
         }

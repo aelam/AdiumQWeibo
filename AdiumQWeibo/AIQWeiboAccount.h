@@ -9,6 +9,43 @@
 #import <Adium/AIAccount.h>
 #import "QWeibo.h"
 
+typedef enum {
+	AIQWeiboUnknownType = 0,
+	
+	AIQWeiboValidateCredentials,
+	AIQWeiboDisconnect,
+	
+	AIQWeiboRateLimitStatus,
+	
+	AIQWeiboInitialUserInfo,
+	AIQWeiboAddFollow,
+	AIQWeiboRemoveFollow,
+	
+	AIQWeiboProfileSelf,
+	AIQWeiboSelfUserIconPull,
+	
+	AIQWeiboProfileUserInfo,
+	AIQWeiboProfileStatusUpdates,
+	AIQWeiboUserIconPull,
+	
+	AIQWeiboDirectMessageSend,  // 发送私信
+	AIQWeiboSendUpdate,
+	
+	AIQWeiboUpdateDirectMessage,
+	AIQWeiboUpdateFollowedTimeline,
+	AIQWeiboUpdateReplies,
+	
+	AIQWeiboFavoriteYes,
+	AIQWeiboFavoriteNo,
+	
+	AIQWeiboNotificationEnable,
+	AIQWeiboNotificationDisable,
+	
+	AIQWeiboDestroyStatus,
+	AIQWeiboDestroyDM
+} AIQWeiboRequestType;
+
+
 
 #define QWEIBO_UPDATE_INTERVAL_MINUTES 20
 

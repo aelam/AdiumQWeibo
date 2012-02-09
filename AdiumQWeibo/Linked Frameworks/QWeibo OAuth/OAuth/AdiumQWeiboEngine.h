@@ -67,6 +67,7 @@ typedef BOOL(^PageableJSONRequestHandler)(NSDictionary *responseJSON, NSHTTPURLR
 }
 
 + (void)fetchDataWithAPIPath:(NSString *)path params:(NSDictionary *)params session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
++ (void)postDataWithAPIPath:(NSString *)path params:(NSDictionary *)params session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
 
 
 + (void)fetchMyInfoWithSession:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
@@ -90,6 +91,8 @@ typedef BOOL(^PageableJSONRequestHandler)(NSDictionary *responseJSON, NSHTTPURLR
 // 获取用户的推
 + (void)fetchStatusWithUID:(NSString *)UID session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
 
+
++ (void)sendPrivateMessageWithSession:(QOAuthSession *)aSession message:(NSString *)message toUser:(NSString *)username resultHandler:(JSONRequestHandler)handler;
 
 
 @end

@@ -8,6 +8,12 @@
 
 #import "NSString+Readable.h"
 
+NSString * EmptyString(NSString *string) {
+    if(string == nil) return @"";
+    
+    return string;
+}
+
 @implementation NSString (Readable)
 
 - (NSString *)readableTimestamp:(double)timestamp {
