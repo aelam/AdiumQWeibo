@@ -8,7 +8,6 @@
 
 #import "UnitTest.h"
 #import "RegexKitLite.h"
-#import "NSString+TweetContent.h"
 
 @implementation UnitTest
 

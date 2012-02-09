@@ -612,7 +612,6 @@
 		942FDE54148CACA7007D8EBE /* AdiumQWeibo */ = {
 			isa = PBXGroup;
 			children = (
-				9461C33114E12F4800A5E3FF /* Categories */,
 				94187AD01493BF7B000F4AD1 /* QWeibo OAuth */,
 				942FDE55148CACA7007D8EBE /* Supporting Files */,
 				94D39FC8148FB97000D1A141 /* AIQWeiboPlugin.h */,
@@ -657,14 +656,6 @@
 			);
 			name = "Linked Frameworks";
 			path = "AdiumQWeibo/Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		9461C33114E12F4800A5E3FF /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Categories;
-			path = src/Categories;
 			sourceTree = "<group>";
 		};
 		94C23FFA14DF9FCF00161FAD /* RegexKitLite-4.0 */ = {
