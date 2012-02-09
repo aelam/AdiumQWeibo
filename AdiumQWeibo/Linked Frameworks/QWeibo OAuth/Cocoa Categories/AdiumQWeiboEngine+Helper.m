@@ -148,11 +148,6 @@
     NSBundle *bundle = [NSBundle bundleForClass:[AdiumQWeiboEngine class]];
     NSString *facePath = [bundle pathForResource:@"face" ofType:@"plist"];
     NSDictionary *facePairs = [NSDictionary dictionaryWithContentsOfFile:facePath];
-
-//    NSString *facePath = @"/Users/ryan/Documents/AdiumQWeibo/AdiumQWeibo/Resources/emotions/face.plist";
-//    NSDictionary *facePairs = [NSDictionary dictionaryWithContentsOfFile:facePath];
-    
-//    NSString *faceRoot = @"/Users/ryan/Documents/AdiumQWeibo/AdiumQWeibo/Resources/emotions/";
     
     NSString *temp1 = [[facePairs allKeys] componentsJoinedByString:@"|/"];    
     NSString *regex = [NSString stringWithFormat:@"/%@",temp1];
