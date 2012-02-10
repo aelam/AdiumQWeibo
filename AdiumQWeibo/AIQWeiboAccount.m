@@ -446,13 +446,27 @@
     inContentMessage.displayContent = NO;
     NIF_INFO(@"inContentMessage.destination.UID : %@",inContentMessage.destination.UID);
     
+    
+    NSString *sourceID = inContentMessage.source.UID;
     NSString *destinationID = inContentMessage.destination.UID;
     NSString *encodedMessage = inContentMessage.encodedMessage;
     if (destinationID && destinationID.length && encodedMessage && [encodedMessage length]) {
         [AdiumQWeiboEngine sendPrivateMessageWithSession:self.session message:encodedMessage toUser:destinationID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
             NIF_INFO(@"%@", responseJSON);
 //            inContentMessage.displayContent = YES;
-            [adium.contentController receiveContentObject:inContentMessage];
+            id data = [responseJSON objectForKey:@"data"];
+            if ([data respondsToSelector:@selector(objectForKey:)]) {
+                NSNumber *messageID = [data objectForKey:@"id"];
+                NSNumber *messageTime = [data objectForKey:@"time"];
+                if (messageID && messageTime) {
+                    NSDate *receivedDate = [NSDate dateWithTimeIntervalSince1970:[messageTime doubleValue]];
+                    AIContentMessage *contentMessage = [AIContentMessage messageInChat:inContentMessage.chat withSource:self destination:destinationID date:receivedDate message:inContentMessage.message autoreply:NO];
+//                    AIContentMessage contentMessage = [AIContentMessage messageInChat:inContentMessage.chat source:self destination:destinationID date:receivedDate message:inContentMessage.message autoreply:NO];
+                    [adium.contentController receiveContentObject:contentMessage];
+//                    [contentMessage release];                    
+                }
+                
+            }
 
         }];
     }
