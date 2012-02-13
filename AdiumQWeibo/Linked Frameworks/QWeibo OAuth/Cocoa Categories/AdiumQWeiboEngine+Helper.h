@@ -16,7 +16,11 @@
 						statusID:(NSString *)statusID
 						 context:(NSString *)context;
 
-+ (NSAttributedString *)attributedTweetFromTweetDictionary:(NSDictionary *)json;
+
++ (NSAttributedString *)attributedTweetForPlainText:(NSString *)tweet replacingNicknames:(NSDictionary *)nicknamePairs;
++ (NSArray *)attributedTweetsFromTweetDictionary:(NSDictionary *)json;
+
+
 
 +(NSAttributedString *)linkifiedStringFromAttributedString:(NSAttributedString *)inString
 										forPrefixCharacter:(NSString *)prefixCharacter

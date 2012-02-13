@@ -9,6 +9,7 @@
 #import "AdiumQWeiboEngine.h"
 #import "QOAuthSession.h"
 
+
 static NSString *const APIDomain = @"http://open.t.qq.com/api";
 static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
 
@@ -148,6 +149,73 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
     }];
 
 }
+
+
+/*!
+ * @brief get 
+ * 
+ * @prama pos       记录的起始位置（第一次请求时填0，继续请求时填上次请求返回的pos）
+ * @prama reqnum    每次请求记录的条数（1-70条）
+ *
+ */
+
++ (void)fetchPublicTimelineWithSession:(QOAuthSession *)aSession position:(NSInteger)position count:(NSInteger)count resultHandler:(JSONRequestHandler)handler{
+    NSString *path = @"statuses/public_timeline";
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    [params setObject:[NSString stringWithFormat:@"%d",position] forKey:@"pos"];
+    [params setObject:[NSString stringWithFormat:@"%d",count] forKey:@"reqnum"];
+    [params setObject:@"json" forKey:@"format"];
+    
+    [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);            
+    }];
+}
+
+
+/*!
+ * @brief Send Message to some user
+ * 
+ * @prama pageflag  分页标识（0：第一页，1：向下翻页，2：向上翻页）
+ * @prama pagetime  本页起始时间（第一页：填0，向上翻页：填上一次请求返回的第一条记录时间，向下翻页：填上一次请求返回的最后一条记录时间）
+ * @prama reqnum    每次请求记录的条数（1-70条）
+ *
+ */
+
+//+ (void)fetchUserHomeTimelineWithSession:(QOAuthSession *)aSession pageTime:(NSDate *)date pageFlag:(PageFlag)pageFlag count:(NSInteger)count resultHandler:(JSONRequestHandler)handler{
+//    NSString *path = @"statuses/user_timeline";
+//    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+//    if (date) {
+//        [params setObject:[NSString stringWithFormat:@"%@",[date timeIntervalSince1970]] forKey:@"pagetime"];
+//    }
+//        
+//    [params setObject:[NSString stringWithFormat:@"%d",pageFlag] forKey:@"pageflag"];
+//    [params setObject:[NSString stringWithFormat:@"%d",count] forKey:@"reqnum"];
+//    [params setObject:@"json" forKey:@"format"];
+//    
+//    [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+//        handler(responseJSON,urlResponse,error);            
+//    }];
+//}
+
++ (void)fetchUserTimelineWithSession:(QOAuthSession *)aSession forUser:(NSString *)username since:(NSDate *)date lastID:(NSInteger)lastID pageFlag:(PageFlag)pageFlag count:(NSInteger)count resultHandler:(JSONRequestHandler)handler{
+    NSString *path = @"statuses/user_timeline";
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    [params setObject:username forKey:@"name"];
+    
+    [params setObject:[NSString stringWithFormat:@"%d",pageFlag] forKey:@"pageflag"];
+    [params setObject:[NSString stringWithFormat:@"%d",count] forKey:@"reqnum"];
+    [params setObject:@"json" forKey:@"format"];
+
+    if (date) {
+        [params setObject:[NSString stringWithFormat:@"%@",[date timeIntervalSince1970]] forKey:@"pagetime"];
+    }
+    
+    [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);            
+    }];
+}
+
+
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //

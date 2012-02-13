@@ -47,7 +47,7 @@ typedef enum {
 
 
 
-#define QWEIBO_UPDATE_INTERVAL_MINUTES 20
+#define QWEIBO_UPDATE_INTERVAL_MINUTES              20
 
 #define QWEIBO_UPDATE_TIMELINE_COUNT_FIRST_RUN		50
 
@@ -80,9 +80,6 @@ typedef enum {
 
 #define QWEIBO_WEBPAGE                      @"http://t.qq.com"
 
-#define QWEIBO_INFO_ICON_URL                @"head"
-#define QWEIBO_INFO_UID                     @"name"
-#define QWEIBO_INFO_SCREEN_NAME             @"nick"
 
 // last tweet it's an array
 #define QWEIBO_INFO_STATUS                  @"tweet"  
@@ -90,6 +87,13 @@ typedef enum {
 
 #define QWEIBO_ICON_SIZE                    120
 
+//
+// TWEET DICTIONARY KEY 
+// 
+#define TWEET_CREATE_AT                     @"timestamp"
+#define QWEIBO_INFO_ICON_URL                @"head"
+#define QWEIBO_INFO_UID                     @"name"
+#define QWEIBO_INFO_SCREEN_NAME             @"nick"
 
 @interface AIQWeiboAccount : AIAccount {
     QOAuthSession       *_session;

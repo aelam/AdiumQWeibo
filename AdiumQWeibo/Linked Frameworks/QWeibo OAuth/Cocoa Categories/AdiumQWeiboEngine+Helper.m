@@ -7,9 +7,6 @@
 //
 
 #import "AdiumQWeiboEngine+Helper.h"
-//#import <AIUtilities/AIStringAdditions.h>
-//#import <AIUtilities/AIAttributedStringAdditions.h>
-//#import <AIUtilities/AIStringAdditions.h>
 #import "RegexKitLite.h"
 
 @interface AdiumQWeiboEngine (Private)
@@ -69,6 +66,18 @@
 	return address;
 }
 
++ (NSAttributedString *)attributedTweetForPlainText:(NSString *)tweet replacingNicknames:(NSDictionary *)nicknamePairs {
+    if (tweet) {
+        NSMutableAttributedString *halfAttributedTweet = [[NSMutableAttributedString alloc] initWithString:tweet];
+        [self _attributeUsernamesForAttributedString:halfAttributedTweet replacingNicknames:nicknamePairs];
+        [self _attributeEmotionsForAttributedString:halfAttributedTweet];
+        [self _attributeTopicsForAttributedString:halfAttributedTweet];
+        return [halfAttributedTweet autorelease];
+    } else {
+        return nil;
+    }
+}
+
 + (NSArray *)attributedTweetsFromTweetDictionary:(NSDictionary *)json {
     NSMutableArray *attributedTweets = [NSMutableArray array];
     
@@ -77,12 +86,8 @@
     
     for (NSDictionary *status in statuses) {
         NSString *plainTweet = [status objectForKey:@"origtext"];
-        NSMutableAttributedString *halfAttributedTweet = [[[NSMutableAttributedString alloc] initWithString:plainTweet] autorelease];
-        [self _attributeUsernamesForAttributedString:halfAttributedTweet replacingNicknames:nicknamePairs];
-        [self _attributeEmotionsForAttributedString:halfAttributedTweet];
-        [self _attributeTopicsForAttributedString:halfAttributedTweet];
+        NSAttributedString *halfAttributedTweet = [self attributedTweetForPlainText:plainTweet replacingNicknames:nicknamePairs];
         [attributedTweets addObject:halfAttributedTweet];
-        [halfAttributedTweet release];
     }
     return attributedTweets;
 }
