@@ -137,7 +137,7 @@
                                           [NSString stringWithFormat:@"http://t.qq.com/%@",name],NSLinkAttributeName,
                                           nil];
                 NSString *nickname = [pairs objectForKey:name]?[pairs objectForKey:name]:name;
-                NSAttributedString *nickAttributedString = [[NSAttributedString alloc] initWithString:nickname attributes:linkAttr];
+                NSAttributedString *nickAttributedString = [[[NSAttributedString alloc] initWithString:nickname attributes:linkAttr] autorelease];
                 
                 [halfAttributedTweet replaceCharactersInRange:NSMakeRange(capturedRanges[i].location + replaceOffset, capturedRanges[i].length) withAttributedString:nickAttributedString];
                 [linkAttr release];                

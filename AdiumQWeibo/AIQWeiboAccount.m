@@ -249,7 +249,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
         timelineBookmark = [adium.contactController bookmarkForChat:newTimelineChat inGroup:[adium.contactController groupWithUID:QWEIBO_REMOTE_GROUP_NAME]];
 
         if(!timelineBookmark) {
-
+            //QWEIBO_REMOTE_GROUP_NAME
         }       
     }
     
@@ -361,7 +361,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 	
 	if(chat.isGroupChat && chat.account == self) {
         [self updateTimelineChat:chat];
-        NIF_INFO();
+//        NIF_INFO();
 	}	
 }
 
@@ -449,7 +449,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     inContentMessage.displayContent = NO;
     
     
-    NSString *sourceID = inContentMessage.source.UID;
+//    NSString *sourceID = inContentMessage.source.UID;
     NSString *destinationID = inContentMessage.destination.UID;
     NSString *encodedMessage = inContentMessage.encodedMessage;
     if (destinationID && destinationID.length && encodedMessage && [encodedMessage length]) {
@@ -489,9 +489,10 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 	}
 
     [AdiumQWeiboEngine fetchUserInfoWithUID:inContact.UID session:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
-        if (!error) {
+        if (error) {
+            NIF_ERROR(@"%@" ,error);
+        } else {
             NSDictionary *thisUserInfo = [responseJSON objectForKey:@"data"];
-//            NIF_TRACE(@"-------------------------- %@", thisUserInfo);
 
             if (thisUserInfo && [thisUserInfo count]) {
 
@@ -614,7 +615,9 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
             // Update this user's status 
             
             [AdiumQWeiboEngine fetchUserTimelineWithSession:self.session forUser:inContact.UID since:nil lastID:0 pageFlag:0 count:10 resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
-                if (!error) {
+                if (error) {
+                    NIF_ERROR(@"%@" ,error);
+                } else {
                     NSMutableArray *profileArray = [[[inContact profileArray] mutableCopy] autorelease];
                     NSArray *attributedTweets = [AdiumQWeiboEngine attributedTweetsFromTweetDictionary:responseJSON];
 
@@ -625,10 +628,6 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                     [inContact setProfileArray:profileArray notify:NotifyNow];
                 }
             }];
-            
-            
-        } else {
-            
         }
     }];
 
@@ -763,7 +762,27 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 - (void)removeContacts:(NSArray *)objects fromGroups:(NSArray *)groups
 {	
 	for (AIListContact *object in objects) {
+        [AdiumQWeiboEngine unfollowUserWithSession:self.session user:object.UID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+            if (error) {
+                NIF_ERROR(@"%@", error);
+                [adium.interfaceController handleErrorMessage:AILocalizedString(@"Unable to Remove Contact", nil)
+                                              withDescription:[NSString stringWithFormat:AILocalizedString(@"Unable to remove %@ on account %@. %@", nil),
+                                                               object.UID,
+                                                               self.explicitFormattedUID,
+                                                               @"What's up?"]];
 
+            } else {
+//                NIF_INFO(@"%@", responseJSON);
+                NSInteger errorCode = [[responseJSON objectForKey:@"errcode"] intValue];
+                NSInteger ret = [[responseJSON objectForKey:@"ret"] intValue];
+                if (ret == 0 || errorCode == 0) {
+                    NIF_TRACE(@"delete %@ success !!",object.UID);
+                    for (NSString *groupName in object.remoteGroupNames) {
+                        [object removeRemoteGroupName:groupName];
+                    }                    
+                }
+            }
+        }];
 	}
 }
 
@@ -773,9 +792,30 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 - (void)addContact:(AIListContact *)contact toGroup:(AIListGroup *)group
 {
 	if ([contact.UID isCaseInsensitivelyEqualToString:self.UID]) {
-//		AILogWithSignature(@"Not adding contact %@ to group %@, it's me!", contact.UID, group.UID);
+		NIF_ERROR(@"Not adding contact %@ to group %@, it's me!", contact.UID, group.UID);
 		return;
 	}
+    
+    [AdiumQWeiboEngine followUserWithSession:self.session user:contact.UID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        if (error) {
+            NIF_ERROR(@"%@", error);
+        } else {
+            if(error.code == 404) {
+				[adium.interfaceController handleErrorMessage:AILocalizedString(@"Unable to Add Contact", nil)
+											  withDescription:[NSString stringWithFormat:AILocalizedString(@"Unable to add %@ to account %@, the user does not exist.", nil),
+															   contact.UID,
+															   self.explicitFormattedUID]];
+			} else {
+				[adium.interfaceController handleErrorMessage:AILocalizedString(@"Unable to Add Contact", nil)
+											  withDescription:[NSString stringWithFormat:AILocalizedString(@"Unable to add %@ to account %@. %@",nil),
+															  contact.UID,
+															   self.explicitFormattedUID,
+															   @"can't add...... "]];
+			}
+
+        }
+    }];
+    
 	
 //	NSString	*requestID = [twitterEngine enableUpdatesFor:contact.UID];
 //	
@@ -867,6 +907,10 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 //                NIF_INFO(@"fan list");
                 [AdiumQWeiboEngine fetchFollowingListWithSession:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
 //                    NIF_INFO(@"fan list : %@", responseJSON);
+                    if (error) {
+                        NIF_ERROR(@"%@" ,error);
+                    } else {
+                    }
                 }];
                 
                 
@@ -908,57 +952,59 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 }
 
 - (void)periodicUpdate {
-    [AdiumQWeiboEngine fetchPublicTimelineWithSession:self.session position:0 count:20 resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+//    [AdiumQWeiboEngine fetchPublicTimelineWithSession:self.session position:0 count:20 resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+    [AdiumQWeiboEngine fetchHomeTimelineWithSession:self.session pageTime:nil pageFlag:0 count:20 resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         if (error) {
-            return;
-        }
-        
-        AIChat *timelineChat = self.timelineChat;
-
-        NSDictionary *nicknamePairs = [responseJSON valueForKeyPath:@"data.user"];
-        NSArray *statuses = [responseJSON valueForKeyPath:@"data.info"];                    
-        
-        BOOL trackContent = [[self preferenceForKey:QWEIBO_PREFERENCE_EVER_LOADED_TIMELINE group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
-
-        [[AIContactObserverManager sharedManager] delayListObjectNotifications];
-
-        for (NSDictionary *status in statuses) {
-            NSString *plainTweet = [status objectForKey:@"origtext"];
+            NIF_ERROR(@"%@" ,error);
+        } else {
             
+            AIChat *timelineChat = self.timelineChat;
             
-            NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet replacingNicknames:nicknamePairs];
-            NSString *contactUID = [status objectForKey:QWEIBO_INFO_UID];
-            double timestamp = [[status objectForKey:TWEET_CREATE_AT] doubleValue];
-            NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
-          
+            NSDictionary *nicknamePairs = [responseJSON valueForKeyPath:@"data.user"];
+            NSArray *statuses = [responseJSON valueForKeyPath:@"data.info"];                    
             
-            id fromObject = nil;
-
-            if(![self.UID isCaseInsensitivelyEqualToString:contactUID]) {
-                AIListContact *listContact = [self contactWithUID:contactUID];
-                [listContact setStatusMessage:[NSAttributedString stringWithString:[plainTweet stringByUnescapingFromXMLWithEntities:nil]] notify:NotifyNow];
-                [self updateUserIcon:[status objectForKey:QWEIBO_INFO_ICON_URL] forContact:listContact];
+            BOOL trackContent = [[self preferenceForKey:QWEIBO_PREFERENCE_EVER_LOADED_TIMELINE group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+            
+            [[AIContactObserverManager sharedManager] delayListObjectNotifications];
+            
+            for (NSDictionary *status in [statuses reverseObjectEnumerator]) {
+                NSString *plainTweet = [status objectForKey:@"origtext"];
                 
-                [timelineChat addParticipatingListObject:listContact notify:NotifyNow];
                 
-                fromObject = (id)listContact;
-
-            } else {
-                fromObject = (id)self;
+                NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet replacingNicknames:nicknamePairs];
+                NSString *contactUID = [status objectForKey:QWEIBO_INFO_UID];
+                double timestamp = [[status objectForKey:TWEET_CREATE_AT] doubleValue];
+                NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
+                
+                
+                id fromObject = nil;
+                
+                if(![self.UID isCaseInsensitivelyEqualToString:contactUID]) {
+                    AIListContact *listContact = [self contactWithUID:contactUID];
+                    [listContact setStatusMessage:[NSAttributedString stringWithString:[plainTweet stringByUnescapingFromXMLWithEntities:nil]] notify:NotifyNow];
+                    [self updateUserIcon:[status objectForKey:QWEIBO_INFO_ICON_URL] forContact:listContact];
+                    
+                    [timelineChat addParticipatingListObject:listContact notify:NotifyNow];
+                    
+                    fromObject = (id)listContact;
+                    
+                } else {
+                    fromObject = (id)self;
+                }
+                
+                AIContentMessage *contentMessage = [AIContentMessage messageInChat:timelineChat
+                                                                        withSource:fromObject
+                                                                       destination:self
+                                                                              date:date
+                                                                           message:attributedTweet
+                                                                         autoreply:NO];
+                
+                contentMessage.trackContent = trackContent;
+                [adium.contentController receiveContentObject:contentMessage];
             }
             
-            AIContentMessage *contentMessage = [AIContentMessage messageInChat:timelineChat
-																	withSource:fromObject
-																   destination:self
-																		  date:date
-																	   message:attributedTweet
-																	 autoreply:NO];
-
-            contentMessage.trackContent = trackContent;
-			[adium.contentController receiveContentObject:contentMessage];
+            [[AIContactObserverManager sharedManager] endListObjectNotificationsDelay];
         }
-        
-        [[AIContactObserverManager sharedManager] endListObjectNotificationsDelay];
     }];
 }
 

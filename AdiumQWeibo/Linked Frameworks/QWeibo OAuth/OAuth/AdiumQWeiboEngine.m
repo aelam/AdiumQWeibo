@@ -181,21 +181,21 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
  *
  */
 
-//+ (void)fetchUserHomeTimelineWithSession:(QOAuthSession *)aSession pageTime:(NSDate *)date pageFlag:(PageFlag)pageFlag count:(NSInteger)count resultHandler:(JSONRequestHandler)handler{
-//    NSString *path = @"statuses/user_timeline";
-//    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
-//    if (date) {
-//        [params setObject:[NSString stringWithFormat:@"%@",[date timeIntervalSince1970]] forKey:@"pagetime"];
-//    }
-//        
-//    [params setObject:[NSString stringWithFormat:@"%d",pageFlag] forKey:@"pageflag"];
-//    [params setObject:[NSString stringWithFormat:@"%d",count] forKey:@"reqnum"];
-//    [params setObject:@"json" forKey:@"format"];
-//    
-//    [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
-//        handler(responseJSON,urlResponse,error);            
-//    }];
-//}
++ (void)fetchHomeTimelineWithSession:(QOAuthSession *)aSession pageTime:(NSDate *)date pageFlag:(PageFlag)pageFlag count:(NSInteger)count resultHandler:(JSONRequestHandler)handler{
+    NSString *path = @"statuses/home_timeline";
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    if (date) {
+        [params setObject:[NSString stringWithFormat:@"%@",[date timeIntervalSince1970]] forKey:@"pagetime"];
+    }
+        
+    [params setObject:[NSString stringWithFormat:@"%d",pageFlag] forKey:@"pageflag"];
+    [params setObject:[NSString stringWithFormat:@"%d",count] forKey:@"reqnum"];
+    [params setObject:@"json" forKey:@"format"];
+    
+    [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);            
+    }];
+}
 
 + (void)fetchUserTimelineWithSession:(QOAuthSession *)aSession forUser:(NSString *)username since:(NSDate *)date lastID:(NSInteger)lastID pageFlag:(PageFlag)pageFlag count:(NSInteger)count resultHandler:(JSONRequestHandler)handler{
     NSString *path = @"statuses/user_timeline";
@@ -212,6 +212,33 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
     
     [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         handler(responseJSON,urlResponse,error);            
+    }];
+}
+
+/**
+ * follow somebody 
+ * friends/add
+ *
+ */
++ (void)followUserWithSession:(QOAuthSession *)aSession user:(NSString *)user resultHandler:(JSONRequestHandler)handler{
+    NSString *path = @"friends/add";
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    [params setObject:@"json" forKey:@"format"];
+    [params setObject:user forKey:@"name"];
+    
+    [self postDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);
+    }];
+}
+
++ (void)unfollowUserWithSession:(QOAuthSession *)aSession user:(NSString *)user resultHandler:(JSONRequestHandler)handler{
+    NSString *path = @"friends/del";
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    [params setObject:@"json" forKey:@"format"];
+    [params setObject:user forKey:@"name"];
+    
+    [self postDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);
     }];
 }
 
