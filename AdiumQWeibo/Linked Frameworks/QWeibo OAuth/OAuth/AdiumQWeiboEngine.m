@@ -244,6 +244,30 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
 
 
 
++ (void)deleteTweetWithSession:(QOAuthSession *)aSession tweetID:(NSString *)anID resultHandler:(JSONRequestHandler)handler {
+    NSString *path = @"t/del";
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    [params setObject:@"json" forKey:@"format"];
+    [params setObject:anID forKey:@"id"];
+    
+    [self postDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);
+    }];
+
+}
+
++ (void)favoriteTweetWithSession:(QOAuthSession *)aSession tweetID:(NSString *)anID resultHandler:(JSONRequestHandler)handler {
+    NSString *path = @"fav/addt";
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    [params setObject:@"json" forKey:@"format"];
+    [params setObject:anID forKey:@"id"];
+    
+    [self postDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);
+    }];    
+}
+
+
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
 // Start Point                                                          //

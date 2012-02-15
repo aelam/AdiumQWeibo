@@ -163,6 +163,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                 [AdiumQWeiboEngine fetchFollowingListFromPage:0 session:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
                     
                     if(!self.online || error) {
+                        NIF_ERROR(@"%@", error);
                         return ;
                     }
                     
@@ -952,7 +953,6 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 }
 
 - (void)periodicUpdate {
-//    [AdiumQWeiboEngine fetchPublicTimelineWithSession:self.session position:0 count:20 resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
     [AdiumQWeiboEngine fetchHomeTimelineWithSession:self.session pageTime:nil pageFlag:0 count:20 resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         if (error) {
             NIF_ERROR(@"%@" ,error);
@@ -970,8 +970,22 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
             for (NSDictionary *status in [statuses reverseObjectEnumerator]) {
                 NSString *plainTweet = [status objectForKey:@"origtext"];
                 
-                
                 NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet replacingNicknames:nicknamePairs];
+                
+                // 
+                // If this tweet is retweet by you, I will mark it before this tweet AS RT(转播) 
+                //
+                ResponseTweetType type = [[status objectForKey:@"type"] intValue];
+                if(type == ResponseTweetTypeRetweet) {
+                    NSMutableAttributedString *retweetMark = [[NSMutableAttributedString alloc] 
+                                                              initWithString:@"转播" attributes:[NSDictionary dictionaryWithObject:                                                              [NSColor lightGrayColor] forKey:NSForegroundColorAttributeName]];
+                    [retweetMark appendAttributedString:attributedTweet];
+                    attributedTweet = [retweetMark autorelease];
+                    
+                }
+                    
+
+                
                 NSString *contactUID = [status objectForKey:QWEIBO_INFO_UID];
                 double timestamp = [[status objectForKey:TWEET_CREATE_AT] doubleValue];
                 NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];

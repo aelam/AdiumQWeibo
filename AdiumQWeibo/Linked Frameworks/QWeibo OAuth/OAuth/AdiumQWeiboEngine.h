@@ -107,5 +107,7 @@ typedef BOOL(^PageableJSONRequestHandler)(NSDictionary *responseJSON, NSHTTPURLR
 + (void)followUserWithSession:(QOAuthSession *)aSession user:(NSString *)user resultHandler:(JSONRequestHandler)handler;
 + (void)unfollowUserWithSession:(QOAuthSession *)aSession user:(NSString *)user resultHandler:(JSONRequestHandler)handler;
 
++ (void)deleteTweetWithSession:(QOAuthSession *)aSession tweetID:(NSString *)anID resultHandler:(JSONRequestHandler)handler;
++ (void)favoriteTweetWithSession:(QOAuthSession *)aSession tweetID:(NSString *)anID resultHandler:(JSONRequestHandler)handler;
 
 @end

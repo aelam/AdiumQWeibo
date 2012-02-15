@@ -105,7 +105,6 @@
                 NSDictionary *linkAttr = [[NSDictionary alloc] initWithObjectsAndKeys:
                                           [NSCursor pointingHandCursor], NSCursorAttributeName,
                                           [NSColor blueColor], NSForegroundColorAttributeName,
-//                                          [NSFont boldSystemFontOfSize:14.0], NSFontAttributeName,
                                           [NSString stringWithFormat:@"http://t.qq.com/k/%@",capturedStrings[i]],NSLinkAttributeName,
                                           nil];
                 
