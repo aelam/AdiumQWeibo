@@ -981,7 +981,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                 ResponseTweetType type = [[status objectForKey:@"type"] intValue];
                 if(type == ResponseTweetTypeRetweet) {
                     NSDictionary *source = [status objectForKey:@"source"];
-                    [finallyAttributedTweet appendString:@"转播: " withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor redColor],NSForegroundColorAttributeName,[NSColor yellowColor],NSBackgroundColorAttributeName,nil]];
+                    [finallyAttributedTweet appendString:@"转播: " withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor lightGrayColor],NSForegroundColorAttributeName,[NSColor yellowColor],NSBackgroundColorAttributeName,nil]];
                     [finallyAttributedTweet appendAttributedString:attributedTweet];
                     
                     if (source) {
