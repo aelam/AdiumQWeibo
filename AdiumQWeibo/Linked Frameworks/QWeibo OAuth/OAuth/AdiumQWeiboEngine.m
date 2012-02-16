@@ -267,6 +267,19 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
     }];    
 }
 
++ (void)sendTweetWithSession:(QOAuthSession *)aSession content:(NSString *)content resultHandler:(JSONRequestHandler)handler {
+    NSString *path = @"t/add";
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    [params setObject:@"json" forKey:@"format"];
+    [params setObject:content forKey:@"content"];
+//    [params setObject:@"json" forKey:@"format"];
+//    [params setObject:@"json" forKey:@"format"];
+    [self postDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);
+    }];    
+
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //

@@ -448,30 +448,59 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 - (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage {
     
     NIF_INFO(@"sending message out....");
-    NIF_INFO(@"%@",inContentMessage);
+//    NIF_INFO(@"%@",inContentMessage);
+    
+    AIChat *timelineChat = self.timelineChat;
     inContentMessage.displayContent = NO;
-    
-    
-//    NSString *sourceID = inContentMessage.source.UID;
-    NSString *destinationID = inContentMessage.destination.UID;
+
     NSString *encodedMessage = inContentMessage.encodedMessage;
-    if (destinationID && destinationID.length && encodedMessage && [encodedMessage length]) {
-        [AdiumQWeiboEngine sendPrivateMessageWithSession:self.session message:encodedMessage toUser:destinationID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
-//            NIF_INFO(@"%@", responseJSON);
-//            inContentMessage.displayContent = YES;
-            id data = [responseJSON objectForKey:@"data"];
-            if ([data respondsToSelector:@selector(objectForKey:)]) {
-                NIF_INFO(@"[data respondsToSelector:@selector(objectForKey:)] == YES");
-                NSNumber *messageID = [data objectForKey:@"id"];
-                NSNumber *messageTime = [data objectForKey:@"time"];
-                if (messageID && messageTime) {
-                    NSDate *receivedDate = [NSDate dateWithTimeIntervalSince1970:[messageTime doubleValue]];
-                    AIContentMessage *contentMessage = [AIContentMessage messageInChat:inContentMessage.chat withSource:self destination:destinationID date:receivedDate message:inContentMessage.message autoreply:NO];
-                    [adium.contentController receiveContentObject:contentMessage];
+
+    if(inContentMessage.chat == timelineChat) {
+        NIF_INFO(@"do you mean send a tweet ?");
+        [AdiumQWeiboEngine sendTweetWithSession:self.session content:encodedMessage resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+            NIF_INFO(@"YES, send it out for me ");
+            if (error) {
+                NIF_ERROR(@"%@", error);
+            } else {
+                NIF_TRACE(@"%@", responseJSON);
+                NSInteger errorCode = [[responseJSON objectForKey:@"errcode"] intValue];
+                NSInteger ret = [[responseJSON objectForKey:@"ret"] intValue];
+                if (ret == 0 || errorCode == 0) {
+                    id data = [responseJSON objectForKey:@"data"];
+                    if (data) {
+                        NSTimeInterval time = [[data objectForKey:@"time"] doubleValue];
+                        [adium.contentController displayEvent:AILocalizedString(@"Tweet successfully sent.", nil)
+                                                       ofType:@"tweet"
+                                                       inChat:self.timelineChat];
+
+                        NSDate *receivedDate = [NSDate dateWithTimeIntervalSince1970:time]; 
+                        
+                        AIContentMessage *contentMessage = [AIContentMessage messageInChat:self.timelineChat withSource:self destination:self date:receivedDate message:inContentMessage.message autoreply:NO];
+                        [adium.contentController receiveContentObject:contentMessage];
+                    }
+                    
                 }
             }
-
         }];
+    } else {
+        NSString *destinationID = inContentMessage.destination.UID;
+//        NSString *encodedMessage = inContentMessage.encodedMessage;
+        if (destinationID && destinationID.length && encodedMessage && [encodedMessage length]) {
+            [AdiumQWeiboEngine sendPrivateMessageWithSession:self.session message:encodedMessage toUser:destinationID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+                id data = [responseJSON objectForKey:@"data"];
+                if ([data respondsToSelector:@selector(objectForKey:)]) {
+                    NSNumber *messageID = [data objectForKey:@"id"];
+                    NSNumber *messageTime = [data objectForKey:@"time"];
+                    if (messageID && messageTime) {
+                        NSDate *receivedDate = [NSDate dateWithTimeIntervalSince1970:[messageTime doubleValue]];
+                        AIContentMessage *contentMessage = [AIContentMessage messageInChat:inContentMessage.chat withSource:self destination:destinationID date:receivedDate message:inContentMessage.message autoreply:NO];
+                        [adium.contentController receiveContentObject:contentMessage];
+                    }
+                }
+                
+            }];
+        }
+        
     }
     
     return YES;
@@ -963,7 +992,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
             
             NSDictionary *nicknamePairs = [responseJSON valueForKeyPath:@"data.user"];
             NSArray *statuses = [responseJSON valueForKeyPath:@"data.info"];                    
-            NIF_INFO(@"%@", statuses);
+//            NIF_INFO(@"%@", statuses);
             BOOL trackContent = [[self preferenceForKey:QWEIBO_PREFERENCE_EVER_LOADED_TIMELINE group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
             
             [[AIContactObserverManager sharedManager] delayListObjectNotifications];

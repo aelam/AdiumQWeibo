@@ -108,6 +108,7 @@ typedef enum {
 
 @property (readonly, nonatomic) NSString *timelineChatName;
 
+- (AIChat *)timelineChat;
 - (void)periodicUpdate;
 
 
