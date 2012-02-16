@@ -256,6 +256,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     }
     
     NSTimeInterval updateInterval = [[self preferenceForKey:QWEIBO_PREFERENCE_UPDATE_INTERVAL group:QWEIBO_PREFERENCE_GROUP_UPDATES] integerValue] * 60;
+    NIF_INFO(@"updateInterval = %lf", updateInterval);
     
     if(updateInterval > 0) {
 		[updateTimer invalidate];
@@ -958,12 +959,11 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
         if (error) {
             NIF_ERROR(@"%@" ,error);
         } else {
-            
             AIChat *timelineChat = self.timelineChat;
             
             NSDictionary *nicknamePairs = [responseJSON valueForKeyPath:@"data.user"];
             NSArray *statuses = [responseJSON valueForKeyPath:@"data.info"];                    
-            
+            NIF_INFO(@"%@", statuses);
             BOOL trackContent = [[self preferenceForKey:QWEIBO_PREFERENCE_EVER_LOADED_TIMELINE group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
             
             [[AIContactObserverManager sharedManager] delayListObjectNotifications];
@@ -992,7 +992,8 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                         
                         NSString *plainTweet2 = [source objectForKey:@"origtext"];
                         NSAttributedString *attributedTweet2 = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet2 replacingNicknames:nicknamePairs];
-                        
+
+                        [finallyAttributedTweet appendString:@"@" withAttributes:nil];
                         [finallyAttributedTweet appendAttributedString:attributedUser];
                         [finallyAttributedTweet appendString:@":" withAttributes:nil];
                         [finallyAttributedTweet appendAttributedString:attributedTweet2];

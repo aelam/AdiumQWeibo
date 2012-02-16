@@ -131,12 +131,44 @@
     }];
 }
 
+
 + (void)_attributeUsernamesForAttributedString:(NSMutableAttributedString *)halfAttributedTweet replacingNicknames:(NSDictionary *)pairs{
     static NSString *usernameCharacters = nil;
-
+    
     
     if (usernameCharacters == nil) {
         usernameCharacters = [@"(?<=@)[a-zA-Z0-9\\-_]+" retain];
+    }
+    
+    __block NSUInteger replaceOffset = 0;
+    
+    [[halfAttributedTweet string] enumerateStringsMatchedByRegex:usernameCharacters usingBlock:^(NSInteger captureCount, NSString *const *capturedStrings, const NSRange *capturedRanges, volatile BOOL *const stop) {
+        for (int i = 0; i < captureCount; i++) {
+            if( capturedRanges[i].location != NSNotFound) {
+                
+                NSString *name = capturedStrings[i];
+                NSDictionary *linkAttr = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                          [NSCursor pointingHandCursor], NSCursorAttributeName,
+                                          [NSColor blueColor], NSForegroundColorAttributeName,
+                                          [NSString stringWithFormat:@"http://t.qq.com/%@",name],NSLinkAttributeName,
+                                          nil];
+                NSString *nickname = [pairs objectForKey:name]?[pairs objectForKey:name]:name;
+                NSAttributedString *nickAttributedString = [[[NSAttributedString alloc] initWithString:nickname attributes:linkAttr] autorelease];
+                
+                [halfAttributedTweet replaceCharactersInRange:NSMakeRange(capturedRanges[i].location + replaceOffset, capturedRanges[i].length) withAttributedString:nickAttributedString];
+                [linkAttr release];                
+                replaceOffset += nickAttributedString.length - capturedStrings[i].length;
+                
+            }
+        }        
+    }];    
+}
+
++ (void)_attributeGroupsForAttributedString:(NSMutableAttributedString *)halfAttributedTweet replacingNicknames:(NSDictionary *)pairs{
+    static NSString *usernameCharacters = nil;
+
+    if (usernameCharacters == nil) {
+        usernameCharacters = [@"(?<=@)*[a-zA-Z0-9\\-_]+" retain];
     }
     
     __block NSUInteger replaceOffset = 0;
@@ -185,12 +217,9 @@
             NSImage *image = nil;
             
             
-//            NSString *imagePath = [NSString stringWithFormat:@"%@/%@.gif",faceRoot,realFaceName];
             image = [bundle imageForResource:[NSString stringWithFormat:@"%@.gif",realFaceName]];
-//            image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
             [cell setImage:image];
-            [ta setAttachmentCell:cell];
-            
+            [ta setAttachmentCell:cell];            
             imageString  = [NSAttributedString attributedStringWithAttachment:ta];
             
             [halfAttributedTweet replaceCharactersInRange:NSMakeRange(capturedRanges[i].location + replaceOffset, capturedRanges[i].length) withAttributedString:imageString];
