@@ -83,10 +83,16 @@
 }
 
 + (NSAttributedString *)attributedTweetForPlainText:(NSString *)tweet replacingNicknames:(NSDictionary *)nicknamePairs {
+    return [self attributedTweetForPlainText:tweet replacingNicknames:nicknamePairs processEmotion:YES];
+}
+
++ (NSAttributedString *)attributedTweetForPlainText:(NSString *)tweet replacingNicknames:(NSDictionary *)nicknamePairs processEmotion:(BOOL)needProcess{
     if (tweet) {
         NSMutableAttributedString *halfAttributedTweet = [[NSMutableAttributedString alloc] initWithString:tweet];
         [self _attributeUsernamesForAttributedString:halfAttributedTweet replacingNicknames:nicknamePairs];
-        [self _attributeEmotionsForAttributedString:halfAttributedTweet];
+        if (needProcess) {
+            [self _attributeEmotionsForAttributedString:halfAttributedTweet];            
+        }
         [self _attributeTopicsForAttributedString:halfAttributedTweet];
         return [halfAttributedTweet autorelease];
     } else {
@@ -94,7 +100,12 @@
     }
 }
 
-+ (NSArray *)attributedTweetsFromTweetDictionary:(NSDictionary *)json {
++ (NSArray *)attributedTweetsFromTweetDictionary:(NSDictionary *)json{
+    [self attributedTweetsFromTweetDictionary:json processEmotion:YES];
+}
+
+
++ (NSArray *)attributedTweetsFromTweetDictionary:(NSDictionary *)json processEmotion:(BOOL)needProcess{
     NSMutableArray *attributedTweets = [NSMutableArray array];
     
     NSDictionary *nicknamePairs = [json valueForKeyPath:@"data.user"];
@@ -102,7 +113,7 @@
     
     for (NSDictionary *status in statuses) {
         NSString *plainTweet = [status objectForKey:@"origtext"];
-        NSAttributedString *halfAttributedTweet = [self attributedTweetForPlainText:plainTweet replacingNicknames:nicknamePairs];
+        NSAttributedString *halfAttributedTweet = [self attributedTweetForPlainText:plainTweet replacingNicknames:nicknamePairs processEmotion:needProcess];
         [attributedTweets addObject:halfAttributedTweet];
     }
     return attributedTweets;

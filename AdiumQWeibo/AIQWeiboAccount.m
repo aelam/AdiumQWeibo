@@ -475,6 +475,10 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 
                         NSDate *receivedDate = [NSDate dateWithTimeIntervalSince1970:time]; 
                         
+//                        NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:encodedMessage replacingNicknames:nil];
+
+//                        NIF_TRACE(@"%@", inContentMessage.message);
+                        
                         AIContentMessage *contentMessage = [AIContentMessage messageInChat:self.timelineChat withSource:self destination:self date:receivedDate message:inContentMessage.message autoreply:NO];
                         [adium.contentController receiveContentObject:contentMessage];
                     }
@@ -493,6 +497,8 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                     NSNumber *messageTime = [data objectForKey:@"time"];
                     if (messageID && messageTime) {
                         NSDate *receivedDate = [NSDate dateWithTimeIntervalSince1970:[messageTime doubleValue]];
+//                        NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:encodedMessage replacingNicknames:nil];
+
                         AIContentMessage *contentMessage = [AIContentMessage messageInChat:inContentMessage.chat withSource:self destination:destinationID date:receivedDate message:inContentMessage.message autoreply:NO];
                         [adium.contentController receiveContentObject:contentMessage];
                     }
@@ -1002,7 +1008,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                 
                 NSMutableAttributedString *finallyAttributedTweet = [[[NSMutableAttributedString alloc] init] autorelease];
                 
-                NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet replacingNicknames:nicknamePairs];
+                NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet replacingNicknames:nicknamePairs processEmotion:NO];
                 
                 // 
                 // If this tweet is retweet by you, I will mark it before this tweet AS RT(转播) 
@@ -1020,7 +1026,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                         NSAttributedString *attributedUser = [AdiumQWeiboEngine attributedUserWithName:origName nick:origNick];
                         
                         NSString *plainTweet2 = [source objectForKey:@"origtext"];
-                        NSAttributedString *attributedTweet2 = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet2 replacingNicknames:nicknamePairs];
+                        NSAttributedString *attributedTweet2 = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet2 replacingNicknames:nicknamePairs processEmotion:NO];
 
                         [finallyAttributedTweet appendString:@"@" withAttributes:nil];
                         [finallyAttributedTweet appendAttributedString:attributedUser];

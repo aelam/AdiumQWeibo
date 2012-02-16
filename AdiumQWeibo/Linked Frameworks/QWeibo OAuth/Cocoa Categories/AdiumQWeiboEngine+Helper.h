@@ -18,7 +18,9 @@
 
 
 + (NSAttributedString *)attributedTweetForPlainText:(NSString *)tweet replacingNicknames:(NSDictionary *)nicknamePairs;
++ (NSAttributedString *)attributedTweetForPlainText:(NSString *)tweet replacingNicknames:(NSDictionary *)nicknamePairs processEmotion:(BOOL)needProcess;
 + (NSArray *)attributedTweetsFromTweetDictionary:(NSDictionary *)json;
++ (NSArray *)attributedTweetsFromTweetDictionary:(NSDictionary *)json processEmotion:(BOOL)needProcess;
 
 + (NSAttributedString *)attributedUserWithName:(NSString *)name nick:(NSString *)nick;
 
