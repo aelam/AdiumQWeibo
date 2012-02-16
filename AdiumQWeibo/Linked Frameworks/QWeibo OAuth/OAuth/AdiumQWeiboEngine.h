@@ -29,7 +29,6 @@ typedef enum {
     ResponseTweetTypeComment        = 7,
 } ResponseTweetType;
 
-
 typedef enum {
 	AIQWeiboLinkReply = 0,
 	AIQWeiboLinkRetweet,

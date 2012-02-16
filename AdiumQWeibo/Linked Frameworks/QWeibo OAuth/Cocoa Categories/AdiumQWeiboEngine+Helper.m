@@ -66,6 +66,22 @@
 	return address;
 }
 
++ (NSAttributedString *)attributedUserWithName:(NSString *)name nick:(NSString *)nick {
+    if (nick == nil || nick.length == 0) {
+        nick = name;
+    } 
+    if (name == nil || name.length == 0) {
+        return nil;
+    }
+    NSDictionary *linkAttr = [[NSDictionary alloc] initWithObjectsAndKeys:
+                              [NSCursor pointingHandCursor], NSCursorAttributeName,
+                              [NSColor blueColor], NSForegroundColorAttributeName,
+                              [NSString stringWithFormat:@"http://t.qq.com/%@",name],NSLinkAttributeName,
+                              nil];
+    NSAttributedString *attributedUser = [[NSAttributedString alloc] initWithString:nick attributes:linkAttr];
+    return [attributedUser autorelease];
+}
+
 + (NSAttributedString *)attributedTweetForPlainText:(NSString *)tweet replacingNicknames:(NSDictionary *)nicknamePairs {
     if (tweet) {
         NSMutableAttributedString *halfAttributedTweet = [[NSMutableAttributedString alloc] initWithString:tweet];

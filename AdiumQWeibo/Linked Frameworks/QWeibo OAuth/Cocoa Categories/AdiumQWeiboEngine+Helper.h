@@ -20,6 +20,8 @@
 + (NSAttributedString *)attributedTweetForPlainText:(NSString *)tweet replacingNicknames:(NSDictionary *)nicknamePairs;
 + (NSArray *)attributedTweetsFromTweetDictionary:(NSDictionary *)json;
 
++ (NSAttributedString *)attributedUserWithName:(NSString *)name nick:(NSString *)nick;
+
 
 
 +(NSAttributedString *)linkifiedStringFromAttributedString:(NSAttributedString *)inString

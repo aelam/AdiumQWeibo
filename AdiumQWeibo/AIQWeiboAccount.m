@@ -37,6 +37,7 @@
 #import <Adium/AIControllerProtocol.h>
 #import "AdiumQWeiboEngine.h"
 #import "AdiumQWeiboEngine+Helper.h"
+#import "Tweet.h"
 
 
 NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
@@ -970,6 +971,8 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
             for (NSDictionary *status in [statuses reverseObjectEnumerator]) {
                 NSString *plainTweet = [status objectForKey:@"origtext"];
                 
+                NSMutableAttributedString *finallyAttributedTweet = [[[NSMutableAttributedString alloc] init] autorelease];
+                
                 NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet replacingNicknames:nicknamePairs];
                 
                 // 
@@ -977,11 +980,28 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                 //
                 ResponseTweetType type = [[status objectForKey:@"type"] intValue];
                 if(type == ResponseTweetTypeRetweet) {
-                    NSMutableAttributedString *retweetMark = [[NSMutableAttributedString alloc] 
-                                                              initWithString:@"转播" attributes:[NSDictionary dictionaryWithObject:                                                              [NSColor lightGrayColor] forKey:NSForegroundColorAttributeName]];
-                    [retweetMark appendAttributedString:attributedTweet];
-                    attributedTweet = [retweetMark autorelease];
+                    NSDictionary *source = [status objectForKey:@"source"];
+                    [finallyAttributedTweet appendString:@"转播: " withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor redColor],NSForegroundColorAttributeName,[NSColor yellowColor],NSBackgroundColorAttributeName,nil]];
+                    [finallyAttributedTweet appendAttributedString:attributedTweet];
                     
+                    if (source) {
+                        [finallyAttributedTweet appendString:@"\n" withAttributes:nil];
+                        NSString *origName = [source objectForKey:@"name"];
+                        NSString *origNick = [source objectForKey:@"nick"];
+                        NSAttributedString *attributedUser = [AdiumQWeiboEngine attributedUserWithName:origName nick:origNick];
+                        
+                        NSString *plainTweet2 = [source objectForKey:@"origtext"];
+                        NSAttributedString *attributedTweet2 = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet2 replacingNicknames:nicknamePairs];
+                        
+                        [finallyAttributedTweet appendAttributedString:attributedUser];
+                        [finallyAttributedTweet appendString:@":" withAttributes:nil];
+                        [finallyAttributedTweet appendAttributedString:attributedTweet2];
+                        
+                    } else {
+                        
+                    }
+                } else if(type == ResponseTweetTypeOriginal){
+                    [finallyAttributedTweet appendAttributedString:attributedTweet];
                 }
                     
 
@@ -1010,7 +1030,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                                                                         withSource:fromObject
                                                                        destination:self
                                                                               date:date
-                                                                           message:attributedTweet
+                                                                           message:finallyAttributedTweet
                                                                          autoreply:NO];
                 
                 contentMessage.trackContent = trackContent;

@@ -140,6 +140,8 @@
 		942FDF0A148CCC43007D8EBE /* qweibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF08148CCC43007D8EBE /* qweibo.png */; };
 		942FDF0B148CCC43007D8EBE /* qweibo-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 942FDF09148CCC43007D8EBE /* qweibo-small.png */; };
 		942FDF0D148CCC8E007D8EBE /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */; };
+		9453C8AC14ECC161007ABF7C /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = 9453C8AB14ECC161007ABF7C /* Tweet.m */; };
+		9453C8CD14ECC4EF007ABF7C /* QPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 9453C8CC14ECC4EF007ABF7C /* QPerson.m */; };
 		94C2401114DF9FCF00161FAD /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C2400714DF9FCF00161FAD /* RegexKitLite.m */; };
 		94C7FD91149788400000139D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD90149788400000139D /* AppKit.framework */; };
 		94C7FD93149788400000139D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C7FD92149788400000139D /* Cocoa.framework */; };
@@ -319,6 +321,10 @@
 		942FDF08148CCC43007D8EBE /* qweibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qweibo.png; sourceTree = "<group>"; };
 		942FDF09148CCC43007D8EBE /* qweibo-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qweibo-small.png"; sourceTree = "<group>"; };
 		942FDF0C148CCC8E007D8EBE /* AIUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AIUtilities.framework; sourceTree = "<group>"; };
+		9453C8AA14ECC161007ABF7C /* Tweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tweet.h; sourceTree = "<group>"; };
+		9453C8AB14ECC161007ABF7C /* Tweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tweet.m; sourceTree = "<group>"; };
+		9453C8CB14ECC4EF007ABF7C /* QPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QPerson.h; sourceTree = "<group>"; };
+		9453C8CC14ECC4EF007ABF7C /* QPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QPerson.m; sourceTree = "<group>"; };
 		94AC0E1914948A5F006F0610 /* NIFLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIFLog.h; sourceTree = "<group>"; };
 		94C2400514DF9FCF00161FAD /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		94C2400714DF9FCF00161FAD /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
@@ -442,6 +448,10 @@
 				94187AE51493BF7B000F4AD1 /* WeiboEngine.m */,
 				94DD0AD51498FE8700399752 /* AdiumQWeiboEngine.h */,
 				94DD0AD61498FE8700399752 /* AdiumQWeiboEngine.m */,
+				9453C8AA14ECC161007ABF7C /* Tweet.h */,
+				9453C8AB14ECC161007ABF7C /* Tweet.m */,
+				9453C8CB14ECC4EF007ABF7C /* QPerson.h */,
+				9453C8CC14ECC4EF007ABF7C /* QPerson.m */,
 			);
 			path = OAuth;
 			sourceTree = "<group>";
@@ -945,6 +955,8 @@
 				941B58C7149ED62700E75554 /* emotions.txt in Sources */,
 				941B5903149EE24200E75554 /* main.m in Sources */,
 				94C2401114DF9FCF00161FAD /* RegexKitLite.m in Sources */,
+				9453C8AC14ECC161007ABF7C /* Tweet.m in Sources */,
+				9453C8CD14ECC4EF007ABF7C /* QPerson.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
