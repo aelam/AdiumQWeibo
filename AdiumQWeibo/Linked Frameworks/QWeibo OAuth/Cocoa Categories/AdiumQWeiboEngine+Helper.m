@@ -78,7 +78,8 @@
                               [NSColor blueColor], NSForegroundColorAttributeName,
                               [NSString stringWithFormat:@"http://t.qq.com/%@",name],NSLinkAttributeName,
                               nil];
-    NSAttributedString *attributedUser = [[NSAttributedString alloc] initWithString:nick attributes:linkAttr];
+    NSMutableAttributedString *attributedUser = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"@%@",nick] attributes:linkAttr];
+    [attributedUser addAttributes:nil range:NSMakeRange(0, 1)];
     return [attributedUser autorelease];
 }
 

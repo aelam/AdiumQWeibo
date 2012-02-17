@@ -1028,7 +1028,6 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                         NSString *plainTweet2 = [source objectForKey:@"origtext"];
                         NSAttributedString *attributedTweet2 = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet2 replacingNicknames:nicknamePairs processEmotion:NO];
 
-                        [finallyAttributedTweet appendString:@"@" withAttributes:nil];
                         [finallyAttributedTweet appendAttributedString:attributedUser];
                         [finallyAttributedTweet appendString:@":" withAttributes:nil];
                         [finallyAttributedTweet appendAttributedString:attributedTweet2];
