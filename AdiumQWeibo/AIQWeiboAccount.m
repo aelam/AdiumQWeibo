@@ -139,19 +139,23 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
             // grab SELF HEAD icon
             //
             
-            NSString *imageURL = [head stringByAppendingFormat:@"/%d",200];
-
+            NSString *imageURL = [head stringByAppendingFormat:@"/%d",QWEIBO_ICON_SIZE];
             [self _fetchImageWithURL:imageURL imageHander:^(NSImage *image) {
-                [self setValue:[NSNumber numberWithBool:YES] forProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON notify:NotifyNever];
+
+                NIF_TRACE(@"My head : %@", imageURL);
+
+                [self setValue:[NSNumber numberWithBool:YES] forProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON notify:NotifyNever];                    
                 
-                [self setPreference:[NSNumber numberWithBool:YES]
-                             forKey:KEY_USE_USER_ICON
-                              group:GROUP_ACCOUNT_STATUS];
-                
-                
-                [self setPreference:[image TIFFRepresentation]
-                             forKey:KEY_USER_ICON
-                              group:GROUP_ACCOUNT_STATUS];
+                if (image) {
+                    [self setPreference:[NSNumber numberWithBool:YES]
+                                 forKey:KEY_USE_USER_ICON
+                                  group:GROUP_ACCOUNT_STATUS];
+                    
+                    
+                    [self setPreference:[image TIFFRepresentation]
+                                 forKey:KEY_USER_ICON
+                                  group:GROUP_ACCOUNT_STATUS];                    
+                }
             }];
                         
 			// Our UID is definitely set; grab our friends.
@@ -474,11 +478,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                                                        inChat:self.timelineChat];
 
                         NSDate *receivedDate = [NSDate dateWithTimeIntervalSince1970:time]; 
-                        
-//                        NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:encodedMessage replacingNicknames:nil];
-
-//                        NIF_TRACE(@"%@", inContentMessage.message);
-                        
+                                                
                         AIContentMessage *contentMessage = [AIContentMessage messageInChat:self.timelineChat withSource:self destination:self date:receivedDate message:inContentMessage.message autoreply:NO];
                         [adium.contentController receiveContentObject:contentMessage];
                     }
@@ -488,7 +488,6 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
         }];
     } else {
         NSString *destinationID = inContentMessage.destination.UID;
-//        NSString *encodedMessage = inContentMessage.encodedMessage;
         if (destinationID && destinationID.length && encodedMessage && [encodedMessage length]) {
             [AdiumQWeiboEngine sendPrivateMessageWithSession:self.session message:encodedMessage toUser:destinationID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
                 id data = [responseJSON objectForKey:@"data"];
@@ -497,7 +496,6 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                     NSNumber *messageTime = [data objectForKey:@"time"];
                     if (messageID && messageTime) {
                         NSDate *receivedDate = [NSDate dateWithTimeIntervalSince1970:[messageTime doubleValue]];
-//                        NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:encodedMessage replacingNicknames:nil];
 
                         AIContentMessage *contentMessage = [AIContentMessage messageInChat:inContentMessage.chat withSource:self destination:destinationID date:receivedDate message:inContentMessage.message autoreply:NO];
                         [adium.contentController receiveContentObject:contentMessage];
@@ -769,6 +767,11 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 	}
 }
 
+
+- (void)uploadNick:(NSString *)newNick website:(NSString *)website location:(NSString *)location description:(NSString *)desc {
+    
+}
+
 /*!
  * @brief Update a user icon from a URL if necessary
  */
@@ -887,22 +890,22 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 
 			// Avoid pushing an icon update which we just downloaded.
 			if(![self boolValueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON]) {
-                
+                //NIF_TRACE(@"KEY_USER_ICON : %@", [prefDict objectForKey:KEY_USER_ICON]);
                 // TODO
                 // 修改图片
+                NIF_TRACE(@"modify my icon...");
+                NSData *imageData = [prefDict objectForKey:KEY_USER_ICON];
+                [imageData writeToFile:@"/Users/ryan/Desktop/test.jpg" atomically:YES];
+                if (imageData) {
+                    [AdiumQWeiboEngine updateHeadIcon:imageData session:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+                        if(error) {
+                            NIF_ERROR(@"%@", error);
+                        } else {
+                            NIF_TRACE(@"%@", responseJSON);
+                        }
+                    }];                    
+                }
                 
-//                NIF_INFO(@"---------------self boolValueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON-[group isEqualToString:KEY_USER_ICON]) {");
-//#warning UPLOAD MY ICON
-                
-//				NSString *requestID = [twitterEngine updateProfileImage:[prefDict objectForKey:KEY_USER_ICON]];
-                
-//				if(requestID) {
-//					AILogWithSignature(@"%@ Pushing self icon update", self);
-//					
-//					[self setRequestType:AIQWeiboProfileSelf
-//							forRequestID:requestID
-//						  withDictionary:nil];
-//				}
 			}
 			
 			[self setValue:nil forProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON notify:NotifyNever];

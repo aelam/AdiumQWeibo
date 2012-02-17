@@ -17,6 +17,9 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
 
 + (void)_requestDataWithAPIPath:(NSString *)path params:(NSDictionary *)params session:(QOAuthSession *)aSession requestMethod:(RequestMethod)method resultHandler:(JSONRequestHandler)handler;
 
++ (void)_requestDataWithAPIPath:(NSString *)path params:(NSDictionary *)params imageData:(NSData *)imageData session:(QOAuthSession *)aSession requestMethod:(RequestMethod)method resultHandler:(JSONRequestHandler)handler;
+
+
 @end
 
 @implementation AdiumQWeiboEngine
@@ -272,12 +275,20 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
     [params setObject:@"json" forKey:@"format"];
     [params setObject:content forKey:@"content"];
-//    [params setObject:@"json" forKey:@"format"];
-//    [params setObject:@"json" forKey:@"format"];
     [self postDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         handler(responseJSON,urlResponse,error);
     }];    
 
+}
+
++ (void)updateHeadIcon:(NSData *)imageData session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler {
+    NSString *path = @"user/update_head";
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    [params setObject:@"json" forKey:@"format"];
+    
+    [self _requestDataWithAPIPath:path params:params imageData:imageData session:aSession requestMethod:RequestMethodPOST resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);
+    }];
 }
 
 
@@ -300,9 +311,24 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
 }
 
 + (void)_requestDataWithAPIPath:(NSString *)path params:(NSDictionary *)params session:(QOAuthSession *)aSession requestMethod:(RequestMethod)method resultHandler:(JSONRequestHandler)handler {
+    [self _requestDataWithAPIPath:path params:params imageData:nil session:aSession requestMethod:method resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        handler(responseJSON,urlResponse,error);
+    }];
+    
+}
+
++ (void)_requestDataWithAPIPath:(NSString *)path params:(NSDictionary *)params imageData:(NSData *)imageData session:(QOAuthSession *)aSession requestMethod:(RequestMethod)method resultHandler:(JSONRequestHandler)handler {
     NSString *url = [APIDomain stringByAppendingFormat:@"/%@",path];
     
-    AdiumQWeiboEngine *engine = [[[AdiumQWeiboEngine alloc] initWithURL:[NSURL URLWithString:url] parameters:params requestMethod:method]autorelease];
+    AdiumQWeiboEngine *engine = nil;//
+    if (imageData) {
+        engine = [[[AdiumQWeiboEngine alloc] initWithURL:[NSURL URLWithString:url] parameters:params requestMethod:method]autorelease];
+        [engine addMultiPartData:imageData withName:[NSString stringWithFormat:@"%lf",[[NSDate date] timeIntervalSince1970]]];
+//        [engine addMultiPartData:imageData withName:@"123"];
+
+    } else {
+        engine = [[[AdiumQWeiboEngine alloc] initWithURL:[NSURL URLWithString:url] parameters:params requestMethod:method]autorelease];
+    }
     engine.session = aSession;
     
     [engine performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
@@ -338,7 +364,7 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
             handler(nil,urlResponse,error);            
         }        
     }];
-
+    
 }
 
 @end

@@ -112,5 +112,6 @@ typedef enum {
 - (AIChat *)timelineChat;
 - (void)periodicUpdate;
 
+- (void)uploadNick:(NSString *)newNick website:(NSString *)website location:(NSString *)location description:(NSString *)desc;
 
 @end

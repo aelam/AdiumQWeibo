@@ -111,5 +111,7 @@ typedef BOOL(^PageableJSONRequestHandler)(NSDictionary *responseJSON, NSHTTPURLR
 
 + (void)sendTweetWithSession:(QOAuthSession *)aSession content:(NSString *)content resultHandler:(JSONRequestHandler)handler;
 
++ (void)updateHeadIcon:(NSData *)imageData session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
+
 
 @end

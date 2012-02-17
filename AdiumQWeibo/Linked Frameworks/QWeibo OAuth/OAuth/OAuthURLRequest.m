@@ -105,13 +105,14 @@
         for (NSString *key in files) {
             
             NSData *fileData = [files objectForKey:key];
-            NSString *header = [NSString stringWithFormat:headerTemplate, key, key];
+            NSString *header = [NSString stringWithFormat:headerTemplate, @"pic", @"name"];
             [bodyData appendData:[header dataUsingEncoding:NSUTF8StringEncoding]];
             [bodyData appendData:fileData];
             [bodyData appendData:boundaryBytes];
         }
-        [request setValue:[NSString stringWithFormat:@"%d", [bodyData length]] forHTTPHeaderField:@"Content-Length"];
+        //[request setValue:[NSString stringWithFormat:@"%d", [bodyData length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:bodyData];
+        NIF_INFO(@"body %s", [bodyData bytes]);
         
         return request;        
     } else {

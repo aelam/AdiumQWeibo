@@ -197,6 +197,16 @@
 					forKey:QWEIBO_PREFERENCE_LOAD_CONTACTS
 					 group:QWEIBO_PREFERENCE_GROUP_UPDATES];
 	
+#warning --
+    /***
+     if (account.online) {
+     [(AITwitterAccount *)account setProfileName:(textField_name.isEnabled ? textField_name.stringValue : nil)
+     url:(textField_url.isEnabled ? textField_url.stringValue : nil)
+     location:(textField_location.isEnabled ? textField_location.stringValue : nil)
+     description:(textField_description.isEnabled ? textField_description.stringValue : nil)];
+     }
+
+     */
 
 }
 
