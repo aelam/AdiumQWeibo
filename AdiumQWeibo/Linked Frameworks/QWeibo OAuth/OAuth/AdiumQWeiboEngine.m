@@ -320,11 +320,10 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
 + (void)_requestDataWithAPIPath:(NSString *)path params:(NSDictionary *)params imageData:(NSData *)imageData session:(QOAuthSession *)aSession requestMethod:(RequestMethod)method resultHandler:(JSONRequestHandler)handler {
     NSString *url = [APIDomain stringByAppendingFormat:@"/%@",path];
     
-    AdiumQWeiboEngine *engine = nil;//
+    AdiumQWeiboEngine *engine = nil;
     if (imageData) {
         engine = [[[AdiumQWeiboEngine alloc] initWithURL:[NSURL URLWithString:url] parameters:params requestMethod:method]autorelease];
         [engine addMultiPartData:imageData withName:[NSString stringWithFormat:@"%lf",[[NSDate date] timeIntervalSince1970]]];
-//        [engine addMultiPartData:imageData withName:@"123"];
 
     } else {
         engine = [[[AdiumQWeiboEngine alloc] initWithURL:[NSURL URLWithString:url] parameters:params requestMethod:method]autorelease];
