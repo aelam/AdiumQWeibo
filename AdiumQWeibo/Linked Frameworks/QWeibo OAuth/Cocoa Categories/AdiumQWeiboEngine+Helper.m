@@ -73,13 +73,15 @@
     if (name == nil || name.length == 0) {
         return nil;
     }
-    NSDictionary *linkAttr = [[NSDictionary alloc] initWithObjectsAndKeys:
+    NSDictionary *linkAttr = [[[NSDictionary alloc] initWithObjectsAndKeys:
                               [NSCursor pointingHandCursor], NSCursorAttributeName,
                               [NSColor blueColor], NSForegroundColorAttributeName,
                               [NSString stringWithFormat:@"http://t.qq.com/%@",name],NSLinkAttributeName,
-                              nil];
-    NSMutableAttributedString *attributedUser = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"@%@",nick] attributes:linkAttr];
-    [attributedUser addAttributes:nil range:NSMakeRange(0, 1)];
+                              nil] autorelease];
+    NSMutableAttributedString *attributedUser = [[NSMutableAttributedString alloc] initWithString:@"@"];
+    NSAttributedString *realUser = [[NSAttributedString alloc] initWithString:nick attributes:linkAttr];
+    [attributedUser appendAttributedString:realUser];
+    [realUser release];
     return [attributedUser autorelease];
 }
 
