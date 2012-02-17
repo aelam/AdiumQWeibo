@@ -882,13 +882,15 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 	}
 	
 	if([group isEqualToString:GROUP_ACCOUNT_STATUS]) {
-//        NIF_INFO(@"[group isEqualToString:GROUP_ACCOUNT_STATUS]) {");
 
 		if([key isEqualToString:KEY_USER_ICON]) {
-//            NIF_INFO(@"----------------[group isEqualToString:KEY_USER_ICON]) {");
 
 			// Avoid pushing an icon update which we just downloaded.
 			if(![self boolValueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON]) {
+                
+                // TODO
+                // 修改图片
+                
 //                NIF_INFO(@"---------------self boolValueForProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON-[group isEqualToString:KEY_USER_ICON]) {");
 //#warning UPLOAD MY ICON
                 
@@ -930,21 +932,11 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 //		retweetLink = [[prefDict objectForKey:QWEIBO_PREFERENCE_RETWEET_SPAM] boolValue];
 		
 		if ([key isEqualToString:QWEIBO_PREFERENCE_LOAD_CONTACTS] && self.online) {
-//            NIF_INFO(@"fan list");
+
 			if ([[prefDict objectForKey:QWEIBO_PREFERENCE_LOAD_CONTACTS] boolValue]) {
 				// Delay updates when loading our contacts list.
 				[self silenceAllContactUpdatesForInterval:18.0];
-				// Grab our user list.
-//				NSString	*requestID = [twitterEngine getRecentlyUpdatedFriendsFor:self.UID startingAtPage:1];
-				
-//				if (requestID) {
-//					[self setRequestType:AIQWeiboInitialUserInfo
-//							forRequestID:requestID
-//						  withDictionary:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:1] forKey:@"Page"]];
-//				}
-//                NIF_INFO(@"fan list");
                 [AdiumQWeiboEngine fetchFollowingListWithSession:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
-//                    NIF_INFO(@"fan list : %@", responseJSON);
                     if (error) {
                         NIF_ERROR(@"%@" ,error);
                     } else {

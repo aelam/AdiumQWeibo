@@ -123,6 +123,30 @@
     
     [textField_OAuthVerifier setHidden:YES];
 
+    // Options
+	// This is why the UI not refresh
+    // 
+	NSNumber *updateInterval = [account preferenceForKey:QWEIBO_PREFERENCE_UPDATE_INTERVAL group:QWEIBO_PREFERENCE_GROUP_UPDATES];
+	[popUp_updateInterval selectItemAtIndex:[[popUp_updateInterval menu] indexOfItemWithRepresentedObject:updateInterval]];
+	
+	BOOL updateAfterSend = [[account preferenceForKey:QWEIBO_PREFERENCE_UPDATE_AFTER_SEND group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+	[checkBox_updateAfterSend setState:updateAfterSend];
+	
+	BOOL updateGlobal = [[account preferenceForKey:QWEIBO_PREFERENCE_UPDATE_GLOBAL group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+	[checkBox_updateGlobalStatus setState:updateGlobal];
+    
+	BOOL updateGlobalIncludesReplies = [[account preferenceForKey:QWEIBO_PREFERENCE_UPDATE_GLOBAL_REPLIES group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+	[checkBox_updateGlobalIncludeReplies setState:updateGlobalIncludesReplies];
+	
+	[checkBox_updateGlobalIncludeReplies setEnabled:[checkBox_updateGlobalStatus state]];
+    
+	BOOL showRetweet = [[account preferenceForKey:QWEIBO_PREFERENCE_RETWEET_SPAM group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+	[checkBox_retweet setState:showRetweet];
+    
+	BOOL loadContacts = [[account preferenceForKey:QWEIBO_PREFERENCE_LOAD_CONTACTS group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+	[checkBox_loadContacts setState:loadContacts];
+
+    
     if (account.online) {
         
         NIF_TRACE(@"account is online");
