@@ -100,7 +100,7 @@ typedef BOOL(^PageableJSONRequestHandler)(NSDictionary *responseJSON, NSHTTPURLR
 + (void)sendPrivateMessageWithSession:(QOAuthSession *)aSession message:(NSString *)message toUser:(NSString *)username resultHandler:(JSONRequestHandler)handler;
 
 + (void)fetchPublicTimelineWithSession:(QOAuthSession *)aSession position:(NSInteger)position count:(NSInteger)count resultHandler:(JSONRequestHandler)handler;
-+ (void)fetchHomeTimelineWithSession:(QOAuthSession *)aSession pageTime:(NSDate *)date pageFlag:(PageFlag)pageFlag count:(NSInteger)count resultHandler:(JSONRequestHandler)handler;
++ (void)fetchHomeTimelineWithSession:(QOAuthSession *)aSession pageTime:(double)date pageFlag:(PageFlag)pageFlag count:(NSInteger)count resultHandler:(JSONRequestHandler)handler;
 + (void)fetchUserTimelineWithSession:(QOAuthSession *)aSession forUser:(NSString *)username since:(NSDate *)date lastID:(NSInteger)lastID pageFlag:(PageFlag)pageFlag count:(NSInteger)count resultHandler:(JSONRequestHandler)handler;
 
 + (void)followUserWithSession:(QOAuthSession *)aSession user:(NSString *)user resultHandler:(JSONRequestHandler)handler;

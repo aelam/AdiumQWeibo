@@ -184,12 +184,12 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
  *
  */
 
-+ (void)fetchHomeTimelineWithSession:(QOAuthSession *)aSession pageTime:(NSDate *)date pageFlag:(PageFlag)pageFlag count:(NSInteger)count resultHandler:(JSONRequestHandler)handler{
++ (void)fetchHomeTimelineWithSession:(QOAuthSession *)aSession pageTime:(double)date pageFlag:(PageFlag)pageFlag count:(NSInteger)count resultHandler:(JSONRequestHandler)handler{
+
     NSString *path = @"statuses/home_timeline";
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
-    if (date) {
-        [params setObject:[NSString stringWithFormat:@"%@",[date timeIntervalSince1970]] forKey:@"pagetime"];
-    }
+
+    [params setObject:[NSString stringWithFormat:@"%0.0f",date] forKey:@"pagetime"];
         
     [params setObject:[NSString stringWithFormat:@"%d",pageFlag] forKey:@"pageflag"];
     [params setObject:[NSString stringWithFormat:@"%d",count] forKey:@"reqnum"];

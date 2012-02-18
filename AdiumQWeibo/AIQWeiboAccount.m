@@ -52,6 +52,10 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 						  userID:(NSString *)userID
 						statusID:(NSString *)statusID
 						 context:(NSString *)context;
+
+- (void)_loadHomeTimelineStartPageTime:(double)date count:(NSInteger)count max:(NSInteger)max;
+- (void)_resetHomeTimelineRequest;
+
 @end
 
 @implementation AIQWeiboAccount
@@ -816,7 +820,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 //                NIF_INFO(@"%@", responseJSON);
                 NSInteger errorCode = [[responseJSON objectForKey:@"errcode"] intValue];
                 NSInteger ret = [[responseJSON objectForKey:@"ret"] intValue];
-                if (ret == 0 || errorCode == 0) {
+                if (ret == 0 && errorCode == 0) {
                     NIF_TRACE(@"delete %@ success !!",object.UID);
                     for (NSString *groupName in object.remoteGroupNames) {
                         [object removeRemoteGroupName:groupName];
@@ -985,15 +989,33 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 }
 
 - (void)periodicUpdate {
-    [AdiumQWeiboEngine fetchHomeTimelineWithSession:self.session pageTime:nil pageFlag:0 count:20 resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+    NIF_TRACE();
+    if (isLoadingHomeTimeline) {
+        return;
+    }
+    isLoadingHomeTimeline = YES;
+    NIF_TRACE(@"timer makes me loading again..");
+    
+    NSString *lastUpdateTime = [self preferenceForKey:QWEIBO_PREFERENCE_TIMELINE_LAST_TIME group:QWEIBO_PREFERENCE_GROUP_UPDATES];
+    double lastUpdateTime_ = [lastUpdateTime doubleValue];
+    
+    [self _loadHomeTimelineStartPageTime:lastUpdateTime_ count:COUNT_UPDATE_TWEET max:200];
+    
+}
+
+- (void)_loadHomeTimelineStartPageTime:(double)date count:(NSInteger)count max:(NSInteger)max {
+    NIF_INFO(@"loading from  : %lf", date);
+    
+    [AdiumQWeiboEngine fetchHomeTimelineWithSession:self.session pageTime:date pageFlag:PageFlagPageUp count:count resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         if (error) {
             NIF_ERROR(@"%@" ,error);
+            [self _resetHomeTimelineRequest];
         } else {
             AIChat *timelineChat = self.timelineChat;
             
             NSDictionary *nicknamePairs = [responseJSON valueForKeyPath:@"data.user"];
             NSArray *statuses = [responseJSON valueForKeyPath:@"data.info"];                    
-//            NIF_INFO(@"%@", statuses);
+            //            NIF_INFO(@"%@", statuses);
             BOOL trackContent = [[self preferenceForKey:QWEIBO_PREFERENCE_EVER_LOADED_TIMELINE group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
             
             [[AIContactObserverManager sharedManager] delayListObjectNotifications];
@@ -1022,7 +1044,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                         
                         NSString *plainTweet2 = [source objectForKey:@"origtext"];
                         NSAttributedString *attributedTweet2 = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet2 replacingNicknames:nicknamePairs processEmotion:NO];
-
+                        
                         [finallyAttributedTweet appendAttributedString:attributedUser];
                         [finallyAttributedTweet appendString:@":" withAttributes:nil];
                         [finallyAttributedTweet appendAttributedString:attributedTweet2];
@@ -1033,8 +1055,8 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                 } else if(type == ResponseTweetTypeOriginal){
                     [finallyAttributedTweet appendAttributedString:attributedTweet];
                 }
-                    
-
+                
+                
                 
                 NSString *contactUID = [status objectForKey:QWEIBO_INFO_UID];
                 double timestamp = [[status objectForKey:TWEET_CREATE_AT] doubleValue];
@@ -1068,9 +1090,44 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
             }
             
             [[AIContactObserverManager sharedManager] endListObjectNotificationsDelay];
+            
+            [self _resetHomeTimelineRequest];
+            
+            // new lastID should be marked here 
+            id firstStatus = [statuses objectAtIndex:0];
+            double futureTimelineLastTime = [[firstStatus objectForKey:@"timestamp"] doubleValue];
+            NSString *futureTimelineLastTime_ = [NSString stringWithFormat:@"%lf",futureTimelineLastTime];
+            
+            [self setPreference:futureTimelineLastTime_
+                         forKey:QWEIBO_PREFERENCE_TIMELINE_LAST_TIME
+                          group:QWEIBO_PREFERENCE_GROUP_UPDATES];
+            // let's load more 
+            
+            id data = [responseJSON objectForKey:@"data"];
+            if(data && [data respondsToSelector:@selector(objectForKey:)] && [statuses count] > 0) {
+                // hasnext == 0 ==> hasNextPage == YES
+                BOOL hasNextPage = [data objectForKey:@"hasnext"] &&([[data objectForKey:@"hasnext"] intValue]==0);
+                NIF_TRACE(@"do we have next page ? %d",hasNextPage);
+                                
+                NSInteger leftTweetsCount = max - [statuses count];
+                if (hasNextPage && leftTweetsCount > 0 ) {
+                    NIF_TRACE(@"IM LOADING MORE HOMTIMELINE....");
+                    [self _loadHomeTimelineStartPageTime:futureTimelineLastTime count:count max:leftTweetsCount];
+                } else {
+                    [self _resetHomeTimelineRequest];
+                }
+            } else {
+                [self _resetHomeTimelineRequest];
+            }
         }
     }];
+
 }
+
+- (void)_resetHomeTimelineRequest {
+    isLoadingHomeTimeline = NO;
+}
+
 
 - (QOAuthSession *)session {
     if (_session == nil) {
@@ -1084,13 +1141,15 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 }
 
 - (void)_fetchImageWithURL:(NSString *)url imageHander:(void(^)(NSImage *image))imageHander {
-    dispatch_queue_t queue = dispatch_queue_create("com.ryan.downloadimage", NULL);
+//    dispatch_queue_t queue = dispatch_queue_create("com.ryan.downloadimage", NULL);
+     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
     dispatch_async(queue, ^{
         NSImage *image = [[[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:url]] autorelease];
         dispatch_async(dispatch_get_main_queue(), ^{
             imageHander(image);
         });
     });
+//    dispatch_release(queue);
 }
 
 - (void)dealloc {
