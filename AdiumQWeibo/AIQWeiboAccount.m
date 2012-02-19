@@ -1024,7 +1024,6 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
         } else {
             
             NSDictionary *data = [responseJSON objectForKey:@"data"];
-            NIF_INFO(@"data is %@,class:%@",data,[data class]);
 
             if (data == nil || [data isKindOfClass:[NSString class]]) {
                 NIF_INFO(@"data is nil");
