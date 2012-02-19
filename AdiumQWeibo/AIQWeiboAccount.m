@@ -62,6 +62,8 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 
 - (void)initAccount {
     [super initAccount];
+
+    _maybeDuplicateTweets = [[NSMutableDictionary alloc] init];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(chatDidOpen:) 
@@ -989,7 +991,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 }
 
 - (void)periodicUpdate {
-    NIF_TRACE();
+    NIF_TRACE(@"isLoadingHomeTimeline: %d",isLoadingHomeTimeline);
     if (isLoadingHomeTimeline) {
         return;
     }
@@ -998,6 +1000,15 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     
     NSString *lastUpdateTime = [self preferenceForKey:QWEIBO_PREFERENCE_TIMELINE_LAST_TIME group:QWEIBO_PREFERENCE_GROUP_UPDATES];
     double lastUpdateTime_ = [lastUpdateTime doubleValue];
+    double currentTimestamp = [[NSDate date]timeIntervalSince1970];
+
+    // 
+    // if we have not loaded timeline for a long time, there will be too many tweets,
+    // so we'd better change the timestamp that we need load begin
+    //
+    if (lastUpdateTime_ - currentTimestamp > 7200 || lastUpdateTime_ == 0) {
+        lastUpdateTime_ = currentTimestamp - 3000;
+    }
     
     [self _loadHomeTimelineStartPageTime:lastUpdateTime_ count:COUNT_UPDATE_TWEET max:200];
     
@@ -1011,113 +1022,121 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
             NIF_ERROR(@"%@" ,error);
             [self _resetHomeTimelineRequest];
         } else {
-            AIChat *timelineChat = self.timelineChat;
             
-            NSDictionary *nicknamePairs = [responseJSON valueForKeyPath:@"data.user"];
-            NSArray *statuses = [responseJSON valueForKeyPath:@"data.info"];                    
-            //            NIF_INFO(@"%@", statuses);
-            BOOL trackContent = [[self preferenceForKey:QWEIBO_PREFERENCE_EVER_LOADED_TIMELINE group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
-            
-            [[AIContactObserverManager sharedManager] delayListObjectNotifications];
-            
-            for (NSDictionary *status in [statuses reverseObjectEnumerator]) {
-                NSString *plainTweet = [status objectForKey:@"origtext"];
+            NSDictionary *data = [responseJSON objectForKey:@"data"];
+            NIF_INFO(@"data is %@,class:%@",data,[data class]);
+
+            if (data == nil || [data isKindOfClass:[NSString class]]) {
+                NIF_INFO(@"data is nil");
+                [self _resetHomeTimelineRequest];
+            } else {
+                AIChat *timelineChat = self.timelineChat;
                 
-                NSMutableAttributedString *finallyAttributedTweet = [[[NSMutableAttributedString alloc] init] autorelease];
+                NSDictionary *nicknamePairs = [data objectForKey:@"user"];
+                NSArray *statuses = [data objectForKey:@"info"];                    
                 
-                NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet replacingNicknames:nicknamePairs processEmotion:NO];
+                BOOL trackContent = [[self preferenceForKey:QWEIBO_PREFERENCE_EVER_LOADED_TIMELINE group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
                 
-                // 
-                // If this tweet is retweet by you, I will mark it before this tweet AS RT(转播) 
-                //
-                ResponseTweetType type = [[status objectForKey:@"type"] intValue];
-                if(type == ResponseTweetTypeRetweet) {
-                    NSDictionary *source = [status objectForKey:@"source"];
-                    [finallyAttributedTweet appendString:@"转播: " withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor lightGrayColor],NSForegroundColorAttributeName,[NSColor yellowColor],NSBackgroundColorAttributeName,nil]];
-                    [finallyAttributedTweet appendAttributedString:attributedTweet];
+                [[AIContactObserverManager sharedManager] delayListObjectNotifications];
+                
+                for (NSDictionary *status in [statuses reverseObjectEnumerator]) {
+                    NSString *plainTweet = [status objectForKey:@"origtext"];
                     
-                    if (source) {
-                        [finallyAttributedTweet appendString:@"\n" withAttributes:nil];
-                        NSString *origName = [source objectForKey:@"name"];
-                        NSString *origNick = [source objectForKey:@"nick"];
-                        NSAttributedString *attributedUser = [AdiumQWeiboEngine attributedUserWithName:origName nick:origNick];
+                    NSMutableAttributedString *finallyAttributedTweet = [[[NSMutableAttributedString alloc] init] autorelease];
+                    
+                    NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet replacingNicknames:nicknamePairs processEmotion:NO];
+                    
+                    // 
+                    // If this tweet is retweet by you, I will mark it before this tweet AS RT(转播) 
+                    //
+                    ResponseTweetType type = [[status objectForKey:@"type"] intValue];
+                    if(type == ResponseTweetTypeRetweet) {
+                        NSDictionary *source = [status objectForKey:@"source"];
+                        [finallyAttributedTweet appendString:@"转播: " withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor lightGrayColor],NSForegroundColorAttributeName,[NSColor yellowColor],NSBackgroundColorAttributeName,nil]];
+                        [finallyAttributedTweet appendAttributedString:attributedTweet];
                         
-                        NSString *plainTweet2 = [source objectForKey:@"origtext"];
-                        NSAttributedString *attributedTweet2 = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet2 replacingNicknames:nicknamePairs processEmotion:NO];
+                        if (source) {
+                            [finallyAttributedTweet appendString:@"\n" withAttributes:nil];
+                            NSString *origName = [source objectForKey:@"name"];
+                            NSString *origNick = [source objectForKey:@"nick"];
+                            NSAttributedString *attributedUser = [AdiumQWeiboEngine attributedUserWithName:origName nick:origNick];
+                            
+                            NSString *plainTweet2 = [source objectForKey:@"origtext"];
+                            NSAttributedString *attributedTweet2 = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet2 replacingNicknames:nicknamePairs processEmotion:NO];
+                            
+                            [finallyAttributedTweet appendAttributedString:attributedUser];
+                            [finallyAttributedTweet appendString:@":" withAttributes:nil];
+                            [finallyAttributedTweet appendAttributedString:attributedTweet2];
+                            
+                        } else {
+                            
+                        }
+                    } else if(type == ResponseTweetTypeOriginal){
+                        [finallyAttributedTweet appendAttributedString:attributedTweet];
+                    }
+                    
+                    
+                    
+                    NSString *contactUID = [status objectForKey:QWEIBO_INFO_UID];
+                    double timestamp = [[status objectForKey:TWEET_CREATE_AT] doubleValue];
+                    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
+                    
+                    
+                    id fromObject = nil;
+                    
+                    if(![self.UID isCaseInsensitivelyEqualToString:contactUID]) {
+                        AIListContact *listContact = [self contactWithUID:contactUID];
+                        [listContact setStatusMessage:[NSAttributedString stringWithString:[plainTweet stringByUnescapingFromXMLWithEntities:nil]] notify:NotifyNow];
+                        [self updateUserIcon:[status objectForKey:QWEIBO_INFO_ICON_URL] forContact:listContact];
                         
-                        [finallyAttributedTweet appendAttributedString:attributedUser];
-                        [finallyAttributedTweet appendString:@":" withAttributes:nil];
-                        [finallyAttributedTweet appendAttributedString:attributedTweet2];
+                        [timelineChat addParticipatingListObject:listContact notify:NotifyNow];
+                        
+                        fromObject = (id)listContact;
                         
                     } else {
-                        
+                        fromObject = (id)self;
                     }
-                } else if(type == ResponseTweetTypeOriginal){
-                    [finallyAttributedTweet appendAttributedString:attributedTweet];
+                    
+                    AIContentMessage *contentMessage = [AIContentMessage messageInChat:timelineChat
+                                                                            withSource:fromObject
+                                                                           destination:self
+                                                                                  date:date
+                                                                               message:finallyAttributedTweet
+                                                                             autoreply:NO];
+                    
+                    contentMessage.trackContent = trackContent;
+                    [adium.contentController receiveContentObject:contentMessage];
                 }
                 
+                [[AIContactObserverManager sharedManager] endListObjectNotificationsDelay];
                 
+                [self _resetHomeTimelineRequest];
                 
-                NSString *contactUID = [status objectForKey:QWEIBO_INFO_UID];
-                double timestamp = [[status objectForKey:TWEET_CREATE_AT] doubleValue];
-                NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
+                // new lastID should be marked here 
+                id firstStatus = [statuses objectAtIndex:0];
+                double futureTimelineLastTime = [[firstStatus objectForKey:@"timestamp"] doubleValue];
+                NSString *futureTimelineLastTime_ = [NSString stringWithFormat:@"%0.0f",futureTimelineLastTime];
                 
+                [self setPreference:futureTimelineLastTime_
+                             forKey:QWEIBO_PREFERENCE_TIMELINE_LAST_TIME
+                              group:QWEIBO_PREFERENCE_GROUP_UPDATES];
+                // let's load more 
                 
-                id fromObject = nil;
-                
-                if(![self.UID isCaseInsensitivelyEqualToString:contactUID]) {
-                    AIListContact *listContact = [self contactWithUID:contactUID];
-                    [listContact setStatusMessage:[NSAttributedString stringWithString:[plainTweet stringByUnescapingFromXMLWithEntities:nil]] notify:NotifyNow];
-                    [self updateUserIcon:[status objectForKey:QWEIBO_INFO_ICON_URL] forContact:listContact];
+                if(data && [data respondsToSelector:@selector(objectForKey:)] && [statuses count] > 0) {
+                    // hasnext == 0 ==> hasNextPage == YES
+                    BOOL hasNextPage = [data objectForKey:@"hasnext"] &&([[data objectForKey:@"hasnext"] intValue]==0);
+                    NIF_TRACE(@"do we have next page ? %d",hasNextPage);
                     
-                    [timelineChat addParticipatingListObject:listContact notify:NotifyNow];
-                    
-                    fromObject = (id)listContact;
-                    
-                } else {
-                    fromObject = (id)self;
-                }
-                
-                AIContentMessage *contentMessage = [AIContentMessage messageInChat:timelineChat
-                                                                        withSource:fromObject
-                                                                       destination:self
-                                                                              date:date
-                                                                           message:finallyAttributedTweet
-                                                                         autoreply:NO];
-                
-                contentMessage.trackContent = trackContent;
-                [adium.contentController receiveContentObject:contentMessage];
-            }
-            
-            [[AIContactObserverManager sharedManager] endListObjectNotificationsDelay];
-            
-            [self _resetHomeTimelineRequest];
-            
-            // new lastID should be marked here 
-            id firstStatus = [statuses objectAtIndex:0];
-            double futureTimelineLastTime = [[firstStatus objectForKey:@"timestamp"] doubleValue];
-            NSString *futureTimelineLastTime_ = [NSString stringWithFormat:@"%lf",futureTimelineLastTime];
-            
-            [self setPreference:futureTimelineLastTime_
-                         forKey:QWEIBO_PREFERENCE_TIMELINE_LAST_TIME
-                          group:QWEIBO_PREFERENCE_GROUP_UPDATES];
-            // let's load more 
-            
-            id data = [responseJSON objectForKey:@"data"];
-            if(data && [data respondsToSelector:@selector(objectForKey:)] && [statuses count] > 0) {
-                // hasnext == 0 ==> hasNextPage == YES
-                BOOL hasNextPage = [data objectForKey:@"hasnext"] &&([[data objectForKey:@"hasnext"] intValue]==0);
-                NIF_TRACE(@"do we have next page ? %d",hasNextPage);
-                                
-                NSInteger leftTweetsCount = max - [statuses count];
-                if (hasNextPage && leftTweetsCount > 0 ) {
-                    NIF_TRACE(@"IM LOADING MORE HOMTIMELINE....");
-                    [self _loadHomeTimelineStartPageTime:futureTimelineLastTime count:count max:leftTweetsCount];
+                    NSInteger leftTweetsCount = max - [statuses count];
+                    if (hasNextPage && leftTweetsCount > 0 ) {
+                        NIF_TRACE(@"IM LOADING MORE HOMTIMELINE....");
+                        [self _loadHomeTimelineStartPageTime:futureTimelineLastTime count:count max:leftTweetsCount];
+                    } else {
+                        [self _resetHomeTimelineRequest];
+                    }
                 } else {
                     [self _resetHomeTimelineRequest];
-                }
-            } else {
-                [self _resetHomeTimelineRequest];
+                }                
             }
         }
     }];
@@ -1141,19 +1160,18 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 }
 
 - (void)_fetchImageWithURL:(NSString *)url imageHander:(void(^)(NSImage *image))imageHander {
-//    dispatch_queue_t queue = dispatch_queue_create("com.ryan.downloadimage", NULL);
-     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
     dispatch_async(queue, ^{
         NSImage *image = [[[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:url]] autorelease];
         dispatch_async(dispatch_get_main_queue(), ^{
             imageHander(image);
         });
     });
-//    dispatch_release(queue);
 }
 
 - (void)dealloc {
     [_session release];
+    [_maybeDuplicateTweets release];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[adium.preferenceController unregisterPreferenceObserver:self];
     

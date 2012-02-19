@@ -99,15 +99,16 @@ typedef enum {
 #define QWEIBO_INFO_UID                     @"name"
 #define QWEIBO_INFO_SCREEN_NAME             @"nick"
 
-#define COUNT_UPDATE_TWEET                  50
+#define COUNT_UPDATE_TWEET                  70
 
 @interface AIQWeiboAccount : AIAccount {
     QOAuthSession       *_session;
     
     NSTimer				*updateTimer;
     
-    BOOL                isLoadingHomeTimeline;
+    __block BOOL        isLoadingHomeTimeline;
 
+    NSMutableDictionary *_maybeDuplicateTweets;
 }
 
 @property (readonly, nonatomic) NSString *defaultServer;

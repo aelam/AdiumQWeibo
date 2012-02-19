@@ -107,7 +107,6 @@
     [RSimpleConnection sendAsynchronousRequest:request queue:_operationQueue completionHandler:^(NSData *data,NSURLResponse *response, NSError *error) {
         if (data) {
             NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//            NSLog(@"---- %@",responseString);
             
             NSDictionary *pairs = [NSDictionary oauthTokenPairsFromResponse:responseString];
             self.session.tokenKey = [pairs objectForKey:@"oauth_token"];

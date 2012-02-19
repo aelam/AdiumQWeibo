@@ -353,7 +353,11 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
                 }
             }
             @catch (NSException *exception) {
-                
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"Exception Error" forKey:NSLocalizedDescriptionKey];
+                NSInteger exceptionErrorCode = 10000;
+                NSError *weiboError = [NSError errorWithDomain:WeiboErrorDomain code:exceptionErrorCode userInfo:userInfo]; 
+                NSString *s1 = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
+                handler(nil,urlResponse,weiboError);
             }
             @finally {
                 
