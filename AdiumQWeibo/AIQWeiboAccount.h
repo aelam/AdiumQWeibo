@@ -109,6 +109,10 @@ typedef enum {
     __block BOOL        isLoadingHomeTimeline;
 
     NSMutableDictionary *_maybeDuplicateTweets;
+    
+    BOOL                _isESiTunesPluginLoaded;
+    
+    NSDictionary        *iTunesInfo;
 }
 
 @property (readonly, nonatomic) NSString *defaultServer;

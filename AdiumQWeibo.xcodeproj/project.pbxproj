@@ -63,6 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		94086E2514F375A600ABA05A /* ESiTunesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESiTunesPlugin.h; sourceTree = "<group>"; };
 		940C0F7B14E008ED00DF9D5E /* UnitTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		940C0F7C14E008EE00DF9D5E /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		940C0F8114E008EE00DF9D5E /* UnitTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UnitTest-Info.plist"; sourceTree = "<group>"; };
@@ -304,6 +305,7 @@
 				942FDEFE148CC1FC007D8EBE /* AIQWeiboService.m */,
 				942FDED2148CBA99007D8EBE /* AIQWeiboAccount.h */,
 				942FDED3148CBA99007D8EBE /* AIQWeiboAccount.m */,
+				94086E2514F375A600ABA05A /* ESiTunesPlugin.h */,
 				942FDF00148CC2B6007D8EBE /* AIQWeiboAccountViewController.h */,
 				942FDF01148CC2B6007D8EBE /* AIQWeiboAccountViewController.m */,
 				94187A881493AD48000F4AD1 /* AIQWeiboAccountView.nib */,

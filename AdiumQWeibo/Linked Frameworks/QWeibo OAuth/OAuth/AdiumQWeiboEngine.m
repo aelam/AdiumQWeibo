@@ -335,6 +335,8 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
             @try {
                 NSDictionary *json = [responseData JSONValue];
                 if (json == nil) {
+                    NSString *s1 = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
+                    NIF_ERROR(@"why json is nil ? %@,%d", s1,[urlResponse statusCode]);
                     NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"JSON parse error" forKey:NSLocalizedDescriptionKey];
                     NSError *weiboError = [NSError errorWithDomain:WeiboErrorDomain code:1000000 userInfo:userInfo];
                     handler(nil,urlResponse,weiboError);
@@ -343,6 +345,7 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
                     int errorCode = [[json objectForKey:@"errcode"] intValue];
                     NSString *errorMessage = [json objectForKey:@"msg"];
                     if (returnCode != 0 || errorCode != 0) {
+                        NIF_INFO(@"error happend ! json : %@", json);
                         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errorMessage forKey:NSLocalizedDescriptionKey];
                         NSInteger weiboErrorCode = returnCode * 10000 + errorCode;
                         NSError *weiboError = [NSError errorWithDomain:WeiboErrorDomain code:weiboErrorCode userInfo:userInfo];                
@@ -356,7 +359,10 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
                 NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"Exception Error" forKey:NSLocalizedDescriptionKey];
                 NSInteger exceptionErrorCode = 10000;
                 NSError *weiboError = [NSError errorWithDomain:WeiboErrorDomain code:exceptionErrorCode userInfo:userInfo]; 
-                NSString *s1 = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
+//                NSString *s1 = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
+                
+//                NIF_ERROR(@"why json is nil ? %@",s1.length > 30 ?[s1 substringToIndex:30]:s1);
+                NIF_ERROR(@"why exception is nil ? %@", exception);
                 handler(nil,urlResponse,weiboError);
             }
             @finally {

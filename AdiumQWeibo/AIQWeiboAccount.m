@@ -32,13 +32,13 @@
 #import <Adium/AIContentEvent.h>
 #import <Adium/AISharedAdium.h>
 #import <Adium/AIAdiumProtocol.h>
+#import "ESiTunesPlugin.h"
 
 #import "NSDictionary+Response.h"
 #import <Adium/AIControllerProtocol.h>
 #import "AdiumQWeiboEngine.h"
 #import "AdiumQWeiboEngine+Helper.h"
 #import "Tweet.h"
-
 
 NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     return [[tweet1 objectForKey:TWEET_CREATE_AT] compare:[tweet2 objectForKey:TWEET_CREATE_AT]];
@@ -64,6 +64,9 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     [super initAccount];
 
     _maybeDuplicateTweets = [[NSMutableDictionary alloc] init];
+    
+    _isESiTunesPluginLoaded = NSClassFromString(@"ESiTunesPlugin")!=nil;
+    NIF_INFO(@"_isESiTunesPluginLoaded : %d", _isESiTunesPluginLoaded);
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(chatDidOpen:) 
@@ -148,7 +151,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
             NSString *imageURL = [head stringByAppendingFormat:@"/%d",QWEIBO_ICON_SIZE];
             [self _fetchImageWithURL:imageURL imageHander:^(NSImage *image) {
 
-                NIF_TRACE(@"My head : %@", imageURL);
+//                NIF_TRACE(@"My head : %@", imageURL);
 
                 [self setValue:[NSNumber numberWithBool:YES] forProperty:QWEIBO_PROPERTY_REQUESTED_USER_ICON notify:NotifyNever];                    
                 
@@ -246,6 +249,10 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 	[super didConnect];
     [self setLastDisconnectionError:nil];
 	
+    // track iTunes status
+    if (_isESiTunesPluginLoaded) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(iTunesDidUpdate:) name:Adium_iTunesTrackChangedNotification object:nil];
+    }
     // Creating the fake timeline account.
     
 	AIListBookmark *timelineBookmark = [adium.contactController existingBookmarkForChatName:self.timelineChatName
@@ -286,7 +293,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 	[super disconnect];
     NIF_TRACE();
     [updateTimer invalidate]; updateTimer = nil;
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:Adium_iTunesTrackChangedNotification object:nil];
     [self didDisconnect];
 
 }
@@ -685,6 +692,16 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 }
 
 
+#pragma PLUS Function : iTunes
+- (void)iTunesDidUpdate:(NSNotification *)notification {
+//    NIF_INFO(@"%@", notification);
+    [iTunesInfo release];
+    iTunesInfo = [[notification object] retain];
+    
+    NIF_INFO(@"%@", iTunesInfo);
+}
+
+
 #pragma mark OAuth
 /*!
  * @brief Should we store our password based on internal object ID?
@@ -1015,8 +1032,8 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 }
 
 - (void)_loadHomeTimelineStartPageTime:(double)date count:(NSInteger)count max:(NSInteger)max {
-    NIF_INFO(@"loading from  : %lf", date);
-    
+    NIF_INFO(@"loading from  : %@",    [[NSDate dateWithTimeIntervalSince1970:date] descriptionWithLocale:[NSLocale currentLocale]]);
+
     [AdiumQWeiboEngine fetchHomeTimelineWithSession:self.session pageTime:date pageFlag:PageFlagPageUp count:count resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         if (error) {
             NIF_ERROR(@"%@" ,error);
