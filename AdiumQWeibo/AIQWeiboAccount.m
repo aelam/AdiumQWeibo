@@ -506,8 +506,15 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                         updateAfterSend = [[self preferenceForKey:QWEIBO_PREFERENCE_UPDATE_AFTER_SEND group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
                         NIF_INFO(@"updateAfterSend ?: %d", updateAfterSend);
                         [self periodicUpdate];
+                    } else {
+                        [adium.contentController displayEvent:AILocalizedString(@"Tweet sent fail", nil)
+                                                       ofType:@"tweet"
+                                                       inChat:self.timelineChat];                        
                     }
-                    
+                } else {
+                    [adium.contentController displayEvent:AILocalizedString(@"Tweet sent fail", nil)
+                                                   ofType:@"tweet"
+                                                   inChat:self.timelineChat];
                 }
             }
         }];
@@ -1010,7 +1017,6 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     [AdiumQWeiboEngine getInboxMessagesWithSession:self.session sinceID:nil resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         NIF_INFO(@"info : %@", responseJSON);
     }];
-    return;
     
     NIF_TRACE(@"isLoadingHomeTimeline: %d",isLoadingHomeTimeline);
     if (isLoadingHomeTimeline) {
