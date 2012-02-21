@@ -294,6 +294,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     NIF_TRACE();
     [updateTimer invalidate]; updateTimer = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:Adium_iTunesTrackChangedNotification object:nil];
+    [iTunesInfo release]; iTunesInfo = nil;
     [self didDisconnect];
 
 }

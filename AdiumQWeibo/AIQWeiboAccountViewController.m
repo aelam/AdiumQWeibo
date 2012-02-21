@@ -147,7 +147,7 @@
 	[checkBox_loadContacts setState:loadContacts];
 
     
-    if (account.online) {
+//    if (account.online) {
         
         NIF_TRACE(@"account is online");
         textField_name.stringValue = [account valueForProperty:@"Profile Name"] ?: @"";
@@ -166,7 +166,7 @@
         [textField_APIpath setEnabled:NO];
         [checkBox_useSSL setEnabled:NO];
         
-    }
+//    }
 }
 
 - (void)saveConfiguration
