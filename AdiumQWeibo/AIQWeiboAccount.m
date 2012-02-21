@@ -486,15 +486,26 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                 if (ret == 0 || errorCode == 0) {
                     id data = [responseJSON objectForKey:@"data"];
                     if (data) {
+                        /*
                         NSTimeInterval time = [[data objectForKey:@"time"] doubleValue];
                         [adium.contentController displayEvent:AILocalizedString(@"Tweet successfully sent.", nil)
                                                        ofType:@"tweet"
                                                        inChat:self.timelineChat];
 
+                        
                         NSDate *receivedDate = [NSDate dateWithTimeIntervalSince1970:time]; 
                                                 
                         AIContentMessage *contentMessage = [AIContentMessage messageInChat:self.timelineChat withSource:self destination:self date:receivedDate message:inContentMessage.message autoreply:NO];
                         [adium.contentController receiveContentObject:contentMessage];
+                    */
+
+                        [adium.contentController displayEvent:AILocalizedString(@"Tweet successfully sent.", nil)
+                                                       ofType:@"tweet"
+                                                       inChat:self.timelineChat];
+
+                        updateAfterSend = [[self preferenceForKey:QWEIBO_PREFERENCE_UPDATE_AFTER_SEND group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+                        NIF_INFO(@"updateAfterSend ?: %d", updateAfterSend);
+                        [self periodicUpdate];
                     }
                     
                 }
@@ -881,20 +892,6 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
         }
     }];
     
-	
-//	NSString	*requestID = [twitterEngine enableUpdatesFor:contact.UID];
-//	
-//	AILogWithSignature(@"%@ Requesting follow for: %@", self, contact.UID);
-//	
-//	if(requestID) {	
-//		NSString	*updateRequestID = [twitterEngine getUserInformationFor:contact.UID];
-//		
-//		if (updateRequestID) {
-//			[self setRequestType:AIQWeiboAddFollow
-//					forRequestID:updateRequestID
-//				  withDictionary:[NSDictionary dictionaryWithObjectsAndKeys:contact.UID, @"UID", nil]];
-//		}
-//	}
 }
 
 
@@ -919,7 +916,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                 // 修改图片
                 NIF_TRACE(@"modify my icon...");
                 NSData *imageData = [prefDict objectForKey:KEY_USER_ICON];
-                [imageData writeToFile:@"/Users/ryan/Desktop/test.jpg" atomically:YES];
+//                [imageData writeToFile:@"/Users/ryan/Desktop/test.jpg" atomically:YES];
                 if (imageData) {
                     [AdiumQWeiboEngine updateHeadIcon:imageData session:self.session resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
                         if(error) {
@@ -1009,6 +1006,12 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 }
 
 - (void)periodicUpdate {
+    
+    [AdiumQWeiboEngine getInboxMessagesWithSession:self.session sinceID:nil resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        NIF_INFO(@"info : %@", responseJSON);
+    }];
+    return;
+    
     NIF_TRACE(@"isLoadingHomeTimeline: %d",isLoadingHomeTimeline);
     if (isLoadingHomeTimeline) {
         return;
@@ -1070,8 +1073,9 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                     if(type == ResponseTweetTypeRetweet) {
                         NSDictionary *source = [status objectForKey:@"source"];
                         [finallyAttributedTweet appendString:@"转播: " withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor lightGrayColor],NSForegroundColorAttributeName,[NSColor yellowColor],NSBackgroundColorAttributeName,nil]];
-                        [finallyAttributedTweet appendAttributedString:attributedTweet];
-                        
+                        if(attributedTweet) {
+                            [finallyAttributedTweet appendAttributedString:attributedTweet];
+                        }
                         if (source) {
                             [finallyAttributedTweet appendString:@"\n" withAttributes:nil];
                             NSString *origName = [source objectForKey:@"name"];
@@ -1081,15 +1085,20 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                             NSString *plainTweet2 = [source objectForKey:@"origtext"];
                             NSAttributedString *attributedTweet2 = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet2 replacingNicknames:nicknamePairs processEmotion:NO];
                             
-                            [finallyAttributedTweet appendAttributedString:attributedUser];
-                            [finallyAttributedTweet appendString:@":" withAttributes:nil];
-                            [finallyAttributedTweet appendAttributedString:attributedTweet2];
-                            
+                            if (attributedUser) {
+                                [finallyAttributedTweet appendAttributedString:attributedUser];
+                                [finallyAttributedTweet appendString:@":" withAttributes:nil];                                
+                            }
+                            if (attributedTweet2) {
+                                [finallyAttributedTweet appendAttributedString:attributedTweet2];
+                            }
                         } else {
                             
                         }
                     } else if(type == ResponseTweetTypeOriginal){
-                        [finallyAttributedTweet appendAttributedString:attributedTweet];
+                        if(attributedTweet) {
+                            [finallyAttributedTweet appendAttributedString:attributedTweet];                            
+                        }
                     }
                     
                     

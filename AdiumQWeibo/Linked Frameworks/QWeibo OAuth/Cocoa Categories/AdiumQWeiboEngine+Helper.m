@@ -104,7 +104,7 @@
 }
 
 + (NSArray *)attributedTweetsFromTweetDictionary:(NSDictionary *)json{
-    [self attributedTweetsFromTweetDictionary:json processEmotion:YES];
+    return [self attributedTweetsFromTweetDictionary:json processEmotion:YES];
 }
 
 

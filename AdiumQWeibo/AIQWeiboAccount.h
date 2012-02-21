@@ -51,7 +51,7 @@ typedef enum {
 
 #define QWEIBO_UPDATE_TIMELINE_COUNT_FIRST_RUN		50
 
-#define QWEIBO_UPDATE_TIMELINE_COUNT		200
+#define QWEIBO_UPDATE_TIMELINE_COUNT		1000
 #define QWEIBO_UPDATE_DM_COUNT				20
 #define QWEIBO_UPDATE_REPLIES_COUNT         20
 #define QWEIBO_UPDATE_USER_INFO_COUNT		10
@@ -113,6 +113,9 @@ typedef enum {
     BOOL                _isESiTunesPluginLoaded;
     
     NSDictionary        *iTunesInfo;
+    
+    BOOL				updateAfterSend;
+
 }
 
 @property (readonly, nonatomic) NSString *defaultServer;
