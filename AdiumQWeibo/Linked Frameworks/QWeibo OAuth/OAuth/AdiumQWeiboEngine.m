@@ -304,36 +304,42 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
     }
     [params setObject:[NSString stringWithFormat:@"%d",PageFlagPageUp] forKey:@"pageflag"];
     
+    NIF_INFO(@"%@", lastID);
+
     __block NSString *newlastID = nil;
     [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         handler(responseJSON,urlResponse,error);
-
+        
+//        NIF_INFO(@"%@", [responseJSON valueForKeyPath:]);
+        
         NSInteger hasNext = -1;
         id data = [responseJSON objectForKey:@"data"];
-        if (data && [data respondsToSelector:@selector(objectForKey:)]) {
+        if (data && [data respondsToSelector:@selector(objectForKey:)] && !error) {
             id info = [data objectForKey:@"info"];
             if (!info || [info count] == 0) {
                 return;
             }
             id lastest = [info objectAtIndex:0];
             newlastID = [[lastest objectForKey:@"id"] description];
+            NIF_INFO(@"newlastID : %@", newlastID);
             id hasnext_ = [data objectForKey:@"hasnext"];
             if (hasnext_) {
                 hasNext = [hasnext_ intValue];
             }
         }
         
-        if (!error && hasNext == 0 && newlastID && newlastID.length > 0) {
+        if (hasNext == 0 && newlastID && newlastID.length > 0) {
             [params setObject:newlastID forKey:@"lastid"];        
-
+            NIF_INFO(@"fetch second page");
             [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+                NIF_INFO(@"params : %@", params);
                 handler(responseJSON,urlResponse,error);            
             }];     
         }
     }];
 }
 
-+ (void)getoutboxMessagesWithSession:(QOAuthSession *)aSession sinceID:(NSString *)lastID resultHandler:(JSONRequestHandler)handler{
++ (void)getOutboxMessagesWithSession:(QOAuthSession *)aSession sinceID:(NSString *)lastID resultHandler:(JSONRequestHandler)handler{
     NSString *path = @"private/send";
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
     [params setObject:@"json" forKey:@"format"];
@@ -417,6 +423,7 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
             @try {
                 NSDictionary *json = [responseData JSONValue];
                 if (json == nil) {
+                    NIF_ERROR(@"! %@", [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
                     NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"JSON parse error" forKey:NSLocalizedDescriptionKey];
                     NSError *weiboError = [NSError errorWithDomain:WeiboErrorDomain code:1000000 userInfo:userInfo];
                     handler(nil,urlResponse,weiboError);

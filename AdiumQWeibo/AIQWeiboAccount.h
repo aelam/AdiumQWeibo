@@ -46,6 +46,13 @@ typedef enum {
 } AIQWeiboRequestType;
 
 
+typedef enum {
+//    PrivateMessageFinishedFlagInitial   = 0,
+    PrivateMessageFinishedFlagInbox     = 1,
+    PrivateMessageFinishedFlagOutbox    = 1<<1,
+    PrivateMessageFinishedFlagDone      = 3
+
+}PrivateMessageFinishedFlag;
 
 #define QWEIBO_UPDATE_INTERVAL_MINUTES              20
 
@@ -68,6 +75,10 @@ typedef enum {
 #define QWEIBO_PREFERENCE_DM_LAST_ID			@"QWeibo Direct Messages Last ID"
 #define QWEIBO_PREFERENCE_REPLIES_LAST_ID		@"QWeibo Replies Last ID"
 #define QWEIBO_PREFERENCE_GROUP_UPDATES         @"QWeibo Preferences"
+
+#define QWEIBO_PREFRENCE_INBOX_LAST_ID          @"QWeibo Inbox LastID"
+#define QWEIBO_PREFRENCE_OUTBOX_LAST_ID         @"QWeibo Outbox LastID"
+
 
 
 #define QWEIBO_PREFERENCE_TIMELINE_LAST_TIME	@"QWeibo Followed Timeline Last Time"
@@ -108,7 +119,10 @@ typedef enum {
     NSTimer				*updateTimer;
     
     __block BOOL        isLoadingHomeTimeline;
-
+    __block             PrivateMessageFinishedFlag privateMessageFlag;
+    
+    NSMutableArray      *privateMessages;
+    
     NSMutableDictionary *_maybeDuplicateTweets;
     
     BOOL                _isESiTunesPluginLoaded;

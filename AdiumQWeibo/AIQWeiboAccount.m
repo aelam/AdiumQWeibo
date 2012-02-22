@@ -66,6 +66,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     [super initAccount];
 
     _maybeDuplicateTweets = [[NSMutableDictionary alloc] init];
+    privateMessages = [[NSMutableArray alloc] init];
     
     _isESiTunesPluginLoaded = NSClassFromString(@"ESiTunesPlugin")!=nil;
     NIF_INFO(@"_isESiTunesPluginLoaded : %d", _isESiTunesPluginLoaded);
@@ -109,7 +110,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
         self.session.isValid = YES;
 
         NIF_TRACE(@"authorize success UID: %@", self.UID);                
-
+        
     } else {
         [self setLastDisconnectionError:QWEIBO_OAUTH_NOT_AUTHORIZED];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"AIEditAccount"
@@ -1085,9 +1086,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 
 - (void)periodicUpdate {
     
-//    [AdiumQWeiboEngine getInboxMessagesWithSession:self.session sinceID:nil resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
-//        NIF_INFO(@"info : %@", responseJSON);
-//    }];
+    [self _loadPrivateMessages];
     
     NIF_TRACE(@"isLoadingHomeTimeline: %d",isLoadingHomeTimeline);
     if (isLoadingHomeTimeline) {
@@ -1250,6 +1249,112 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     isLoadingHomeTimeline = NO;
 }
 
+- (void)_loadPrivateMessages {    
+    if (privateMessageFlag == PrivateMessageFinishedFlagInbox || privateMessageFlag == PrivateMessageFinishedFlagOutbox) {
+        return;
+    }
+    
+//    __block NSMutableArray *privateMessages = [[NSMutableArray alloc] init];
+    
+    dispatch_block_t finishedBlock = ^{
+        
+        NIF_INFO(@"privateMessageFlag : %d  ",privateMessageFlag);
+
+        if (privateMessageFlag == PrivateMessageFinishedFlagDone) {
+            NIF_INFO(@"need sort");
+            
+            privateMessageFlag = PrivateMessageFinishedFlagDone;
+        } 
+    };
+    
+        
+    NSString *lastInboxID = [self preferenceForKey:QWEIBO_PREFRENCE_INBOX_LAST_ID group:QWEIBO_PREFERENCE_GROUP_UPDATES];
+    NSString *lastOutboxID = [self preferenceForKey:QWEIBO_PREFRENCE_OUTBOX_LAST_ID group:QWEIBO_PREFERENCE_GROUP_UPDATES];
+    
+    [AdiumQWeiboEngine getInboxMessagesWithSession:self.session sinceID:lastInboxID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        NSInteger hasNext = -1;
+        id data = [responseJSON objectForKey:@"data"];
+        if (data && [data respondsToSelector:@selector(objectForKey:)] && !error) {
+            id info = [data objectForKey:@"info"];
+            if (!info || [info count] == 0) {
+                privateMessageFlag |= PrivateMessageFinishedFlagInbox;
+                finishedBlock();
+            } else {
+                id lastest = [info objectAtIndex:0];
+                NSString *newlastID = [[lastest objectForKey:@"id"] description];
+                [self setPreference:newlastID
+                             forKey:QWEIBO_PREFRENCE_INBOX_LAST_ID
+                              group:QWEIBO_PREFERENCE_GROUP_UPDATES];
+                
+                NIF_INFO(@"inbox count : %d", [[data objectForKey:@"info"] count]);
+                NIF_INFO(@"newlastID : %@", newlastID);
+                [privateMessages addObjectsFromArray:[data objectForKey:@"info"]];
+                
+                id hasnext_ = [data objectForKey:@"hasnext"];
+                if (hasnext_) {
+                    hasNext = [hasnext_ intValue];
+                }
+                
+                NIF_INFO(@"hasNext : %d", hasNext);
+
+                if(hasNext != 0){    // 没有下页
+                    NIF_INFO(@"Inbox hasNext != 0");
+                    privateMessageFlag |= PrivateMessageFinishedFlagInbox;
+                    finishedBlock();
+                }                
+            }
+        } else {
+            privateMessageFlag |= PrivateMessageFinishedFlagInbox;
+            finishedBlock();
+        }
+    }];
+    
+    [AdiumQWeiboEngine getOutboxMessagesWithSession:self.session sinceID:lastOutboxID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        NSInteger hasNext = -1;
+        id data = [responseJSON objectForKey:@"data"];
+        if (data && [data respondsToSelector:@selector(objectForKey:)]) {
+            id info = [data objectForKey:@"info"];
+            if (!info || [info count] == 0) {
+                privateMessageFlag |= PrivateMessageFinishedFlagOutbox;
+                finishedBlock();
+            } else {
+                [privateMessages addObjectsFromArray:[data objectForKey:@"info"]];
+                
+                id lastest = [info objectAtIndex:0];
+                NSString *newlastID = [[lastest objectForKey:@"id"] description];
+                NIF_INFO(@"outbox count : %d", [[data objectForKey:@"info"] count]);
+                NIF_INFO(@"newlastID : %@", newlastID);
+
+                [self setPreference:newlastID
+                             forKey:QWEIBO_PREFRENCE_OUTBOX_LAST_ID
+                              group:QWEIBO_PREFERENCE_GROUP_UPDATES];
+                
+                id hasnext_ = [data objectForKey:@"hasnext"];
+                if (hasnext_) {
+                    hasNext = [hasnext_ intValue];
+                }
+                
+                NIF_INFO(@"hasNext : %d", hasNext);
+                if(hasNext != 0){
+                    NIF_INFO(@"Outbox hasNext != 0");
+                    privateMessageFlag |= PrivateMessageFinishedFlagOutbox;
+                    finishedBlock();
+                }                
+            }
+        } else {
+            privateMessageFlag |= PrivateMessageFinishedFlagOutbox;
+            finishedBlock();
+        }
+    }];
+
+}
+
+- (void)displayPrivateMessages:(NSArray *)messages {
+    NIF_INFO(@"need sort");
+    
+    privateMessageFlag = PrivateMessageFinishedFlagDone;
+}
+
 
 - (QOAuthSession *)session {
     if (_session == nil) {
@@ -1273,10 +1378,12 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 }
 
 - (void)dealloc {
-    [_session release];
-    [_maybeDuplicateTweets release];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[adium.preferenceController unregisterPreferenceObserver:self];
+
+    [_session release];
+    [_maybeDuplicateTweets release];
+    [privateMessages release];
     
     [super dealloc];
 }

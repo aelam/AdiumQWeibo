@@ -114,6 +114,6 @@ typedef BOOL(^PageableJSONRequestHandler)(NSDictionary *responseJSON, NSHTTPURLR
 + (void)updateHeadIcon:(NSData *)imageData session:(QOAuthSession *)aSession resultHandler:(JSONRequestHandler)handler;
 
 + (void)getInboxMessagesWithSession:(QOAuthSession *)aSession sinceID:(NSString *)lastID resultHandler:(JSONRequestHandler)handler;
-+ (void)getoutboxMessagesWithSession:(QOAuthSession *)aSession sinceID:(NSString *)lastID resultHandler:(JSONRequestHandler)handler;
++ (void)getOutboxMessagesWithSession:(QOAuthSession *)aSession sinceID:(NSString *)lastID resultHandler:(JSONRequestHandler)handler;
 
 @end

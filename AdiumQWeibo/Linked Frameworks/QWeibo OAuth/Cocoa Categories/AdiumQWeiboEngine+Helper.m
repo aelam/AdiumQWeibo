@@ -168,9 +168,7 @@
                                           nil];
                 NSString *nickname = [pairs objectForKey:name]?[pairs objectForKey:name]:name;
                 NSAttributedString *nickAttributedString = [[[NSAttributedString alloc] initWithString:nickname attributes:linkAttr] autorelease];
-                NIF_INFO(@"-----mark --- ");
                 [halfAttributedTweet replaceCharactersInRange:NSMakeRange(capturedRanges[i].location + replaceOffset, capturedRanges[i].length) withAttributedString:nickAttributedString];
-                NIF_INFO(@"-----mark --- ");
                 [linkAttr release];                
                 replaceOffset += nickAttributedString.length - capturedStrings[i].length;
                 
@@ -200,9 +198,7 @@
                                           nil];
                 NSString *nickname = [pairs objectForKey:name]?[pairs objectForKey:name]:name;
                 NSAttributedString *nickAttributedString = [[[NSAttributedString alloc] initWithString:nickname attributes:linkAttr] autorelease];
-                NIF_INFO(@"-----mark --- nickAttributedString is nil ? %d",nickAttributedString == nil);
                 [halfAttributedTweet replaceCharactersInRange:NSMakeRange(capturedRanges[i].location + replaceOffset, capturedRanges[i].length) withAttributedString:nickAttributedString];
-                NIF_INFO(@"-----mark --- ");
                 [linkAttr release];                
                 replaceOffset += nickAttributedString.length - capturedStrings[i].length;
 
@@ -237,9 +233,7 @@
             [cell setImage:image];
             [ta setAttachmentCell:cell];            
             imageString  = [NSAttributedString attributedStringWithAttachment:ta];
-            NIF_INFO(@"-----mark --- ");
             [halfAttributedTweet replaceCharactersInRange:NSMakeRange(capturedRanges[i].location + replaceOffset, capturedRanges[i].length) withAttributedString:imageString];
-            NIF_INFO(@"-----mark --- ");
             replaceOffset += imageString.length - capturedStrings[i].length;
         }
     }];
