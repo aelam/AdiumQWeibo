@@ -39,6 +39,8 @@
 #import "AdiumQWeiboEngine.h"
 #import "AdiumQWeiboEngine+Helper.h"
 #import "Tweet.h"
+#import "NSString+Readable.h"
+
 
 NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     return [[tweet1 objectForKey:TWEET_CREATE_AT] compare:[tweet2 objectForKey:TWEET_CREATE_AT]];
@@ -250,7 +252,9 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     [self setLastDisconnectionError:nil];
 	
     // track iTunes status
-    if (_isESiTunesPluginLoaded) {
+    BOOL synciTunes = [[self preferenceForKey:QWEIBO_PREFERENCE_SYNC_ITUNES group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+
+    if (_isESiTunesPluginLoaded && synciTunes) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(iTunesDidUpdate:) name:Adium_iTunesTrackChangedNotification object:nil];
     }
     // Creating the fake timeline account.
@@ -717,7 +721,60 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     [iTunesInfo release];
     iTunesInfo = [[notification object] retain];
     
-    NIF_INFO(@"%@", iTunesInfo);
+//    NIF_INFO(@"%@", iTunesInfo);
+    NSString *name = [iTunesInfo objectForKey:ITUNES_NAME];
+    NSString *artist = [iTunesInfo objectForKey:ITUNES_ARTIST];
+    NSString *storeURL = [iTunesInfo objectForKey:ITUNES_STORE_URL];
+
+    if (!name || !artist || !storeURL) {
+        return;
+    }
+    NSString *content = [NSString stringWithFormat:@"%@ %@ - %@ , %@ #iTunes#",AILocalizedString(@"正在听",@"Listening to"),EmptyString(name),EmptyString(artist),EmptyString(storeURL)];
+    
+    NIF_INFO(@"do you mean send a tweet ?,%@",content);
+    [AdiumQWeiboEngine sendTweetWithSession:self.session content:content resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+        NIF_INFO(@"YES, send it out for me ");
+        if (error) {
+            NIF_ERROR(@"%@", error);
+        } else {
+            NIF_TRACE(@"%@", responseJSON);
+            NSInteger errorCode = [[responseJSON objectForKey:@"errcode"] intValue];
+            NSInteger ret = [[responseJSON objectForKey:@"ret"] intValue];
+            if (ret == 0 || errorCode == 0) {
+                id data = [responseJSON objectForKey:@"data"];
+                if (data) {
+                    /*
+                     NSTimeInterval time = [[data objectForKey:@"time"] doubleValue];
+                     [adium.contentController displayEvent:AILocalizedString(@"Tweet successfully sent.", nil)
+                     ofType:@"tweet"
+                     inChat:self.timelineChat];
+                     
+                     
+                     NSDate *receivedDate = [NSDate dateWithTimeIntervalSince1970:time]; 
+                     
+                     AIContentMessage *contentMessage = [AIContentMessage messageInChat:self.timelineChat withSource:self destination:self date:receivedDate message:inContentMessage.message autoreply:NO];
+                     [adium.contentController receiveContentObject:contentMessage];
+                     */
+                    
+                    [adium.contentController displayEvent:AILocalizedString(@"Tweet successfully sent.", nil)
+                                                   ofType:@"tweet"
+                                                   inChat:self.timelineChat];
+                    
+                    updateAfterSend = [[self preferenceForKey:QWEIBO_PREFERENCE_UPDATE_AFTER_SEND group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+                    NIF_INFO(@"updateAfterSend ?: %d", updateAfterSend);
+                    [self periodicUpdate];
+                } else {
+                    [adium.contentController displayEvent:AILocalizedString(@"Tweet sent fail", nil)
+                                                   ofType:@"tweet"
+                                                   inChat:self.timelineChat];                        
+                }
+            } else {
+                [adium.contentController displayEvent:AILocalizedString(@"Tweet sent fail", nil)
+                                               ofType:@"tweet"
+                                               inChat:self.timelineChat];
+            }
+        }
+    }];
 }
 
 
@@ -979,6 +1036,14 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 				[self removeAllContacts];
 			}
 		}
+        if ([key isEqualToString:QWEIBO_PREFERENCE_SYNC_ITUNES] && self.online) {
+            BOOL synciTunes = [[prefDict objectForKey:QWEIBO_PREFERENCE_SYNC_ITUNES] boolValue];//[[self preferenceForKey:QWEIBO_PREFERENCE_SYNC_ITUNES group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+            
+            if (_isESiTunesPluginLoaded && synciTunes) {
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(iTunesDidUpdate:) name:Adium_iTunesTrackChangedNotification object:nil];
+            }
+            NIF_INFO(@"sync iTune opened ? ", synciTunes);
+        }
 	}	
 }
 

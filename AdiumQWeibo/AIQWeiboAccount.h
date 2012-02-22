@@ -78,6 +78,7 @@ typedef enum {
 #define QWEIBO_PREFERENCE_UPDATE_GLOBAL_REPLIES	@"Update Global Status Includes Replies"
 #define QWEIBO_PREFERENCE_RETWEET_SPAM			@"Retweet Enabled"
 #define QWEIBO_PREFERENCE_LOAD_CONTACTS			@"Load Follows as Contacts"
+#define QWEIBO_PREFERENCE_SYNC_ITUNES           @"Sync iTunes info While listening to music"
 
 #define QWEIBO_REMOTE_GROUP_NAME			@"Tencent Weibo"
 #define QWEIBO_TIMELINE_NAME				@"Timeline (%@)"

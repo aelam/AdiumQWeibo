@@ -145,6 +145,9 @@
     
 	BOOL loadContacts = [[account preferenceForKey:QWEIBO_PREFERENCE_LOAD_CONTACTS group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
 	[checkBox_loadContacts setState:loadContacts];
+    
+    BOOL synciTunes = [[account preferenceForKey:QWEIBO_PREFERENCE_SYNC_ITUNES group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+	[checkBox_synciTunes setState:synciTunes];
 
     
 //    if (account.online) {
@@ -195,6 +198,10 @@
     
 	[account setPreference:[NSNumber numberWithBool:[checkBox_loadContacts state]]
 					forKey:QWEIBO_PREFERENCE_LOAD_CONTACTS
+					 group:QWEIBO_PREFERENCE_GROUP_UPDATES];
+    
+    [account setPreference:[NSNumber numberWithBool:[checkBox_synciTunes state]]
+					forKey:QWEIBO_PREFERENCE_SYNC_ITUNES
 					 group:QWEIBO_PREFERENCE_GROUP_UPDATES];
 	
 #warning --

@@ -34,6 +34,8 @@
 	IBOutlet	NSButton		*checkBox_updateGlobalStatus;
 	IBOutlet	NSButton		*checkBox_updateGlobalIncludeReplies;
 	
+    IBOutlet	NSButton		*checkBox_synciTunes;
+
 	// Personal
 	
 	IBOutlet	NSTextField		*textField_name;
