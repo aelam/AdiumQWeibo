@@ -253,7 +253,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 	
     // track iTunes status
     BOOL synciTunes = [[self preferenceForKey:QWEIBO_PREFERENCE_SYNC_ITUNES group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
-
+    NIF_INFO(@"synciTunes ? %d", synciTunes);
     if (_isESiTunesPluginLoaded && synciTunes) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(iTunesDidUpdate:) name:Adium_iTunesTrackChangedNotification object:nil];
     }
@@ -721,7 +721,11 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     [iTunesInfo release];
     iTunesInfo = [[notification object] retain];
     
-//    NIF_INFO(@"%@", iTunesInfo);
+    BOOL synciTunes = [[self preferenceForKey:QWEIBO_PREFERENCE_SYNC_ITUNES group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
+    if (!synciTunes) {
+        return;
+    }
+    
     NSString *name = [iTunesInfo objectForKey:ITUNES_NAME];
     NSString *artist = [iTunesInfo objectForKey:ITUNES_ARTIST];
     NSString *storeURL = [iTunesInfo objectForKey:ITUNES_STORE_URL];
@@ -1041,8 +1045,10 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
             
             if (_isESiTunesPluginLoaded && synciTunes) {
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(iTunesDidUpdate:) name:Adium_iTunesTrackChangedNotification object:nil];
+            } else {
+                [[NSNotificationCenter defaultCenter] removeObserver:self name:Adium_iTunesTrackChangedNotification object:nil];
             }
-            NIF_INFO(@"sync iTune opened ? ", synciTunes);
+            NIF_INFO(@"sync iTunes opened ? %d  ll 2 : %d", synciTunes,[[self preferenceForKey:QWEIBO_PREFERENCE_SYNC_ITUNES group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue]);
         }
 	}	
 }
@@ -1079,9 +1085,9 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 
 - (void)periodicUpdate {
     
-    [AdiumQWeiboEngine getInboxMessagesWithSession:self.session sinceID:nil resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
-        NIF_INFO(@"info : %@", responseJSON);
-    }];
+//    [AdiumQWeiboEngine getInboxMessagesWithSession:self.session sinceID:nil resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+//        NIF_INFO(@"info : %@", responseJSON);
+//    }];
     
     NIF_TRACE(@"isLoadingHomeTimeline: %d",isLoadingHomeTimeline);
     if (isLoadingHomeTimeline) {
