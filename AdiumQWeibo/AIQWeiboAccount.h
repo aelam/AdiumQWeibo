@@ -47,7 +47,7 @@ typedef enum {
 
 
 typedef enum {
-//    PrivateMessageFinishedFlagInitial   = 0,
+    PrivateMessageFinishedFlagInitial   = 0,
     PrivateMessageFinishedFlagInbox     = 1,
     PrivateMessageFinishedFlagOutbox    = 1<<1,
     PrivateMessageFinishedFlagDone      = 3

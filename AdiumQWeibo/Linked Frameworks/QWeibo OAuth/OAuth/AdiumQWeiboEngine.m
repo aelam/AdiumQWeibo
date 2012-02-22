@@ -292,7 +292,7 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
 }
 
 
-#define PRIVATE_MESAGE_REQUEST_NUM  @"3"
+#define PRIVATE_MESAGE_REQUEST_NUM  @"20"
 
 + (void)getInboxMessagesWithSession:(QOAuthSession *)aSession sinceID:(NSString *)lastID resultHandler:(JSONRequestHandler)handler{
     NSString *path = @"private/recv";
@@ -302,16 +302,14 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
     if (lastID) {
         [params setObject:lastID forKey:@"lastid"];        
     }
-    [params setObject:[NSString stringWithFormat:@"%d",PageFlagPageUp] forKey:@"pageflag"];
+    [params setObject:[NSString stringWithFormat:@"%d",2] forKey:@"pageflag"];
     
     NIF_INFO(@"%@", lastID);
 
     __block NSString *newlastID = nil;
     [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         handler(responseJSON,urlResponse,error);
-        
-//        NIF_INFO(@"%@", [responseJSON valueForKeyPath:]);
-        
+                
         NSInteger hasNext = -1;
         id data = [responseJSON objectForKey:@"data"];
         if (data && [data respondsToSelector:@selector(objectForKey:)] && !error) {
@@ -331,7 +329,7 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
         if (hasNext == 0 && newlastID && newlastID.length > 0) {
             [params setObject:newlastID forKey:@"lastid"];        
             NIF_INFO(@"fetch second page");
-            [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+            [self getInboxMessagesWithSession:aSession sinceID:newlastID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
                 NIF_INFO(@"params : %@", params);
                 handler(responseJSON,urlResponse,error);            
             }];     
@@ -370,8 +368,9 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
         
         if (!error && hasNext == 0 && newlastID && newlastID.length > 0) {
             [params setObject:newlastID forKey:@"lastid"];        
-            
-            [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+
+            [self getInboxMessagesWithSession:aSession sinceID:newlastID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+//            [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
                 handler(responseJSON,urlResponse,error);            
             }];     
         }
@@ -443,6 +442,7 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
                 }
             }
             @catch (NSException *exception) {
+                [responseData writeToFile:@"/Users/ryan/Desktop/error.json" atomically:YES];
                 NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"Exception Error" forKey:NSLocalizedDescriptionKey];
                 NSInteger exceptionErrorCode = 10000;
                 NSError *weiboError = [NSError errorWithDomain:WeiboErrorDomain code:exceptionErrorCode userInfo:userInfo]; 
