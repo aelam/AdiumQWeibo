@@ -58,6 +58,9 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 - (void)_loadHomeTimelineStartPageTime:(double)date count:(NSInteger)count max:(NSInteger)max;
 - (void)_resetHomeTimelineRequest;
 
+- (void)_loadHomeTimeline;
+- (void)_loadPrivateMessages;
+
 @end
 
 @implementation AIQWeiboAccount
@@ -181,9 +184,26 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                     
                     if(!self.online || error) {
                         NIF_ERROR(@"%@", error);
+                        contactListDidLoad = YES;
+                        [self _loadPrivateMessages];
                         return ;
                     }
                     
+                    NSInteger hasNext = -1;
+                    id data = [responseJSON objectForKey:@"data"];
+                    if (data && [data respondsToSelector:@selector(objectForKey:)]) {
+                        id hasnext_ = [data objectForKey:@"hasnext"];
+                        if (hasnext_) {
+                            hasNext = [hasnext_ intValue];
+                        }
+                    }
+                    
+                    if (!error && hasNext == 0) {
+                        contactListDidLoad = NO;
+                    } else {
+                        contactListDidLoad = YES;
+                        [self _loadPrivateMessages];
+                    }
                     
                     NSArray *users = [responseJSON valueForKeyPath:@"data.info"];
                     for(NSDictionary *user in users) {
@@ -472,7 +492,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 
 - (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage {
     
-    NIF_INFO(@"sending message out....");
+    NIF_INFO(@"sending message out.... %@",inContentMessage.chat);
 //    NIF_INFO(@"%@",inContentMessage);
     
     AIChat *timelineChat = self.timelineChat;
@@ -490,7 +510,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                 NIF_TRACE(@"%@", responseJSON);
                 NSInteger errorCode = [[responseJSON objectForKey:@"errcode"] intValue];
                 NSInteger ret = [[responseJSON objectForKey:@"ret"] intValue];
-                if (ret == 0 || errorCode == 0) {
+                if (ret == 0 && errorCode == 0) {
                     id data = [responseJSON objectForKey:@"data"];
                     if (data) {
                         /*
@@ -541,15 +561,16 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                         [adium.contentController receiveContentObject:contentMessage];
                     }
                 }*/
-                
+                NIF_INFO(@"sending private message");
+                NIF_INFO(@"%@", responseJSON);
                 NSInteger errorCode = [[responseJSON objectForKey:@"errcode"] intValue];
                 NSInteger ret = [[responseJSON objectForKey:@"ret"] intValue];
-                if (ret == 0 || errorCode == 0) {
+                if (ret == 0 && errorCode == 0) {
                     id data = [responseJSON objectForKey:@"data"];
                     if (data) {
                         [adium.contentController displayEvent:AILocalizedString(@"Private message successfully sent.", nil)
                                                        ofType:@"tweet"
-                                                       inChat:self.timelineChat];
+                                                       inChat:inContentMessage.chat];
                         
                         updateAfterSend = [[self preferenceForKey:QWEIBO_PREFERENCE_UPDATE_AFTER_SEND group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
                         NIF_INFO(@"updateAfterSend ?: %d", updateAfterSend);
@@ -557,12 +578,12 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                     } else {
                         [adium.contentController displayEvent:AILocalizedString(@"Private message sent fail", nil)
                                                        ofType:@"tweet"
-                                                       inChat:self.timelineChat];                        
+                                                       inChat:inContentMessage.chat];                        
                     }
                 } else {
                     [adium.contentController displayEvent:AILocalizedString(@"Private message sent fail", nil)
                                                    ofType:@"tweet"
-                                                   inChat:self.timelineChat];
+                                                   inChat:inContentMessage.chat];
                 }
 
                 
@@ -772,7 +793,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
             NIF_TRACE(@"%@", responseJSON);
             NSInteger errorCode = [[responseJSON objectForKey:@"errcode"] intValue];
             NSInteger ret = [[responseJSON objectForKey:@"ret"] intValue];
-            if (ret == 0 || errorCode == 0) {
+            if (ret == 0 && errorCode == 0) {
                 id data = [responseJSON objectForKey:@"data"];
                 if (data) {
                     /*
@@ -1113,19 +1134,21 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 
 - (void)periodicUpdate {
     
-    [self _loadPrivateMessages];
-    
-    NIF_TRACE(@"isLoadingHomeTimeline: %d",isLoadingHomeTimeline);
-    if (isLoadingHomeTimeline) {
-        return;
+    if(contactListDidLoad) {
+        NIF_INFO(@"update private messages");
+        [self _loadPrivateMessages];        
     }
-    isLoadingHomeTimeline = YES;
-    NIF_TRACE(@"timer makes me loading again..");
     
+    if (!isLoadingHomeTimeline) {
+        [self _loadHomeTimeline];
+    }
+}
+
+- (void)_loadHomeTimeline {
     NSString *lastUpdateTime = [self preferenceForKey:QWEIBO_PREFERENCE_TIMELINE_LAST_TIME group:QWEIBO_PREFERENCE_GROUP_UPDATES];
     double lastUpdateTime_ = [lastUpdateTime doubleValue];
     double currentTimestamp = [[NSDate date]timeIntervalSince1970];
-
+    
     // 
     // if we have not loaded timeline for a long time, there will be too many tweets,
     // so we'd better change the timestamp that we need load begin
@@ -1137,6 +1160,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     [self _loadHomeTimelineStartPageTime:lastUpdateTime_ count:COUNT_UPDATE_TWEET max:200];
     
 }
+
 
 - (void)_loadHomeTimelineStartPageTime:(double)date count:(NSInteger)count max:(NSInteger)max {
     NIF_INFO(@"loading from  : %@",    [[NSDate dateWithTimeIntervalSince1970:date] descriptionWithLocale:[NSLocale currentLocale]]);
@@ -1277,15 +1301,13 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 }
 
 - (void)_loadPrivateMessages {    
-    if (privateMessageFlag == PrivateMessageFinishedFlagInbox || privateMessageFlag == PrivateMessageFinishedFlagOutbox) {
+    if(isLoadingInbox || isLoadingOutbox) {
         return;
     }
-        
+    
     dispatch_block_t finishedBlock = ^{
         
-        NIF_INFO(@"privateMessageFlag : %d  ",privateMessageFlag);
-
-        if (privateMessageFlag == PrivateMessageFinishedFlagDone) {
+        if (isLoadingInbox == NO && isLoadingOutbox == NO) {
             NIF_INFO(@"need sort");
             NSArray *sortedMessages = [privateMessages sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
                 double time1 = [[obj1 objectForKey:@"timestamp"] doubleValue];
@@ -1301,7 +1323,6 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
             
             NIF_INFO(@"sortedMessages count = %d", [sortedMessages count]);
             
-//            NIF_INFO(@"%@",[sortedMessages objectAtIndex:0]);
             for (NSDictionary *status in sortedMessages) {
                 
                 NSString *plainTweet = [status objectForKey:@"origtext"];
@@ -1309,30 +1330,32 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                 double timestamp = [[status objectForKey:TWEET_CREATE_AT] doubleValue];
                 NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
                 BOOL isSentByMe = [[status objectForKey:@"self"] boolValue];
-                
+                // 1 发件箱 0 收件箱
                 
                 NSAttributedString *attributedTweet = [AdiumQWeiboEngine attributedTweetForPlainText:plainTweet replacingNicknames:nil processEmotion:NO];
-                
-                
+                                
                 id fromObject = nil;                
                 id destination = nil;
                 AIListContact *listContact = [self contactWithUID:contactUID];
-                if (!isSentByMe) {
-                    fromObject = (id)listContact;                    
-                    destination = self;
-                } else {
-                    fromObject = (id)self;                    
-                    destination = (id)listContact;                    
-                }
 
-                AIChat *chat = [adium.chatController existingChatWithName:contactUID
+                if (isSentByMe) {
+                    NSString *toUser = [status objectForKey:@"toname"];
+                    contactUID = toUser;
+                    listContact = [self contactWithUID:toUser];
+                    NIF_INFO(@"to User : %@, listContact : %@", toUser,listContact);
+                    fromObject = self;//[self contactWithUID:contactUID];;
+                    destination = listContact;
+                } else {
+                    listContact = [self contactWithUID:contactUID];
+                    fromObject = listContact;
+                    destination = self;
+                }
+                
+                AIChat *chat = [adium.chatController existingChatWithIdentifier:contactUID
                                                                 onAccount:self];
                 
                 if (!chat) {
-                    chat = [adium.chatController chatWithName:contactUID
-                                                   identifier:nil
-                                                    onAccount:self
-                                             chatCreationInfo:nil];
+                    chat = [adium.chatController chatWithContact:listContact];
                 }
                 
                 BOOL trackContent = [[self preferenceForKey:QWEIBO_PREFERENCE_EVER_LOADED_TIMELINE group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
@@ -1349,7 +1372,10 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                 [adium.contentController receiveContentObject:contentMessage];
             }
             
-            privateMessageFlag = PrivateMessageFinishedFlagInitial;
+            // reset
+            [privateMessages removeAllObjects];
+            isLoadingOutbox = NO;
+            isLoadingInbox = NO;
         } 
     };
     
@@ -1363,18 +1389,21 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
         if (data && [data respondsToSelector:@selector(objectForKey:)] && !error) {
             id info = [data objectForKey:@"info"];
             if (!info || [info count] == 0) {
-                privateMessageFlag |= PrivateMessageFinishedFlagInbox;
+                isLoadingInbox = NO;
                 finishedBlock();
             } else {
                 id lastest = [info objectAtIndex:0];
-                NSString *newlastID = [[lastest objectForKey:@"id"] description];
+                NSString *newlastID = [[lastest objectForKey:@"timestamp"] description];
                 [self setPreference:newlastID
                              forKey:QWEIBO_PREFRENCE_INBOX_LAST_ID
                               group:QWEIBO_PREFERENCE_GROUP_UPDATES];
                 
-                NIF_INFO(@"inbox count : %d", [[data objectForKey:@"info"] count]);
+                id messages = [data objectForKey:@"info"];
+                NIF_INFO(@"inbox count : %d", [messages count]);
                 NIF_INFO(@"newlastID : %@", newlastID);
-                [privateMessages addObjectsFromArray:[data objectForKey:@"info"]];
+                if (messages && [messages count]) {
+                    [privateMessages addObjectsFromArray:messages];                    
+                }
                 
                 id hasnext_ = [data objectForKey:@"hasnext"];
                 if (hasnext_) {
@@ -1385,12 +1414,14 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 
                 if(hasNext != 0){    // 没有下页
                     NIF_INFO(@"Inbox hasNext != 0");
-                    privateMessageFlag |= PrivateMessageFinishedFlagInbox;
+                    isLoadingInbox = NO;
                     finishedBlock();
-                }                
+                } else {
+                    isLoadingInbox = YES;
+                }
             }
         } else {
-            privateMessageFlag |= PrivateMessageFinishedFlagInbox;
+            isLoadingInbox = NO;
             finishedBlock();
         }
     }];
@@ -1401,13 +1432,17 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
         if (data && [data respondsToSelector:@selector(objectForKey:)]) {
             id info = [data objectForKey:@"info"];
             if (!info || [info count] == 0) {
-                privateMessageFlag |= PrivateMessageFinishedFlagOutbox;
+                isLoadingOutbox = NO;
                 finishedBlock();
             } else {
-                [privateMessages addObjectsFromArray:[data objectForKey:@"info"]];
-                
+
+                id messages = [data objectForKey:@"info"];
+                if (messages && [messages count]) {
+                    [privateMessages addObjectsFromArray:messages];                    
+                }
+
                 id lastest = [info objectAtIndex:0];
-                NSString *newlastID = [[lastest objectForKey:@"id"] description];
+                NSString *newlastID = [[lastest objectForKey:@"timestamp"] description];
                 NIF_INFO(@"outbox count : %d", [[data objectForKey:@"info"] count]);
                 NIF_INFO(@"newlastID : %@", newlastID);
 
@@ -1423,22 +1458,18 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                 NIF_INFO(@"hasNext : %d", hasNext);
                 if(hasNext != 0){
                     NIF_INFO(@"Outbox hasNext != 0");
-                    privateMessageFlag |= PrivateMessageFinishedFlagOutbox;
+                    isLoadingInbox = NO;
                     finishedBlock();
-                }                
+                } else {
+                    isLoadingInbox = YES;
+                }
             }
         } else {
-            privateMessageFlag |= PrivateMessageFinishedFlagOutbox;
+            isLoadingInbox = NO;
             finishedBlock();
         }
     }];
 
-}
-
-- (void)displayPrivateMessages:(NSArray *)messages {
-    NIF_INFO(@"need sort");
-    
-    privateMessageFlag = PrivateMessageFinishedFlagDone;
 }
 
 

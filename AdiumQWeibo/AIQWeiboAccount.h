@@ -119,7 +119,11 @@ typedef enum {
     NSTimer				*updateTimer;
     
     __block BOOL        isLoadingHomeTimeline;
-    __block             PrivateMessageFinishedFlag privateMessageFlag;
+//    __block             PrivateMessageFinishedFlag privateMessageFlag;
+    BOOL                isLoadingInbox;
+    BOOL                isLoadingOutbox;
+    
+    BOOL                contactListDidLoad;
     
     NSMutableArray      *privateMessages;
     

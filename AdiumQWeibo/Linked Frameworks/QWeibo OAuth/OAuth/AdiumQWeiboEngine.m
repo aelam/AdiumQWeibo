@@ -300,16 +300,17 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
     [params setObject:@"json" forKey:@"format"];
     [params setObject:PRIVATE_MESAGE_REQUEST_NUM forKey:@"reqnum"];
     if (lastID) {
-        [params setObject:lastID forKey:@"lastid"];        
+        [params setObject:lastID forKey:@"pagetime"];        
     }
     [params setObject:[NSString stringWithFormat:@"%d",2] forKey:@"pageflag"];
     
-    NIF_INFO(@"%@", lastID);
 
     __block NSString *newlastID = nil;
     [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
         handler(responseJSON,urlResponse,error);
-                
+             
+        NIF_INFO(@"params : %@", params);
+        NIF_INFO(@"%@", responseJSON);
         NSInteger hasNext = -1;
         id data = [responseJSON objectForKey:@"data"];
         if (data && [data respondsToSelector:@selector(objectForKey:)] && !error) {
@@ -317,8 +318,8 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
             if (!info || [info count] == 0) {
                 return;
             }
-            id lastest = [info objectAtIndex:0];
-            newlastID = [[lastest objectForKey:@"id"] description];
+            id lastest = [info lastObject];
+            newlastID = [[lastest objectForKey:@"timestamp"] description];
             NIF_INFO(@"newlastID : %@", newlastID);
             id hasnext_ = [data objectForKey:@"hasnext"];
             if (hasnext_) {
@@ -327,10 +328,9 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
         }
         
         if (hasNext == 0 && newlastID && newlastID.length > 0) {
-            [params setObject:newlastID forKey:@"lastid"];        
+            [params setObject:newlastID forKey:@"pagetime"];        
             NIF_INFO(@"fetch second page");
             [self getInboxMessagesWithSession:aSession sinceID:newlastID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
-                NIF_INFO(@"params : %@", params);
                 handler(responseJSON,urlResponse,error);            
             }];     
         }
@@ -342,9 +342,8 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
     [params setObject:@"json" forKey:@"format"];
     [params setObject:PRIVATE_MESAGE_REQUEST_NUM forKey:@"reqnum"];
-    if (lastID) {
-        [params setObject:lastID forKey:@"lastid"];        
-    }
+    [params setObject:lastID?lastID:@"0" forKey:@"pagetime"];        
+
     [params setObject:[NSString stringWithFormat:@"%d",PageFlagPageUp] forKey:@"pageflag"];
     
     __block NSString *newlastID = nil;
@@ -358,8 +357,9 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
             if (!info || [info count] == 0) {
                 return;
             }
-            id lastest = [info objectAtIndex:0];
-            newlastID = [[lastest objectForKey:@"id"] description];
+            id lastest = [info lastObject];
+            newlastID = [[lastest objectForKey:@"timestamp"] description];
+            NIF_INFO(@"outbox newlastID : %@", newlastID);
             id hasnext_ = [data objectForKey:@"hasnext"];
             if (hasnext_) {
                 hasNext = [hasnext_ intValue];
@@ -367,10 +367,9 @@ static NSString *const WeiboErrorDomain = @"WeiboErrorDomain";
         }
         
         if (!error && hasNext == 0 && newlastID && newlastID.length > 0) {
-            [params setObject:newlastID forKey:@"lastid"];        
+            [params setObject:newlastID forKey:@"pagetime"];        
 
-            [self getInboxMessagesWithSession:aSession sinceID:newlastID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
-//            [self fetchDataWithAPIPath:path params:params session:aSession resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
+            [self getOutboxMessagesWithSession:aSession sinceID:newlastID resultHandler:^(NSDictionary *responseJSON, NSHTTPURLResponse *urlResponse, NSError *error) {
                 handler(responseJSON,urlResponse,error);            
             }];     
         }
