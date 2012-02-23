@@ -575,6 +575,7 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
                         updateAfterSend = [[self preferenceForKey:QWEIBO_PREFERENCE_UPDATE_AFTER_SEND group:QWEIBO_PREFERENCE_GROUP_UPDATES] boolValue];
                         NIF_INFO(@"updateAfterSend ?: %d", updateAfterSend);
                         [self periodicUpdate];
+                        [self performSelector:@selector(periodicUpdate) withObject:nil afterDelay:10];
                     } else {
                         [adium.contentController displayEvent:AILocalizedString(@"Private message sent fail", nil)
                                                        ofType:@"tweet"
