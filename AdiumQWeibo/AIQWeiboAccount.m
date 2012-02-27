@@ -40,11 +40,7 @@
 #import "AdiumQWeiboEngine+Helper.h"
 #import "Tweet.h"
 #import "NSString+Readable.h"
-
-
-NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
-    return [[tweet1 objectForKey:TWEET_CREATE_AT] compare:[tweet2 objectForKey:TWEET_CREATE_AT]];
-}
+#import <CoreLocation/CoreLocation.h>
 
 @interface AIQWeiboAccount (Private)
 
@@ -63,6 +59,8 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 
 @end
 
+static CLLocationManager *locationManager = nil;
+
 @implementation AIQWeiboAccount
 
 - (void)initAccount {
@@ -73,6 +71,15 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
     
     _isESiTunesPluginLoaded = NSClassFromString(@"ESiTunesPlugin")!=nil;
     NIF_INFO(@"_isESiTunesPluginLoaded : %d", _isESiTunesPluginLoaded);
+    
+//    if (locationManager == nil) {
+//        locationManager = [[CLLocationManager alloc] init];        
+//    }
+//    locationManager.delegate = self;
+//    locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+//    locationManager.distanceFilter = 10000;
+//
+//    [locationManager startUpdatingLocation];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(chatDidOpen:) 
@@ -95,6 +102,17 @@ NSInteger TweetSorter(id tweet1, id tweet2, void *context) {
 	[adium.preferenceController informObserversOfChangedKey:nil inGroup:QWEIBO_PREFERENCE_GROUP_UPDATES object:self];
     
 }
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    NIF_INFO(@"%@", newLocation);
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    NIF_ERROR(@"%@", error);
+
+}
+
+
 
 - (NSString *)defaultServer
 {
