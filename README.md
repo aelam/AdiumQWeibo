@@ -1,7 +1,7 @@
 What is it?
 ===
 
-This is an Adium plugin, you can use it view your following Tecent Mini-Blog tweets and post tweets. 
+This is an Adium plugin for **Tecent Mini-Blog**, you can use it view your following tweets and post tweets. 
 
 Function details
 ---
